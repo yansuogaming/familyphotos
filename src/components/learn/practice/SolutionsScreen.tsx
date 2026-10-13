@@ -2,7 +2,7 @@
 
 import { ArrowLeft, ArrowRight, CaretDown, ChatCircleDots, Eye, EyeSlash, Play, VideoCamera } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";

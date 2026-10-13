@@ -1,8 +1,7 @@
 "use client";
 
-import { CheckCircle } from "@/components/ui/icons";
-import { AnimatePresence, motion } from "motion/react";
-import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
+import { notify, type Notify } from "@/components/ui/Toaster";
 
 export function Section({
   id,
@@ -39,37 +38,15 @@ export function Block({ title, children, aside }: { title: string; children: Rea
   );
 }
 
-const ToastCtx = createContext<(msg: string) => void>(() => {});
-export const useToast = () => useContext(ToastCtx);
+/**
+ * Notifications go through Sonner (see components/ui/Toaster). `useToast()` keeps the
+ * old call style: `toast("Đã lưu")`, plus `toast.success / error / warning / info / promise`.
+ */
+export const useToast = (): Notify => notify;
 
+/** Kept so existing screens compile; the single <AppToaster /> lives in the root layout. */
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const [msg, setMsg] = useState<{ id: number; text: string } | null>(null);
-  const show = useCallback((text: string) => {
-    const id = Date.now();
-    setMsg({ id, text });
-    setTimeout(() => setMsg((m) => (m?.id === id ? null : m)), 2600);
-  }, []);
-  return (
-    <ToastCtx.Provider value={show}>
-      {children}
-      <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-24 z-50 flex justify-center md:bottom-8">
-        <AnimatePresence>
-          {msg && (
-            <motion.p
-              key={msg.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper shadow-[0_12px_32px_-12px_hsl(var(--shadow)/0.5)]"
-            >
-              <CheckCircle size={18} weight="fill" className="text-coral" /> {msg.text}
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </div>
-    </ToastCtx.Provider>
-  );
+  return <>{children}</>;
 }
 
 export const formatBytes = (n: number) =>

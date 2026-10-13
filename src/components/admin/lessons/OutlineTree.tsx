@@ -1,7 +1,8 @@
 "use client";
 
-import { ArrowDown, ArrowUp, CaretRight, DotsThree, PencilSimple, Plus, Trash } from "@/components/ui/icons";
+import { ArrowDown, ArrowUp, CaretRight, DotsThree, PencilSimple, Plus, Sparkle, Trash } from "@/components/ui/icons";
 import { useState } from "react";
+import { RichText } from "@/components/learn/Math";
 import { Button } from "@/components/ui/Button";
 import type { LessonSummary, SubjectOutline, TopicSummary } from "@/lib/api/lesson-types";
 import { EmptyState, ErrorNote, RibbonMark } from "../ui";
@@ -19,23 +20,43 @@ export interface TreeActions {
 }
 
 /** Chủ đề > Bài. Order matters, so both levels are numbered. */
-export function OutlineTree({ outline, selected, busy, error, actions }: { outline: SubjectOutline; selected: string | null; busy: boolean; error: string | null; actions: TreeActions }) {
+export function OutlineTree({
+  outline,
+  selected,
+  busy,
+  error,
+  actions,
+  aiLessons,
+  onAiOutline,
+}: {
+  outline: SubjectOutline;
+  selected: string | null;
+  busy: boolean;
+  error: string | null;
+  actions: TreeActions;
+  /** Lessons added from an AI outline in this session. */
+  aiLessons: Set<string>;
+  onAiOutline: () => void;
+}) {
   const [openMap, setOpenMap] = useState<Record<string, boolean>>({});
   const lessonCount = outline.topics.reduce((n, t) => n + t.lessons.length, 0);
   const isOpen = (t: TopicSummary, i: number) => openMap[t.id] ?? (i === 0 || t.lessons.some((l) => l.id === selected));
 
   return (
     <nav aria-label="Mục lục môn học">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <h2 className="text-xl font-bold">Mục lục</h2>
-          <p className="text-sm text-ink-3">
-            {outline.topics.length} chủ đề, {lessonCount} bài{busy ? ". Đang lưu..." : ""}
-          </p>
-        </div>
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 className="text-lg font-bold">Mục lục</h2>
+        <p className="text-xs text-ink-3" aria-live="polite">
+          {busy ? "Đang lưu..." : `${outline.topics.length} chủ đề, ${lessonCount} bài`}
+        </p>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <Button variant="secondary" size="sm" className="!h-10 !px-3.5" onClick={onAiOutline} disabled={busy}>
+          <Sparkle size={16} className="text-coral-ink" /> Dàn ý bằng AI
+        </Button>
         {outline.topics.length > 0 && (
-          <Button variant="secondary" size="sm" className="!h-10" onClick={actions.addTopic} disabled={busy}>
-            <Plus size={16} /> Thêm chủ đề
+          <Button variant="ghost" size="sm" className="!h-10 !px-3" onClick={actions.addTopic} disabled={busy}>
+            <Plus size={16} /> Chủ đề
           </Button>
         )}
       </div>
@@ -50,7 +71,7 @@ export function OutlineTree({ outline, selected, busy, error, actions }: { outli
         <div className="mt-4">
           <EmptyState
             title="Môn này chưa có chủ đề."
-            body="Thêm chủ đề đầu tiên, rồi thêm bài vào chủ đề đó."
+            body="Thêm chủ đề đầu tiên, hoặc để AI gợi ý dàn ý cả môn rồi chọn những gì muốn giữ."
             action={
               <Button size="sm" className="!h-10" onClick={actions.addTopic} disabled={busy}>
                 <Plus size={16} /> Thêm chủ đề
@@ -76,7 +97,9 @@ export function OutlineTree({ outline, selected, busy, error, actions }: { outli
                     <CaretRight size={14} weight="bold" className={`mt-1 shrink-0 text-ink-3 transition-transform duration-200 ${open ? "rotate-90" : ""}`} />
                     <span className="tabular w-5 shrink-0 text-right font-semibold text-coral-ink">{t.index}</span>
                     <span className="min-w-0 flex-1">
-                      <span className="block font-semibold leading-snug">{t.title}</span>
+                      <span className="block text-[0.95rem] font-semibold leading-snug">
+                        <RichText text={t.title} />
+                      </span>
                       <span className="block text-xs text-ink-3">{t.lessons.length} bài</span>
                     </span>
                   </button>
@@ -108,7 +131,12 @@ export function OutlineTree({ outline, selected, busy, error, actions }: { outli
                             }`}
                           >
                             <span className={`tabular shrink-0 ${active ? "text-coral-ink" : "text-ink-3"}`}>{l.index}.</span>
-                            <span className="min-w-0">{l.title}</span>
+                            <span className="min-w-0">
+                              <RichText text={l.title} />
+                              {aiLessons.has(l.id) && (
+                                <span className="ml-1.5 inline-flex h-5 items-center rounded-full bg-coral-wash px-1.5 align-[1px] text-[0.7rem] font-semibold text-coral-ink">AI</span>
+                              )}
+                            </span>
                           </button>
                           <ActionMenu
                             label={`Thao tác cho bài ${l.index}, chủ đề ${t.index}`}

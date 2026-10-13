@@ -2,7 +2,7 @@
 
 import { CameraRotate, Microphone, MicrophoneSlash, PhoneDisconnect, VideoCamera, VideoCameraSlash } from "@/components/ui/icons";
 import { motion, useReducedMotion } from "motion/react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { useEffect, useRef, useState } from "react";
 import { Portal, useModal } from "@/components/album/Modal";
 import { Avatar } from "@/components/ui/Avatar";

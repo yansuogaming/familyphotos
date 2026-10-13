@@ -116,7 +116,6 @@ export const learningToday: LearningToday = {
 };
 
 export const learningAreas: LearningArea[] = [
-  { id: "toan", title: "Toán", description: "Luyện từng dạng bài, có lời giải từng bước", itemCount: 1284, href: "/learn/math" },
   { id: "cac-mon", title: "Các môn học", description: "Lý thuyết theo chủ đề, lớp 1 đến lớp 12", itemCount: 312, href: "/learn/theory" },
   { id: "de-thi", title: "Đề thi", description: "Đề kiểm tra giữa kỳ, cuối kỳ và vào lớp 10", itemCount: 476, href: "/learn/exams" },
   { id: "sach", title: "Sách", description: "Sách giáo khoa và sách đọc thêm", itemCount: 89, href: "/learn/books" },

@@ -2,7 +2,6 @@ import { ArrowRight, BookOpenText, ChatsCircle, Images, LockKey, Sparkle } from 
 import Link from "next/link";
 import { AiDemo } from "@/components/ai/AiDemo";
 import { AreaIndex } from "@/components/learn/AreaIndex";
-import { AlbumCover } from "@/components/album/AlbumCover";
 import { AlbumSpread } from "@/components/album/AlbumSpread";
 import { Logo } from "@/components/brand/Logo";
 import { ChatPreview } from "@/components/chat/ChatPreview";
@@ -10,7 +9,7 @@ import { DailyTicks } from "@/components/learn/DailyTicks";
 import { ButtonLink } from "@/components/ui/Button";
 import { QrLogin } from "@/components/ui/QrLogin";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { HeroTitle, PrivacyPoints, SiteText } from "@/components/admin/site/SiteSlots";
+import { LandingShelf, HeroTitle, PrivacyPoints, SiteText } from "@/components/admin/site/SiteSlots";
 import { learningAreas } from "@/lib/api/mock-data";
 
 const nav = [
@@ -20,17 +19,6 @@ const nav = [
   { href: "#assistant", label: "Trợ lý AI", icon: Sparkle },
 ];
 
-/**
- * The landing page is public. Its shelf shows illustrative albums only, never the
- * family's real albums, so nobody outside the home can see their titles or photos.
- */
-const showcase = [
-  { title: "Tết ở nhà bà", coverUrl: "https://picsum.photos/seed/fp-show-tet/600/760", meta: "Ảnh minh hoạ" },
-  { title: "Hè đi biển", coverUrl: "https://picsum.photos/seed/fp-show-bien/600/760", meta: "Ảnh minh hoạ" },
-  { title: "Sinh nhật con", coverUrl: "https://picsum.photos/seed/fp-show-sinhnhat/600/760", meta: "Ảnh minh hoạ" },
-  { title: "Ngày khai giảng", coverUrl: "https://picsum.photos/seed/fp-show-truong/600/760", meta: "Ảnh minh hoạ" },
-  { title: "Về quê", coverUrl: "https://picsum.photos/seed/fp-show-que/600/760", meta: "Ảnh minh hoạ" },
-];
 
 export default function Home() {
   return (
@@ -89,16 +77,8 @@ export default function Home() {
           </div>
           {/* Phones swipe the shelf; wider screens lay it out as a grid aligned with the heading. */}
           <div className="mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-6 [scrollbar-width:none] sm:px-6 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-5 lg:overflow-visible lg:pb-0">
-            {showcase.map((a) => (
-              <AlbumCover
-                key={a.title}
-                href="/login"
-                title={a.title}
-                coverUrl={a.coverUrl}
-                meta={a.meta}
-                className="w-56 shrink-0 snap-start sm:w-64 lg:w-auto"
-              />
-            ))}
+            {/* Illustrative albums set in /admin/content, never the family's real albums. */}
+            <LandingShelf />
           </div>
         </section>
 

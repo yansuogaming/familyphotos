@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- previews are local blob URLs */
-import { ArrowClockwise, CaretDown, CheckCircle, CloudArrowUp, ImageSquare, WarningCircle, X } from "@/components/ui/icons";
+import { ArrowClockwise, CaretDown, CheckCircle, CloudArrowUp, ImageSquare, LinkSimple, WarningCircle, X } from "@/components/ui/icons";
 import { useEffect, useId, useRef, useState } from "react";
 import { formatBytes } from "@/components/settings/shared";
 import { buttonClass } from "@/components/ui/Button";
@@ -15,7 +15,12 @@ import { useFileDrop } from "./useFileDrop";
 type Status = "ready" | "invalid" | "uploading" | "done" | "failed" | "cancelled";
 interface Item {
   id: string;
-  file: File;
+  /** From the computer... */
+  file?: File;
+  /** ...or from a web address. */
+  url?: string;
+  name: string;
+  bytes?: number;
   preview: string | null;
   status: Status;
   progress: number;
@@ -35,6 +40,8 @@ function toItems(files: File[]): Item[] {
     return {
       id: crypto.randomUUID(),
       file,
+      name: file.name,
+      bytes: file.size,
       preview: error ? null : URL.createObjectURL(file),
       status: error ? "invalid" : "ready",
       progress: 0,
@@ -100,7 +107,7 @@ function Body({
     const ctrls = controllers.current;
     return () => {
       ctrls.forEach((c) => c.abort());
-      all.current.forEach((i) => i.preview && URL.revokeObjectURL(i.preview));
+      all.current.forEach((i) => i.preview && i.file && URL.revokeObjectURL(i.preview));
     };
   }, []);
 
@@ -118,7 +125,7 @@ function Body({
       patch(item.id, { status: "cancelled" });
       return;
     }
-    if (item.preview) URL.revokeObjectURL(item.preview);
+    if (item.preview && item.file) URL.revokeObjectURL(item.preview);
     setItems((cur) => cur.filter((i) => i.id !== item.id));
   }
 
@@ -156,7 +163,8 @@ function Body({
         controllers.current.set(itemId, ctrl);
         patch(itemId, { status: "uploading", progress: 0, error: undefined });
         try {
-          const photo = await mediaApi.upload(dest, item.file, { signal: ctrl.signal, onProgress: (f) => patch(itemId, { progress: f }) });
+          const opts = { signal: ctrl.signal, onProgress: (f: number) => patch(itemId, { progress: f }) };
+          const photo = item.file ? await mediaApi.upload(dest, item.file, opts) : await mediaApi.uploadFromUrl(dest, item.url!, opts);
           done.push(photo);
           patch(itemId, { status: "done", progress: 1 });
         } catch (e) {
@@ -244,6 +252,17 @@ function Body({
         </div>
       )}
 
+      {phase === "pick" && (
+        <UrlAdder
+          onAdd={(url) =>
+            setItems((cur) => [
+              ...cur,
+              { id: crypto.randomUUID(), url, name: nameFromUrl(url), preview: url, status: "ready", progress: 0 },
+            ])
+          }
+        />
+      )}
+
       {items.length > 0 && (
         <ul className="flex flex-col divide-y divide-line rounded-[var(--radius-paper)] border border-line" aria-label="Ảnh sẽ tải lên">
           {items.map((it) => (
@@ -256,13 +275,13 @@ function Body({
                 )}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold">{it.file.name}</p>
-                <p className="tabular text-xs text-ink-3">{size(it.file.size)}</p>
+                <p className="truncate text-sm font-semibold">{it.name}</p>
+                <p className="tabular text-xs text-ink-3">{it.bytes != null ? size(it.bytes) : "Từ địa chỉ web"}</p>
                 {it.status === "uploading" && (
                   <div className="mt-1.5 flex items-center gap-2">
                     <span
                       role="progressbar"
-                      aria-label={`Đang tải ${it.file.name}`}
+                      aria-label={`Đang tải ${it.name}`}
                       aria-valuemin={0}
                       aria-valuemax={100}
                       aria-valuenow={Math.round(it.progress * 100)}
@@ -284,7 +303,7 @@ function Body({
                 <button
                   type="button"
                   onClick={() => remove(it)}
-                  aria-label={it.status === "uploading" ? `Huỷ tải ${it.file.name}` : `Bỏ ${it.file.name}`}
+                  aria-label={it.status === "uploading" ? `Huỷ tải ${it.name}` : `Bỏ ${it.name}`}
                   title={it.status === "uploading" ? "Huỷ tải" : "Bỏ ảnh này"}
                   className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-ink-2 hover:bg-paper-3 hover:text-ink"
                 >
@@ -326,6 +345,79 @@ function Body({
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+const nameFromUrl = (url: string) => {
+  try {
+    const u = new URL(url);
+    return decodeURIComponent(u.pathname.split("/").filter(Boolean).pop() || u.hostname);
+  } catch {
+    return url;
+  }
+};
+
+/** Paste a web address instead of picking a file. The image is test-loaded before it joins the list. */
+function UrlAdder({ onAdd }: { onAdd: (url: string) => void }) {
+  const id = useId();
+  const [value, setValue] = useState("");
+  const [state, setState] = useState<"idle" | "checking">("idle");
+  const [error, setError] = useState<string | null>(null);
+
+  function check() {
+    const url = value.trim();
+    setError(null);
+    if (!/^https?:\/\/\S+$/i.test(url)) return setError("Dán địa chỉ ảnh bắt đầu bằng https://");
+    setState("checking");
+    const img = new window.Image();
+    img.onload = () => {
+      setState("idle");
+      setValue("");
+      onAdd(url);
+    };
+    img.onerror = () => {
+      setState("idle");
+      setError("Không mở được ảnh từ địa chỉ này. Kiểm tra lại đường dẫn, hoặc ảnh đã bị chặn.");
+    };
+    img.src = url;
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label htmlFor={`${id}-url`} className="flex items-center gap-2 text-sm font-semibold">
+        <LinkSimple size={16} /> Hoặc thêm từ địa chỉ web
+      </label>
+      <div className="flex gap-2">
+        <input
+          id={`${id}-url`}
+          type="url"
+          inputMode="url"
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value);
+            setError(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              check();
+            }
+          }}
+          placeholder="https://..."
+          aria-invalid={!!error}
+          aria-describedby={error ? `${id}-err` : `${id}-hint`}
+          className={`${inputClass} min-w-0 flex-1`}
+        />
+        <button type="button" onClick={check} disabled={!value.trim() || state === "checking"} className={buttonClass("secondary", "md", "shrink-0")}>
+          {state === "checking" ? "Đang kiểm tra..." : "Thêm"}
+        </button>
+      </div>
+      {error ? (
+        <p id={`${id}-err`} className="text-sm text-danger">{error}</p>
+      ) : (
+        <p id={`${id}-hint`} className="text-sm text-ink-3">Nhà sẽ lưu một bản riêng của ảnh, không phụ thuộc vào trang gốc.</p>
+      )}
     </div>
   );
 }

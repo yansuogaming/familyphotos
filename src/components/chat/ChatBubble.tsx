@@ -2,7 +2,7 @@
 
 import { ArrowBendUpLeft, DownloadSimple, FilePdf, FileText, MapPin, Smiley } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { useState, type MouseEvent, type ReactNode } from "react";
 import type { ChatMessage } from "@/lib/api/chat-ext-types";
 import { QUICK_REACTIONS } from "./emoji";

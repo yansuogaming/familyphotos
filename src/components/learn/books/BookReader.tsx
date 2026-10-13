@@ -2,7 +2,7 @@
 
 import { ArrowLeft, ArrowRight, BookmarkSimple, CaretDown, MagnifyingGlassMinus, MagnifyingGlassPlus, X } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";

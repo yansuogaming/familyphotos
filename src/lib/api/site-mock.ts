@@ -20,6 +20,13 @@ export const defaultSite: SiteContent = {
       title: "Mỗi dịp một cuốn album.",
       body: "Tết, sinh nhật, chuyến đi chơi. Ai trong nhà cũng thêm ảnh được, kèm một dòng ghi chú như viết tay sau tấm ảnh.",
     },
+    shelf: [
+      { title: "Tết ở nhà bà", image: { url: "https://picsum.photos/seed/fp-show-tet/600/760", alt: "" } },
+      { title: "Hè đi biển", image: { url: "https://picsum.photos/seed/fp-show-bien/600/760", alt: "" } },
+      { title: "Sinh nhật con", image: { url: "https://picsum.photos/seed/fp-show-sinhnhat/600/760", alt: "" } },
+      { title: "Ngày khai giảng", image: { url: "https://picsum.photos/seed/fp-show-truong/600/760", alt: "" } },
+      { title: "Về quê", image: { url: "https://picsum.photos/seed/fp-show-que/600/760", alt: "" } },
+    ],
     chat: {
       title: "Chuyện nhà, nói trong nhà.",
       body: "Nhóm cả nhà hoặc nhắn riêng. Gửi ảnh, tệp, vị trí và gọi video, không có người lạ, không có quảng cáo.",
@@ -53,12 +60,17 @@ export const defaultSite: SiteContent = {
     greeting: "Chào mừng về nhà. Chọn cách mở cửa quen thuộc của bạn.",
   },
   register: {
+    coverPhotos: [
+      { url: cover("reg-1"), alt: "" },
+      { url: cover("reg-2"), alt: "" },
+      { url: cover("reg-3"), alt: "" },
+    ],
     title: "Bạn là ai?",
     lead: "Người trong nhà thấy mọi thứ. Khách chỉ thấy những album được chia sẻ.",
     member: { title: "Người trong nhà", body: "Bố mẹ, con cái. Cần mã mời từ một người trong nhà." },
     guest: { title: "Đăng ký làm khách", body: "Họ hàng, bạn bè. Người nhà duyệt rồi mới vào được." },
-    sentTitle: "Đã gửi lời xin vào nhà",
-    sentBody: "Người trong nhà sẽ nhận được thông báo và duyệt cho bạn. Khi được duyệt, bạn đăng nhập như bình thường.",
+    sentTitle: "Kiểm tra email của bạn",
+    sentBody: "Nhà vừa gửi một mã gồm 6 số để xác nhận email.",
   },
 };
 

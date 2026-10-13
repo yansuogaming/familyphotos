@@ -56,6 +56,7 @@ import {
   KeyRound as LKeyRound,
   Library as LLibrary,
   Lightbulb as LLightbulb,
+  Link as LLink,
   List as LList,
   ListMinus as LListMinus,
   ListOrdered as LListOrdered,
@@ -64,6 +65,7 @@ import {
   LockOpen as LLockOpen,
   LogOut as LLogOut,
   Mail as LMail,
+  MailOpen as LMailOpen,
   MapPin as LMapPin,
   Maximize2 as LMaximize2,
   Menu as LMenu,
@@ -78,6 +80,8 @@ import {
   Monitor as LMonitor,
   Moon as LMoon,
   PanelLeft as LPanelLeft,
+  PanelLeftClose as LPanelLeftClose,
+  PanelLeftOpen as LPanelLeftOpen,
   Paperclip as LPaperclip,
   PartyPopper as LPartyPopper,
   Pause as LPause,
@@ -190,6 +194,7 @@ export const icons = {
   DotsThree: LEllipsis,
   DotsThreeVertical: LEllipsisVertical,
   DownloadSimple: LDownload,
+  EnvelopeOpen: LMailOpen,
   EnvelopeSimple: LMail,
   Eye: LEye,
   EyeSlash: LEyeOff,
@@ -211,6 +216,7 @@ export const icons = {
   Info: LInfo,
   Lightbulb: LLightbulb,
   LinkBreak: LUnlink,
+  LinkSimple: LLink,
   List: LMenu,
   ListBullets: LList,
   ListDashes: LListMinus,
@@ -228,6 +234,7 @@ export const icons = {
   Minus: LMinus,
   Moon: LMoon,
   NotePencil: LSquarePen,
+  PaperPlane: LSend,
   PaperPlaneRight: LSendHorizontal,
   PaperPlaneTilt: LSend,
   Paperclip: LPaperclip,
@@ -248,6 +255,8 @@ export const icons = {
   ShieldCheck: LShieldCheck,
   ShieldStar: LShieldUser,
   ShieldWarning: LShieldAlert,
+  SidebarCollapse: LPanelLeftClose,
+  SidebarExpand: LPanelLeftOpen,
   SidebarSimple: LPanelLeft,
   SignOut: LLogOut,
   SkipForward: LSkipForward,
@@ -331,6 +340,7 @@ export const DotsSixVertical = make(LGripVertical, "DotsSixVertical");
 export const DotsThree = make(LEllipsis, "DotsThree");
 export const DotsThreeVertical = make(LEllipsisVertical, "DotsThreeVertical");
 export const DownloadSimple = make(LDownload, "DownloadSimple");
+export const EnvelopeOpen = make(LMailOpen, "EnvelopeOpen");
 export const EnvelopeSimple = make(LMail, "EnvelopeSimple");
 export const Eye = make(LEye, "Eye");
 export const EyeSlash = make(LEyeOff, "EyeSlash");
@@ -352,6 +362,7 @@ export const Images = make(LImages, "Images");
 export const Info = make(LInfo, "Info");
 export const Lightbulb = make(LLightbulb, "Lightbulb");
 export const LinkBreak = make(LUnlink, "LinkBreak");
+export const LinkSimple = make(LLink, "LinkSimple");
 export const List = make(LMenu, "List");
 export const ListBullets = make(LList, "ListBullets");
 export const ListDashes = make(LListMinus, "ListDashes");
@@ -369,6 +380,7 @@ export const MicrophoneSlash = make(LMicOff, "MicrophoneSlash");
 export const Minus = make(LMinus, "Minus");
 export const Moon = make(LMoon, "Moon");
 export const NotePencil = make(LSquarePen, "NotePencil");
+export const PaperPlane = make(LSend, "PaperPlane");
 export const PaperPlaneRight = make(LSendHorizontal, "PaperPlaneRight");
 export const PaperPlaneTilt = make(LSend, "PaperPlaneTilt");
 export const Paperclip = make(LPaperclip, "Paperclip");
@@ -389,6 +401,8 @@ export const ShareNetwork = make(LShare2, "ShareNetwork");
 export const ShieldCheck = make(LShieldCheck, "ShieldCheck");
 export const ShieldStar = make(LShieldUser, "ShieldStar");
 export const ShieldWarning = make(LShieldAlert, "ShieldWarning");
+export const SidebarCollapse = make(LPanelLeftClose, "SidebarCollapse");
+export const SidebarExpand = make(LPanelLeftOpen, "SidebarExpand");
 export const SidebarSimple = make(LPanelLeft, "SidebarSimple");
 export const SignOut = make(LLogOut, "SignOut");
 export const SkipForward = make(LSkipForward, "SkipForward");

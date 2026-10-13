@@ -166,19 +166,6 @@ function SystemForm({ initial, onSaved }: { initial: SystemSettings; onSaved: ()
         />
       </div>
 
-      <div className="mt-4 border-y border-line">
-        <SwitchRow
-          checked={draft.allowGuestSelfSignup}
-          onChange={(allowGuestSelfSignup) => patch({ allowGuestSelfSignup })}
-          label="Cho phép khách tự đăng ký"
-          description={
-            draft.allowGuestSelfSignup
-              ? "Khách tự tạo tài khoản rồi chờ bạn duyệt ở trang Thành viên."
-              : "Đang tắt: khách chỉ vào được bằng mã mời do bạn tạo."
-          }
-        />
-      </div>
-
       <SelectField
         className="mt-6 max-w-xs"
         label="Thời hạn mã QR đăng nhập"

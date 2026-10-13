@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- library images may be local data URLs */
-import { ImageSquare, MagnifyingGlass, UploadSimple } from "@/components/ui/icons";
+import { ImageSquare, LinkSimple, MagnifyingGlass, UploadSimple } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useRef, useState, type DragEvent } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
@@ -54,6 +54,7 @@ function Library({ initial }: { initial: MediaAsset[] }) {
   const [sort, setSort] = useState<Sort>("new");
   const [detail, setDetail] = useState<{ asset: MediaAsset; n: number; open: boolean } | null>(null);
   const [over, setOver] = useState(false);
+  const [urlOpen, setUrlOpen] = useState(false);
   const dragDepth = useRef(0);
   const fileRef = useRef<HTMLInputElement>(null);
   const files = useRef(new Map<string, File>());
@@ -163,11 +164,26 @@ function Library({ initial }: { initial: MediaAsset[] }) {
         title="Thư viện ảnh"
         description="Ảnh dùng cho trang chủ, trang đăng nhập và bìa album. Tải lên một lần, dùng lại ở nhiều chỗ."
         actions={
-          <Button onClick={pick}>
-            <UploadSimple size={18} /> Tải ảnh lên
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" onClick={() => setUrlOpen((o) => !o)} aria-expanded={urlOpen}>
+              <LinkSimple size={18} /> Thêm từ URL
+            </Button>
+            <Button onClick={pick}>
+              <UploadSimple size={18} /> Tải ảnh lên
+            </Button>
+          </div>
         }
       />
+      {urlOpen && (
+        <UrlImport
+          onClose={() => setUrlOpen(false)}
+          onAdded={(asset) => {
+            setItems((cur) => [asset, ...cur]);
+            setFresh((f) => new Set(f).add(asset.id));
+            toast.success(`Đã thêm ${asset.name} vào thư viện`);
+          }}
+        />
+      )}
       <input ref={fileRef} type="file" accept={IMAGE_ACCEPT} multiple className="sr-only" tabIndex={-1} aria-hidden="true" onChange={(e) => addFiles(e.target.files)} />
 
       {items.length > 0 && (
@@ -335,6 +351,101 @@ function LibrarySkeleton() {
             <div className="mt-1.5 h-3 w-1/2 animate-pulse rounded bg-paper-3" />
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+/** Add a library image from a web address: test-load it, name it, keep it. */
+function UrlImport({ onClose, onAdded }: { onClose: () => void; onAdded: (a: MediaAsset) => void }) {
+  const toast = useToast();
+  const [url, setUrl] = useState("");
+  const [preview, setPreview] = useState<{ url: string; width: number; height: number } | null>(null);
+  const [name, setName] = useState("");
+  const [alt, setAlt] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  function check() {
+    const u = url.trim();
+    setError(null);
+    setPreview(null);
+    if (!/^https?:\/\/\S+$/i.test(u)) return setError("Dán địa chỉ ảnh bắt đầu bằng https://");
+    setBusy(true);
+    const img = new window.Image();
+    img.onload = () => {
+      setBusy(false);
+      setPreview({ url: u, width: img.naturalWidth, height: img.naturalHeight });
+      if (!name) {
+        try {
+          setName(decodeURIComponent(new URL(u).pathname.split("/").filter(Boolean).pop() || "anh-tu-url"));
+        } catch {
+          setName("anh-tu-url");
+        }
+      }
+    };
+    img.onerror = () => {
+      setBusy(false);
+      setError("Không mở được ảnh từ địa chỉ này. Kiểm tra lại đường dẫn.");
+    };
+    img.src = u;
+  }
+
+  async function save() {
+    if (!preview) return;
+    setBusy(true);
+    try {
+      onAdded(await adminApi.media.addFromUrl({ url: preview.url, name: name.trim() || "anh-tu-url", alt: alt.trim(), width: preview.width, height: preview.height }));
+      onClose();
+    } catch (e) {
+      toast.error(errorText(e, "Chưa thêm được ảnh. Thử lại sau."));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="rounded-[var(--radius-paper)] border border-line bg-paper-2 p-5">
+      <p className="font-semibold">Thêm ảnh từ địa chỉ web</p>
+      <p className="mt-0.5 text-sm text-ink-2">Thư viện lưu một bản riêng của ảnh, nên trang vẫn đẹp kể cả khi trang gốc xoá ảnh.</p>
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+        <label className="sr-only" htmlFor="lib-url">Địa chỉ ảnh</label>
+        <input
+          id="lib-url"
+          type="url"
+          inputMode="url"
+          value={url}
+          onChange={(e) => {
+            setUrl(e.target.value);
+            setError(null);
+          }}
+          onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), check())}
+          placeholder="https://..."
+          aria-invalid={!!error}
+          className={`${inputClass} min-w-0 flex-1`}
+        />
+        <Button variant="secondary" onClick={check} disabled={!url.trim() || busy}>{busy && !preview ? "Đang kiểm tra..." : "Kiểm tra ảnh"}</Button>
+      </div>
+      {error && <p role="alert" className="mt-2 text-sm text-danger">{error}</p>}
+      {preview && (
+        <div className="mt-4 grid gap-4 sm:grid-cols-[160px_minmax(0,1fr)]">
+          <img src={preview.url} alt="" className="aspect-[4/3] w-full rounded-[3px] border border-line object-cover" />
+          <div className="flex flex-col gap-3">
+            <p className="tabular text-sm text-ink-3">{preview.width} x {preview.height} px</p>
+            <label className="flex flex-col gap-1.5 text-sm font-semibold">
+              Tên ảnh
+              <input value={name} onChange={(e) => setName(e.target.value)} className={inputClass} />
+            </label>
+            <label className="flex flex-col gap-1.5 text-sm font-semibold">
+              Mô tả cho người khiếm thị
+              <input value={alt} onChange={(e) => setAlt(e.target.value)} placeholder="VD: Cả nhà chụp trước cổng" className={inputClass} />
+            </label>
+          </div>
+        </div>
+      )}
+      <div className="mt-4 flex gap-2">
+        <Button onClick={save} disabled={!preview || busy}>{busy && preview ? "Đang thêm..." : "Thêm vào thư viện"}</Button>
+        <Button variant="ghost" onClick={onClose}>Huỷ</Button>
       </div>
     </div>
   );

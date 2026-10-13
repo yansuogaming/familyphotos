@@ -2,6 +2,8 @@
 // the real backend (see API_CONTRACT.md); otherwise mock data is returned.
 import * as mock from "./mock-data";
 import type {
+  PendingSignup,
+  RegisterInput,
   AiAccount,
   Device,
   ProfileUpdate,
@@ -27,6 +29,21 @@ import { mockRequireCaptcha } from "./security";
 import { practiceApi } from "./practice";
 
 export { ApiError, isMock } from "./core";
+
+// Mock sign-up: the emailed code is always 123456 in the demo (see DEMO_ACCOUNTS.txt).
+const MOCK_OTP = "123456";
+const pendingSignups = new Map<string, { input: RegisterInput; tries: number }>();
+const maskEmail = (e: string) => {
+  const [user, domain] = e.split("@");
+  return `${user.slice(0, 2)}${"*".repeat(Math.max(1, user.length - 2))}@${domain ?? ""}`;
+};
+const pendingFor = (id: string, email: string): PendingSignup => ({
+  id,
+  emailHint: maskEmail(email),
+  expiresAt: new Date(Date.now() + 10 * 60_000).toISOString(),
+  resendAt: new Date(Date.now() + 60_000).toISOString(),
+  codeLength: 6,
+});
 
 // Mock QR flow: pending until simulateScan(), then scanned, confirmed 3s later.
 const qrStarted = new Map<string, number>();
@@ -64,14 +81,51 @@ export const api = {
         return wait(600).then(() => { throw new ApiError(403, "Tài khoản này không có quyền quản trị."); });
       return fake({ user: account.user, token: "demo-admin" }, 700);
     },
-    register(input: { name: string; identifier: string; password: string; role: "member" | "guest"; inviteCode?: string; captchaToken?: string | null }): Promise<Session> {
+    /**
+     * Step 1 of sign-up: checks the details and emails a one-time code.
+     * No account exists until verifyEmail() succeeds.
+     */
+    register(input: RegisterInput): Promise<PendingSignup> {
       if (BASE) return http("/auth/register", { method: "POST", body: JSON.stringify(input) });
       try {
         mockRequireCaptcha(input.captchaToken);
       } catch (e) {
         return wait(300).then(() => { throw e; });
       }
-      return fake({ user: { ...mock.me, name: input.name, role: input.role }, token: "demo" }, 700);
+      const email = input.email.trim().toLowerCase();
+      if (mock.demoAccounts.some((a) => a.identifier === email))
+        return wait(500).then(() => { throw new ApiError(409, "Email này đã có tài khoản. Hãy đăng nhập."); });
+      if (input.role === "member" && !/^NHA-\d{4}$/i.test(input.inviteCode?.trim() ?? ""))
+        return wait(500).then(() => { throw new ApiError(400, "Mã mời không đúng hoặc đã hết hạn."); });
+      const id = crypto.randomUUID();
+      pendingSignups.set(id, { input: { ...input, email }, tries: 0 });
+      return fake(pendingFor(id, email), 800);
+    },
+    /** Step 2: the code from the email. Creates the account and signs in. */
+    verifyEmail(pendingId: string, code: string): Promise<Session> {
+      if (BASE) return http("/auth/register/verify", { method: "POST", body: JSON.stringify({ pendingId, code }) });
+      const p = pendingSignups.get(pendingId);
+      if (!p) return wait(400).then(() => { throw new ApiError(410, "Mã đã hết hạn. Bấm Gửi lại mã để nhận mã mới."); });
+      if (code !== MOCK_OTP) {
+        p.tries++;
+        const left = 5 - p.tries;
+        if (left <= 0) {
+          pendingSignups.delete(pendingId);
+          return wait(400).then(() => { throw new ApiError(429, "Nhập sai quá nhiều lần. Hãy đăng ký lại sau ít phút."); });
+        }
+        return wait(500).then(() => { throw new ApiError(400, `Mã chưa đúng. Còn ${left} lần thử.`); });
+      }
+      pendingSignups.delete(pendingId);
+      const { input } = p;
+      return fake({ user: { id: crypto.randomUUID(), name: input.name, role: input.role, email: input.email }, token: "demo" }, 700);
+    },
+    /** Send a fresh code. Allowed once resendAt has passed. */
+    resendCode(pendingId: string): Promise<PendingSignup> {
+      if (BASE) return http("/auth/register/resend", { method: "POST", body: JSON.stringify({ pendingId }) });
+      const p = pendingSignups.get(pendingId);
+      if (!p) return wait(400).then(() => { throw new ApiError(410, "Phiên đăng ký đã hết. Hãy điền lại thông tin."); });
+      p.tries = 0;
+      return fake(pendingFor(pendingId, p.input.email), 600);
     },
     createQrSession(): Promise<QrLoginSession> {
       if (BASE) return http("/auth/qr", { method: "POST" });

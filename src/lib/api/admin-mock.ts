@@ -126,7 +126,6 @@ const assistant: AssistantConfig = {
 const system: SystemSettings = {
   familyName: "Nhà Minh Quân",
   quotaPerUserGb: 5,
-  allowGuestSelfSignup: true,
   qrTtlSeconds: 60,
   ...SECURITY_DEFAULTS,
 };

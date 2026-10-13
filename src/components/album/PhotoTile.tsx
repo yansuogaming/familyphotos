@@ -2,7 +2,7 @@
 
 import { Check, PencilSimple } from "@/components/ui/icons";
 import { motion, useReducedMotion } from "motion/react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { useState, type KeyboardEvent, type ReactNode } from "react";
 import type { Photo } from "@/lib/api/types";
 

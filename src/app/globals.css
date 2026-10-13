@@ -155,6 +155,16 @@ a { text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
   background: color-mix(in oklch, var(--coral) 70%, transparent);
 }
 
+/* Phones: the margin moves in so the page keeps its width (no 80px gutter). */
+@media (max-width: 639px) {
+  .oli-margin::before {
+    left: 14px;
+  }
+  .oli-margin.pl-20 {
+    padding-left: 1.75rem;
+  }
+}
+
 /* Ruled memo strip beside each photo in an album sleeve. */
 .memo-lines {
   background-image: repeating-linear-gradient(

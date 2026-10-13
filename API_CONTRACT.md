@@ -15,7 +15,9 @@ Nguồn chuẩn của các kiểu dữ liệu: `src/lib/api/types.ts`. Frontend 
 |---|---|---|---|
 | POST | `/auth/login` | `{ identifier, password }` (identifier là email hoặc số điện thoại) | `Session`. Chỉ nhận người trong nhà và khách. Tài khoản `admin` trả `403` |
 | POST | `/admin/auth/login` | `{ identifier, password }` | `Session`. Trang `/admin` dùng endpoint này. Chỉ nhận `role: "admin"`, tài khoản khác trả `403` |
-| POST | `/auth/register` | `{ name, identifier, password, role: "member" \| "guest", inviteCode? }` | `Session`. Với khách: tài khoản ở trạng thái chờ duyệt |
+| POST | `/auth/register` | `RegisterInput { name, email, password, role, inviteCode?, captchaToken }` | `PendingSignup { id, emailHint, expiresAt, resendAt, codeLength }`. Gửi mã OTP về email, **chưa tạo tài khoản**. Email đã có tài khoản thì trả `409`. Mã mời sai thì trả `400` |
+| POST | `/auth/register/verify` | `{ pendingId, code }` | `Session`. Đúng mã thì tạo tài khoản và đăng nhập luôn. Sai mã trả `400`, message có số lần thử còn lại. Hết hạn trả `410`. Sai quá 5 lần trả `429` |
+| POST | `/auth/register/resend` | `{ pendingId }` | `PendingSignup` mới (mã mới). Gửi lại trước `resendAt` thì trả `429` |
 | POST | `/auth/logout` | | `204` |
 | GET | `/auth/me` | | `User` |
 
@@ -44,6 +46,13 @@ Các trạng thái: `pending | scanned | confirmed | expired`. Nếu sau này c�
 | DELETE | `/account` | | `{ purgeAt }`: đưa vào hàng chờ xoá 30 ngày, đăng nhập lại thì huỷ |
 
 Frontend lưu phiên đăng nhập trong `src/lib/session.ts`. Khi có backend, frontend gọi `GET /auth/me` lúc mở app để lấy lại thông tin người dùng.
+
+### Đăng ký có xác nhận email
+
+1. Người dùng điền thông tin, frontend gọi `POST /auth/register`. Backend kiểm tra captcha và dữ liệu, gửi mã 6 số về email (hạn 10 phút), rồi trả `PendingSignup`.
+2. Frontend hiện màn nhập mã. Người dùng nhập mã, frontend gọi `POST /auth/register/verify`.
+3. Đúng mã thì backend tạo tài khoản và set cookie phiên. Khách vào thẳng phần ảnh của riêng mình. Người trong nhà cần mã mời hợp lệ ở bước 1.
+4. "Gửi lại mã" chỉ hiện sau `resendAt` (60 giây).
 
 ## Ảnh
 

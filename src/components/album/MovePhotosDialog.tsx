@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "@/components/ui/icons";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { useState } from "react";
 import { buttonClass } from "@/components/ui/Button";
 import { mediaApi } from "@/lib/api/media";

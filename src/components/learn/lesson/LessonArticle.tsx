@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeft, ArrowRight, Check, NotePencil, Play, Sparkle } from "@/components/ui/icons";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import Link from "next/link";
 import { useState } from "react";
 import { RichText } from "@/components/learn/Math";

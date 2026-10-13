@@ -328,6 +328,24 @@ export const mediaApi = {
     return fake(c, 300);
   },
 
+  /**
+   * Add a photo from a web address. The backend downloads and stores its own copy
+   * (so the album never depends on someone else's link). `albumId: null`: loose photo.
+   */
+  async uploadFromUrl(albumId: string | null, url: string, opts: UploadOptions = {}): Promise<Photo> {
+    if (BASE) {
+      const path = albumId ? `/albums/${albumId}/photos/from-url` : "/photos/from-url";
+      return http<Photo>(path, { method: "POST", body: JSON.stringify({ url }), signal: opts.signal });
+    }
+    if (albumId === null) albumId = ensureLooseAlbum();
+    if (!accessFor(albumId)?.canUpload) throw new ApiError(403, "Bạn chỉ thêm được ảnh vào album của mình.");
+    await fakeUpload(new File([], "url"), opts);
+    const { width, height } = await readSize(url);
+    const photo: Photo = { id: crypto.randomUUID(), albumId, url, width, height, takenAt: new Date().toISOString().slice(0, 10), uploadedBy: meNow() };
+    mock.uploaded.push(photo);
+    return photo;
+  },
+
   /** `albumId: null` uploads a loose photo that belongs to no album. */
   async upload(albumId: string | null, file: File, opts: UploadOptions = {}): Promise<Photo> {
     if (BASE) {

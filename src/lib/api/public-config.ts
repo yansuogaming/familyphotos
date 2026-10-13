@@ -5,7 +5,6 @@ import { BASE, fake, http } from "./core";
 export interface PublicConfig {
   assistantSuggestions: string[];
   assistantGuestsAllowed: boolean;
-  allowGuestSelfSignup: boolean;
   qrTtlSeconds: number;
   captchaOnAuth: boolean;
   botCheckEnabled: boolean;
@@ -18,7 +17,6 @@ export function mockPublicConfig(): PublicConfig {
   return {
     assistantSuggestions: db.assistant.suggestions,
     assistantGuestsAllowed: db.assistant.guestsAllowed,
-    allowGuestSelfSignup: sys.allowGuestSelfSignup,
     qrTtlSeconds: sys.qrTtlSeconds,
     captchaOnAuth: sys.captchaOnAuth,
     botCheckEnabled: sys.botCheckEnabled,

@@ -76,8 +76,8 @@ Khung trợ lý ở mọi trang nên lấy `suggestions` từ đây (hiện đan
 
 | Method | Path | Body | Trả về |
 |---|---|---|---|
-| GET | `/admin/system` | | `SystemSettings { familyName, quotaPerUserGb, allowGuestSelfSignup, qrTtlSeconds }` |
+| GET | `/admin/system` | | `SystemSettings { familyName, quotaPerUserGb, qrTtlSeconds, captchaOnAuth, botCheckEnabled, botCheckMinutes }` |
 | PUT | `/admin/system` | `SystemSettings` | `SystemSettings` |
 | GET | `/admin/audit?limit=200` | | `AuditEntry[] { id, at, actor { id, name }, action, target }` (mới trước) |
 
-`allowGuestSelfSignup: false` thì `POST /auth/register` với `role: "guest"` mà không có mã mời trả `403`. `qrTtlSeconds` là hạn của mã QR đăng nhập (`POST /auth/qr`).
+Đăng ký luôn mở và luôn xác nhận email bằng mã OTP (xem API_CONTRACT.md). `qrTtlSeconds` là hạn của mã QR đăng nhập (`POST /auth/qr`).

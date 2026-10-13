@@ -264,6 +264,26 @@ export const adminApi = {
         return { ...m, usedIn: [] };
       }, 200);
     },
+    /** Add an image from a web address. The backend downloads and keeps its own copy. */
+    async addFromUrl(input: { url: string; name: string; alt: string; width: number; height: number }): Promise<MediaAsset> {
+      if (BASE) return http("/admin/media/from-url", json("POST", { url: input.url, name: input.name, alt: input.alt }));
+      return asAdmin(() => {
+        const m = {
+          id: `m-${crypto.randomUUID().slice(0, 8)}`,
+          url: input.url,
+          name: input.name,
+          alt: input.alt,
+          width: input.width,
+          height: input.height,
+          sizeBytes: 0,
+          uploadedAt: new Date().toISOString(),
+          uploadedBy: mockActor(),
+        };
+        writeDb((db) => ({ ...db, media: [m, ...db.media] }));
+        logMockAudit("Thêm ảnh từ URL vào thư viện", m.name);
+        return { ...m, usedIn: [] };
+      }, 300);
+    },
     update(id: string, patch: { name?: string; alt?: string }): Promise<MediaAsset> {
       if (BASE) return http(`/admin/media/${id}`, json("PATCH", patch));
       return asAdmin(() => {

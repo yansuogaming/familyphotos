@@ -2,7 +2,7 @@
 
 import { ArrowCounterClockwise, Check, Lightbulb, X, Morph, icons } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { type ReactNode, useId, useState } from "react";
 import { Math, RichText } from "@/components/learn/Math";
 import type { LessonBlock, QuizQuestion } from "@/lib/api/lesson-types";

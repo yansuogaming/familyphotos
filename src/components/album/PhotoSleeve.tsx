@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 
 /** A photo tucked into an album sleeve, with a ruled memo strip below. */
 export function PhotoSleeve({

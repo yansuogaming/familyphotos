@@ -2,7 +2,7 @@
 
 import { ArrowRight } from "@/components/ui/icons";
 import { motion, useReducedMotion } from "motion/react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { mediaApi } from "@/lib/api/media";

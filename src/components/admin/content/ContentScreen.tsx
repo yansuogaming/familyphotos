@@ -52,6 +52,7 @@ function validate(c: SiteContent): Errors {
   need("login.greetingTitle", c.login.greetingTitle, LIMIT.short);
   need("login.greeting", c.login.greeting, LIMIT.body);
   const r = c.register;
+  c.landing.shelf.forEach((a, i) => need(`landing.shelf.${i}.title`, a.title, LIMIT.short));
   need("register.title", r.title, LIMIT.short);
   need("register.lead", r.lead, LIMIT.body);
   section("register.member", r.member);
@@ -180,7 +181,7 @@ function Editor({ initial }: { initial: SiteContent }) {
         <div style={{ zoom: 0.34 }} className="pointer-events-none select-none">
           {page === "landing" && <LandingPreview c={draft.landing} />}
           {page === "login" && <LoginPreview c={draft.login} />}
-          {page === "register" && <RegisterPreview c={draft.register} cover={draft.login} sent={registerSent} />}
+          {page === "register" && <RegisterPreview c={draft.register} cover={{ ...draft.login, coverPhotos: draft.register.coverPhotos }} sent={registerSent} />}
         </div>
       </div>
     </div>
@@ -323,6 +324,21 @@ function LandingForm({ c, edit, err }: { c: SiteContent["landing"]; edit: Edit; 
         ))}
       </Group>
 
+      <Group title="Kệ album minh hoạ" description="Năm cuốn album ở mục Ảnh của trang chủ. Đây là ảnh minh hoạ cho khách lạ xem, không phải album thật của nhà.">
+        {c.shelf.map((a, i) => (
+          <div key={i} className="flex flex-col gap-4 rounded-[var(--radius-paper)] border border-line p-4">
+            <ImageField
+              label={`Album ${i + 1}`}
+              value={a.image}
+              defaultValue={defaultSite.landing.shelf[i].image}
+              altHint="Ảnh minh hoạ, có thể để trống phần mô tả."
+              onChange={(img) => edit(`landing.shelf.${i}.image`, (d) => void (d.landing.shelf[i].image = { url: img.url, alt: img.alt, mediaId: img.mediaId }))}
+            />
+            <Text label="Tên album" path={`landing.shelf.${i}.title`} value={a.title} max={LIMIT.short} err={err} onChange={(v) => edit(`landing.shelf.${i}.title`, (d) => void (d.landing.shelf[i].title = v))} />
+          </div>
+        ))}
+      </Group>
+
       {([
         ["photos", "Mục Ảnh"],
         ["chat", "Mục Chat riêng"],
@@ -356,7 +372,7 @@ const coverSlots = ["Ảnh nằm nghiêng bên trái", "Ảnh bên phải", "Ả
 function LoginForm({ c, edit, err }: { c: SiteContent["login"]; edit: Edit; err: Err }) {
   return (
     <div>
-      <Group title="Bìa album bên trái" description="Ba ảnh xếp chồng trên bìa xanh than, hiện ở trang đăng nhập và trang đăng ký trên máy tính.">
+      <Group title="Bìa album bên trái" description="Ba ảnh xếp chồng trên bìa xanh than của trang đăng nhập (trên máy tính).">
         {c.coverPhotos.map((p, i) => (
           <div key={i} className="rounded-[var(--radius-paper)] border border-line p-4">
             <ImageField
@@ -382,6 +398,19 @@ function RegisterForm({ c, edit, err, onFocusSent }: { c: SiteContent["register"
   return (
     <div>
       <div onFocus={() => onFocusSent(false)}>
+        <Group title="Bìa album bên trái" description="Ba ảnh xếp chồng trên bìa xanh than của trang đăng ký (trên máy tính). Đặt riêng, khác trang đăng nhập.">
+          {c.coverPhotos.map((p, i) => (
+            <div key={i} className="rounded-[var(--radius-paper)] border border-line p-4">
+              <ImageField
+                label={`Ảnh ${i + 1}: ${coverSlots[i]}`}
+                value={p}
+                defaultValue={defaultSite.register.coverPhotos[i]}
+                altHint="Ảnh trên bìa chỉ để trang trí, có thể để trống."
+                onChange={(img) => edit(`register.coverPhotos.${i}`, (d) => void (d.register.coverPhotos[i] = { url: img.url, alt: img.alt, mediaId: img.mediaId }))}
+              />
+            </div>
+          ))}
+        </Group>
         <Group title="Câu hỏi đầu trang">
           <Text label="Tiêu đề" path="register.title" value={c.title} max={LIMIT.short} err={err} onChange={(v) => edit("register.title", (d) => void (d.register.title = v))} />
           <Text label="Câu giải thích" path="register.lead" value={c.lead} max={LIMIT.body} err={err} multiline onChange={(v) => edit("register.lead", (d) => void (d.register.lead = v))} />
@@ -394,7 +423,7 @@ function RegisterForm({ c, edit, err, onFocusSent }: { c: SiteContent["register"
         </Group>
       </div>
       <div onFocus={() => onFocusSent(true)}>
-        <Group title="Thông báo sau khi gửi" description="Khách thấy dòng này sau khi gửi lời xin vào nhà.">
+        <Group title="Màn nhập mã xác nhận" description="Hiện sau khi người đăng ký bấm Gửi mã xác nhận. Địa chỉ email và thời hạn mã được thêm tự động phía sau.">
           <Text label="Tiêu đề" path="register.sentTitle" value={c.sentTitle} max={LIMIT.title} err={err} onChange={(v) => edit("register.sentTitle", (d) => void (d.register.sentTitle = v))} />
           <Text label="Nội dung" path="register.sentBody" value={c.sentBody} max={LIMIT.body} err={err} multiline onChange={(v) => edit("register.sentBody", (d) => void (d.register.sentBody = v))} />
         </Group>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "@/components/ui/Image";
 /* eslint-disable @next/next/no-img-element -- previews may be local data URLs */
 import { ArrowRight, BookOpenText, ChatsCircle, HouseLine, Images, LockKey, QrCode, Password, Sparkle, UserCirclePlus } from "@/components/ui/icons";
 import type { ReactNode } from "react";
@@ -86,7 +87,14 @@ export function LandingPreview({ c }: { c: SiteContent["landing"] }) {
         <h2 className="max-w-2xl text-5xl font-bold">{c.photos.title}</h2>
         <p className="mt-4 max-w-[58ch] text-lg text-ink-2">{c.photos.body}</p>
         <div className="mt-10 flex gap-6">
-          {[0, 1, 2, 3].map((i) => <div key={i} className="vinyl aspect-[4/5] w-56 rounded-[8px]" />)}
+          {c.shelf.slice(0, 4).map((a, i) => (
+            <div key={i} className="vinyl flex aspect-[4/5] w-56 flex-col rounded-[8px] p-3">
+              <div className="relative flex-1 overflow-hidden rounded-[3px]">
+                <Image src={a.image.url} alt="" fill sizes="224px" className="object-cover" />
+              </div>
+              <p className="mt-2 truncate rounded-[3px] bg-[oklch(0.97_0.008_275)] px-2 py-1 font-display text-sm font-semibold text-[oklch(0.25_0.045_265)]">{a.title}</p>
+            </div>
+          ))}
         </div>
       </section>
 

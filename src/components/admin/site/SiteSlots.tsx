@@ -1,9 +1,11 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 // Client islands that show admin-editable copy on the public pages.
 // They render the defaults on the server and swap in saved content after
 // hydration (useSiteContent), so the static shell never changes shape.
-import Image from "next/image";
+import { AlbumCover } from "@/components/album/AlbumCover";
+import Image from "@/components/ui/Image";
 import { useSiteContent } from "@/lib/api/site";
 import type { SiteContent } from "@/lib/api/site-types";
 
@@ -68,15 +70,35 @@ export function PrivacyPoints() {
 
 const coverPositions = ["-rotate-6 left-0 top-6", "rotate-3 right-0 top-0", "-rotate-1 left-12 top-24"];
 
-/** Three photos stacked on the closed album cover (login and register). */
+/** Three photos stacked on the closed album cover. Login and register each have their own set. */
 export function LoginCoverPhotos() {
-  const photos = useSiteContent().login.coverPhotos;
+  const c = useSiteContent();
+  const photos = usePathname().startsWith("/register") ? c.register.coverPhotos : c.login.coverPhotos;
   return (
     <>
       {photos.map((p, i) => (
         <div key={i} className={`absolute w-56 rounded-[4px] bg-[oklch(0.98_0.005_275)] p-2 pb-8 shadow-[0_18px_40px_-12px_oklch(0_0_0/0.5)] ${coverPositions[i] ?? coverPositions[0]}`}>
           <Image src={p.url} alt={p.alt} width={600} height={450} className="aspect-[4/3] w-full object-cover" sizes="224px" />
         </div>
+      ))}
+    </>
+  );
+}
+
+/** The landing shelf: illustrative albums the admin picks, never the family's real ones. */
+export function LandingShelf() {
+  const shelf = useSiteContent().landing.shelf;
+  return (
+    <>
+      {shelf.map((a, i) => (
+        <AlbumCover
+          key={i}
+          href="/login"
+          title={a.title}
+          coverUrl={a.image.url}
+          meta="Ảnh minh hoạ"
+          className="w-56 shrink-0 snap-start sm:w-64 lg:w-auto"
+        />
       ))}
     </>
   );

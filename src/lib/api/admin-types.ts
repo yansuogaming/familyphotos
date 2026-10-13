@@ -113,7 +113,6 @@ export interface AssistantConfig {
 export interface SystemSettings {
   familyName: string;
   quotaPerUserGb: number;
-  allowGuestSelfSignup: boolean;
   qrTtlSeconds: number;
   /** Cloudflare Turnstile on login, register and admin login. */
   captchaOnAuth: boolean;

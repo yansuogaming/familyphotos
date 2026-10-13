@@ -1,4 +1,4 @@
-// Types for practice (/learn/luyen-tap, /learn/on-tap, /learn/math), worked
+// Types for practice (/learn/practice, /learn/review), worked
 // textbook exercises (/learn/solutions), exams (/learn/exams), books
 // (/learn/books) and study tools (/learn/tools). Builds on lesson-types.ts.
 // Text fields marked "rich" may contain inline TeX between $...$.

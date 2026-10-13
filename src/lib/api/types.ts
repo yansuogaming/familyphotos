@@ -75,6 +75,28 @@ export interface Session {
   token: string;
 }
 
+export interface RegisterInput {
+  name: string;
+  email: string;
+  password: string;
+  role: "member" | "guest";
+  /** Members only. */
+  inviteCode?: string;
+  captchaToken?: string | null;
+}
+
+/** Sign-up waiting for the code sent by email. Nothing is created until the code is right. */
+export interface PendingSignup {
+  id: string;
+  /** Masked, e.g. "ba***@gmail.com". */
+  emailHint: string;
+  /** When the code stops working (ISO). */
+  expiresAt: string;
+  /** Earliest moment "Gửi lại mã" is allowed (ISO). */
+  resendAt: string;
+  codeLength: number;
+}
+
 export type QrStatus = "pending" | "scanned" | "confirmed" | "expired";
 
 export interface QrLoginSession {
@@ -143,7 +165,7 @@ export interface LearningToday {
 }
 
 export interface LearningArea {
-  id: "toan" | "cac-mon" | "de-thi" | "sach";
+  id: "cac-mon" | "de-thi" | "sach";
   title: string;
   description: string;
   itemCount: number;

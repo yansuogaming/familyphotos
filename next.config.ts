@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { OPTIMIZED_IMAGE_HOSTS } from "./src/lib/image-hosts";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
@@ -18,7 +19,8 @@ const nextConfig: NextConfig = {
       ["/hoc/on-tap", "/learn/review"],
       ["/hoc/giai-bai-tap", "/learn/solutions"],
       ["/hoc/tien-ich", "/learn/tools"],
-      ["/hoc/toan", "/learn/math"],
+      ["/hoc/toan", "/learn/theory"],
+      ["/learn/math", "/learn/theory"],
       ["/hoc/de-thi", "/learn/exams"],
       ["/hoc/sach", "/learn/books"],
       ["/quan-tri", "/admin"],
@@ -35,10 +37,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     // Demo photos. Replace with the backend's media host.
-    remotePatterns: [
-      { protocol: "https", hostname: "picsum.photos" },
-      { protocol: "https", hostname: "fastly.picsum.photos" },
-    ],
+    remotePatterns: OPTIMIZED_IMAGE_HOSTS.map((hostname) => ({ protocol: "https" as const, hostname })),
   },
   turbopack: {
     rules: {

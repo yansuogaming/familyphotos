@@ -13,7 +13,7 @@ import {
   X,
 } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion, type PanInfo } from "motion/react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Avatar } from "@/components/ui/Avatar";
 import { mediaApi } from "@/lib/api/media";

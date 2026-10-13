@@ -53,7 +53,7 @@ Mọi URL đều bằng tiếng Anh. URL tiếng Việt cũ (`/dang-nhap`, `/anh
 | `/learn/theory` | Đọc bài (`?grade=9&subject=toan&lesson=...`): mục lục ẩn/hiện, toàn màn hình, video, công thức, tự kiểm |
 | `/learn/practice`, `/learn/review` | Luyện tập có chấm điểm (`?lesson=`), ôn câu sai |
 | `/learn/solutions` | Lời giải SGK theo bộ sách (`?exercise=`) |
-| `/learn/math`, `/learn/exams`, `/learn/books` | Dạng bài Toán, thư viện đề (`?exam=&take=1`), kệ sách (`?book=&page=`) |
+| `/learn/exams`, `/learn/books` | Thư viện đề (`?exam=&take=1`), kệ sách (`?book=&page=`) |
 | `/learn/tools` | Máy tính, giải phương trình, bảng công thức, đồng hồ học, đổi đơn vị (`?tool=`) |
 | `/assistant` | Trợ lý AI toàn trang. Nút nổi ở góc phải có trên mọi trang trong app |
 | `/settings` | Hồ sơ, bảo mật, thiết bị, API AI (khách), dung lượng, riêng tư, giao diện, thông báo |
