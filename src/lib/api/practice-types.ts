@@ -111,23 +111,6 @@ export interface Mistake {
 // ---------------------------------------------------------------------------
 // Góc Toán
 
-export interface MathSkill {
-  id: string;
-  title: string; // "Nhận biết phương trình bậc nhất hai ẩn"
-  /** Practice set to open, or null while the content is being written. */
-  setId: string | null;
-  questionCount: number;
-  /** Questions answered correctly at least once (from attempts). */
-  mastered: number;
-}
-
-export interface MathChapter {
-  id: string;
-  index: number;
-  title: string;
-  skills: MathSkill[];
-}
-
 // ---------------------------------------------------------------------------
 // Giải bài tập SGK
 

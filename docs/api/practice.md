@@ -1,6 +1,6 @@
 # API Luyện tập, Giải bài tập, Đề thi, Sách, Tiện ích
 
-Kiểu dữ liệu: `src/lib/api/practice-types.ts` (dựa trên `QuizQuestion`, `Subject`, `Video` trong `lesson-types.ts`). Hàm gọi: `practiceApi` trong `src/lib/api/practice.ts`. Dữ liệu mẫu: `src/lib/api/practice-mock.ts`. Quy ước chung (cookie, lỗi `{ message }`) như `API_CONTRACT.md`.
+Kiểu dữ liệu: `src/lib/api/practice-types.ts` (dựa trên `QuizQuestion`, `Subject`, `Video` trong `lesson-types.ts`). Hàm gọi: `practiceApi` trong `src/lib/api/practice.ts`. Quy ước chung (cookie, lỗi `{ message }`) như `API_CONTRACT.md`.
 
 Chữ đánh dấu "rich" có thể chứa công thức TeX giữa hai dấu `$...$`.
 
@@ -30,7 +30,6 @@ Câu hỏi luyện tập gửi kèm đáp án để chấm ngay trên máy (đâ
 | GET | `/practice/attempts?set=:id` | | `PracticeAttempt[]`, mới nhất trước |
 | GET | `/practice/mistakes` | | `Mistake[]`: câu sai chưa sửa, kèm bản sao câu hỏi, mới nhất trước |
 | DELETE | `/practice/mistakes/:questionId` | | `204`. Người học tự bỏ câu khỏi danh sách |
-| GET | `/practice/math/:grade` | | `MathChapter[]`: chương, dạng bài (`setId` null là đang soạn), `questionCount`, `mastered` (số câu đã từng làm đúng) |
 
 ## Giải bài tập SGK
 
@@ -52,7 +51,7 @@ Câu hỏi luyện tập gửi kèm đáp án để chấm ngay trên máy (đâ
 | GET | `/exams/:id` | | `ExamDetail { ...ExamSummary, parts: ExamPart[] }`. Đề chỉ có PDF thì `online: false` và `parts: []` |
 | POST | `/exams/:id/submissions` | `ExamSubmission { examId, answers: { [questionId]: number \| string \| boolean }, usedSec }` | `ExamResult { score, correct, total, usedSec, submittedAt }`. Điểm = tổng `pointsEach` các câu đúng, quy về thang 10 |
 
-`pdfUrl` là link tải đề (mock dùng một file PDF mẫu).
+`pdfUrl` là link tải đề.
 
 ## Sách
 
@@ -74,4 +73,3 @@ Máy tính, giải phương trình, đồng hồ học và đổi đơn vị ch�
 ## Ghi chú cho backend
 
 - Nếu muốn giấu đáp án đề thi khi đang làm: trả `ExamDetail` không có `answerIndex` / `answer`, rồi trong `ExamResult` thêm `key: Record<questionId, AnswerValue>` và `explanations`. Báo frontend để đổi phần chấm sang dùng `key`.
-- Mock lưu kết quả bằng `localStorage` (khoá `fp-mock:practice:*`), nên tải lại trang vẫn giữ câu sai, điểm, dấu trang.

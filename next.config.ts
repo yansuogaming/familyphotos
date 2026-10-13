@@ -36,7 +36,7 @@ const nextConfig: NextConfig = {
     return map.map(([source, destination]) => ({ source, destination, permanent: false }));
   },
   images: {
-    // Demo photos. Replace with the backend's media host.
+    // Hosts in src/lib/image-hosts.ts. Add the backend's media host there.
     remotePatterns: OPTIMIZED_IMAGE_HOSTS.map((hostname) => ({ protocol: "https" as const, hostname })),
   },
   turbopack: {

@@ -19,7 +19,7 @@ const examples = [
   },
 ];
 
-export function AiDemo() {
+export function AiPreview() {
   const [active, setActive] = useState(0);
   return (
     <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">

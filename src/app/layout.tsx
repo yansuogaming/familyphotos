@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro, Bricolage_Grotesque, Patrick_Hand } from "next/font/google";
 import { Suspense } from "react";
 import { HumanCheck } from "@/components/security/HumanCheck";
+import { SessionSync } from "@/components/shell/SessionSync";
 import { AppToaster } from "@/components/ui/Toaster";
 import "./globals.css";
 
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Suspense fallback={null}>
           <HumanCheck />
         </Suspense>
+        <SessionSync />
         <AppToaster />
       </body>
     </html>

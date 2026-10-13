@@ -4,7 +4,7 @@ import { ArrowClockwise, CheckCircle, DeviceMobileCamera } from "@/components/ui
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { api, isMock } from "@/lib/api/client";
+import { api } from "@/lib/api/client";
 import { session as sessionStore } from "@/lib/session";
 import type { QrLoginSession, QrLoginState } from "@/lib/api/types";
 
@@ -143,14 +143,6 @@ export function QrLogin({ compact = false, redirectTo = "/photos" }: { compact?:
               Mở Family Photos trên điện thoại, chọn <span className="font-semibold text-ink">Quét mã</span>.
               {view.kind === "live" && <span className="tabular"> Còn {secondsLeft} giây.</span>}
             </p>
-            {isMock && !compact && view.kind === "live" && (
-              <button
-                onClick={() => api.auth.simulateScan(view.session.id)}
-                className="mt-3 text-sm font-semibold text-coral-ink underline decoration-dotted"
-              >
-                Demo: giả lập điện thoại quét
-              </button>
-            )}
           </>
         )}
       </div>

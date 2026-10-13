@@ -6,10 +6,9 @@ Frontend: `src/lib/api/security.ts`, `src/components/security/*`.
 
 | Biến | Ở đâu | Ý nghĩa |
 |---|---|---|
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Frontend (`.env.local`) | Site key của Turnstile. Không đặt thì frontend dùng widget demo |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Frontend (`.env.local`) | Site key của Turnstile. Không đặt thì frontend không hiện captcha |
 | `TURNSTILE_SECRET_KEY` | Backend | Secret key, dùng để gọi `siteverify` |
 
-Khi phát triển trên máy, có thể dùng test key luôn qua của Cloudflare: site key `1x00000000000000000000AA`, secret key `1x0000000000000000000000000000000AA`.
 
 Mỗi token chỉ dùng được một lần. Backend kiểm tra token bằng `POST https://challenges.cloudflare.com/turnstile/v0/siteverify` với `secret`, `response` (là token) và `remoteip`. Nên đối chiếu thêm trường `action`: frontend gửi `login`, `register`, `admin-login` hoặc `page`.
 

@@ -22,8 +22,6 @@ import { LoadError } from "@/components/album/PhotosScreen";
 import { ToastProvider, useToast } from "@/components/settings/shared";
 import { chatExtApi, previewOf } from "@/lib/api/chat-ext";
 import type { ChatConversation, ChatEvent, ChatMessage, Contact, SendInput } from "@/lib/api/chat-ext-types";
-import { isMock } from "@/lib/api/core";
-import { me, userById } from "@/lib/api/mock-data";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { useSession } from "@/lib/session";
 import { ChatBubble, matches } from "./ChatBubble";
@@ -79,7 +77,7 @@ type ListState = { status: "loading" } | { status: "error" } | { status: "ready"
 function Chat() {
   const toast = useToast();
   const s = useSession();
-  const myId = isMock ? me.id : (s?.user.id ?? me.id);
+  const myId = s?.user.id ?? "";
   const [state, setState] = useState<ListState>({ status: "loading" });
   const [nonce, setNonce] = useState(0);
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -138,7 +136,7 @@ function Chat() {
   }, []);
 
   const nameOf = useCallback(
-    (id: string) => (id === myId ? "Bạn" : (contacts.find((c) => c.id === id)?.name ?? userById(id)?.name ?? "Người trong nhà")),
+    (id: string) => (id === myId ? "Bạn" : (contacts.find((c) => c.id === id)?.name ?? "Người trong nhà")),
     [contacts, myId],
   );
 

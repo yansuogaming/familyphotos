@@ -13,7 +13,7 @@ Frontend: `src/lib/api/ai.ts`, kiểu dữ liệu trong `ai-types.ts`.
 
 ## Bảo mật khoá
 
-- **Lưu khoá:** API key chỉ đi một chiều, từ frontend lên. Backend lưu mã hoá và **không bao giờ trả lại khoá đầy đủ**, chỉ trả `keyHint` (ví dụ `sk-ant-...4f2c`).
+- **Lưu khoá:** API key chỉ đi một chiều, từ frontend lên. Backend lưu mã hoá và **không bao giờ trả lại khoá đầy đủ**, chỉ trả `keyHint` gồm 4 ký tự cuối (ví dụ `....4f2c`).
 - **Giữ nguyên khoá cũ:** khi `PUT` mà không gửi `apiKey`, backend giữ nguyên khoá đã lưu.
 - **Gọi nhà cung cấp AI:** chỉ backend gọi, frontend không gọi trực tiếp.
 - **Kiểm tra quyền khi trả lời:** `POST /assistant/messages` phải tự kiểm tra quyền theo bảng trên. Không được dùng thì trả `403` kèm lý do.

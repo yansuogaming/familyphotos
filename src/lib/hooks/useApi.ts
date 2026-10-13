@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type State<T> = { status: "loading" } | { status: "error"; error: unknown } | { status: "ready"; data: T };
 
-/** Minimal loader for the demo. Swap for TanStack Query when the backend lands. */
+/** Minimal loader: status, data and a reload function. */
 export function useApi<T>(load: () => Promise<T>, deps: unknown[] = []) {
   const [nonce, setNonce] = useState(0);
   const key = `${JSON.stringify(deps)}:${nonce}`;

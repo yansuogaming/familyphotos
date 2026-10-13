@@ -107,7 +107,7 @@ function QrSignInBlock() {
         {tried && (
           <p role="status" className="mt-3 max-w-[56ch] text-sm text-ink-2">
             {isPhone
-              ? "Bản demo chưa mở camera. Khi nối backend, nút này mở camera để quét mã trên máy tính."
+              ? "Hãy mở camera của điện thoại hoặc ứng dụng quét mã, rồi hướng vào mã QR trên máy tính."
               : "Bạn đang dùng máy tính. Mở trang Cài đặt này trên điện thoại để quét mã."}
           </p>
         )}

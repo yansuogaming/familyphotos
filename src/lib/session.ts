@@ -1,8 +1,8 @@
 "use client";
 
-// Signed-in user, shared across the app. In mock mode it lives in localStorage;
-// with a real backend, the cookie is the source of truth and this is a cache
-// filled from GET /auth/me.
+// Signed-in user, shared across the app. The backend's httpOnly cookie is the real
+// credential; this only caches who is signed in (no token) so the UI renders at once.
+// It is re-checked against GET /auth/me (see SessionSync) and cleared on any 401.
 import { useSyncExternalStore } from "react";
 import type { Session, User } from "./api/types";
 
@@ -30,8 +30,9 @@ function emit() {
 
 export const session = {
   get: read,
-  set(s: Session) {
-    localStorage.setItem(KEY, JSON.stringify(s));
+  set(s: Pick<Session, "user">) {
+    // never persist a token, even if one is returned
+    localStorage.setItem(KEY, JSON.stringify({ user: s.user }));
     emit();
   },
   updateUser(patch: Partial<User>) {

@@ -1,6 +1,6 @@
 # API soạn học liệu bằng AI
 
-Module frontend: `src/lib/api/lesson-ai.ts` (export `lessonAiApi`). Kiểu dữ liệu: `src/lib/api/lesson-ai-types.ts`. Mock nằm ngay trong `lesson-ai.ts`.
+Module frontend: `src/lib/api/lesson-ai.ts` (export `lessonAiApi`). Kiểu dữ liệu: `src/lib/api/lesson-ai-types.ts`.
 Dùng ở: trang soạn bài `/admin/lessons` (nút "Soạn bằng AI" ở bài đang mở, nút "Dàn ý bằng AI" ở mục lục).
 
 Quy ước chung như `API_CONTRACT.md`: JSON UTF-8, cookie httpOnly, lỗi trả `{ "message": "..." }` bằng tiếng Việt.

@@ -1,6 +1,6 @@
 import { ArrowRight, BookOpenText, ChatsCircle, Images, LockKey, Sparkle } from "@/components/ui/icons";
 import Link from "next/link";
-import { AiDemo } from "@/components/ai/AiDemo";
+import { AiPreview } from "@/components/ai/AiPreview";
 import { AreaIndex } from "@/components/learn/AreaIndex";
 import { AlbumSpread } from "@/components/album/AlbumSpread";
 import { Logo } from "@/components/brand/Logo";
@@ -10,7 +10,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { QrLogin } from "@/components/ui/QrLogin";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LandingShelf, HeroTitle, PrivacyPoints, SiteText } from "@/components/admin/site/SiteSlots";
-import { learningAreas } from "@/lib/api/mock-data";
+import { learnAreas } from "@/lib/learn-areas";
 
 const nav = [
   { href: "#photos", label: "Ảnh", icon: Images },
@@ -82,7 +82,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Chat riêng: the real conversation component, demo family */}
+        {/* Chat riêng: the real conversation component with sample messages */}
         <section id="chat" className="scroll-mt-20 py-20 lg:py-28">
           <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-12">
             <div className="lg:col-span-5 lg:pt-6">
@@ -110,7 +110,7 @@ export default function Home() {
               </div>
 
               <div className="mt-14">
-                <AreaIndex areas={learningAreas} linkTo="/login" />
+                <AreaIndex areas={learnAreas} linkTo="/login" />
               </div>
             </div>
           </div>
@@ -123,7 +123,7 @@ export default function Home() {
             <p className="mt-4 mb-12 max-w-[56ch] text-lg text-ink-2">
               <SiteText k="landing.assistant.body" />
             </p>
-            <AiDemo />
+            <AiPreview />
           </div>
         </section>
 

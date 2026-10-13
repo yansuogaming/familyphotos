@@ -64,15 +64,9 @@ export interface Device {
   current: boolean;
 }
 
-export interface AiAccount {
-  provider: "claude" | "openai";
-  connected: boolean;
-  label?: string; // e.g. connected account email
-}
-
+/** Sign-in result. The credential itself is the backend's httpOnly cookie. */
 export interface Session {
   user: User;
-  token: string;
 }
 
 export interface RegisterInput {
@@ -170,19 +164,6 @@ export interface LearningArea {
   description: string;
   itemCount: number;
   href: string;
-}
-
-export interface Topic {
-  index: number;
-  title: string;
-}
-
-export interface TopicDetail extends Topic {
-  grade: number;
-  subject: string;
-  outcomes: string[];
-  sgkLessons: string[];
-  notes: { title: string; keyPoint: string }[];
 }
 
 export interface AssistantMessage {

@@ -1,4 +1,4 @@
-import { persisted } from "./core";
+// Default copy and images of the public pages, used until the backend returns its own.
 import type { SiteContent } from "./site-types";
 
 const album = (seed: string) => `https://picsum.photos/seed/fp-${seed}/800/600`;
@@ -74,4 +74,3 @@ export const defaultSite: SiteContent = {
   },
 };
 
-export const siteStore = persisted<SiteContent>("site", defaultSite);

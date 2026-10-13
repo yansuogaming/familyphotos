@@ -215,8 +215,6 @@ function VideoList({ videos, onPlay }: { videos: Video[]; onPlay: (v: Video) => 
                 alt=""
                 fill
                 sizes="(min-width: 640px) 340px, 90vw"
-                // Hosts outside next.config remotePatterns (admin uploads) load as-is.
-                unoptimized={!/^https:\/\/(fastly\.)?picsum\.photos\//.test(v.thumbnailUrl)}
                 className="object-cover transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
               />
               <span className="absolute inset-0 flex items-center justify-center">

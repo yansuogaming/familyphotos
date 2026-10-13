@@ -88,12 +88,9 @@ export interface MediaAsset {
 }
 
 export interface MediaUpload {
+  file: File;
   name: string;
   alt: string;
-  dataUrl: string; // mock; real backend takes multipart
-  width: number;
-  height: number;
-  sizeBytes: number;
 }
 
 export type AiProvider = "claude" | "openai";
@@ -123,8 +120,6 @@ export interface SystemSettings {
   /** Minutes a passed human check stays valid. */
   botCheckMinutes: number;
 }
-
-export const SECURITY_DEFAULTS = { captchaOnAuth: true, botCheckEnabled: true, botCheckMinutes: 20, siteUrl: "" } as const;
 
 export interface AuditEntry {
   id: string;

@@ -8,6 +8,7 @@ import { api } from "@/lib/api/client";
 import { slugify } from "@/lib/api/lessons";
 import { useApi } from "@/lib/hooks/useApi";
 import { useSession } from "@/lib/session";
+import { learnAreas } from "@/lib/learn-areas";
 import { AreaIndex } from "./AreaIndex";
 import { DailyTicks } from "./DailyTicks";
 
@@ -86,9 +87,10 @@ export function LearnHome() {
 
       <h2 className="mt-14 text-2xl font-bold">Mục lục</h2>
       <div className="mt-2">
-        {areas.status === "loading" && <div className="h-48 animate-pulse rounded bg-paper-2" />}
-        {areas.status === "error" && <LoadError onRetry={areas.reload} what="mục lục" />}
-        {areas.status === "ready" && <AreaIndex areas={areas.data} />}
+        {/* the table of contents is fixed; counts appear once the API answers */}
+        <AreaIndex
+          areas={learnAreas.map((a) => ({ ...a, itemCount: areas.status === "ready" ? areas.data.find((d) => d.id === a.id)?.itemCount : undefined }))}
+        />
       </div>
     </div>
   );

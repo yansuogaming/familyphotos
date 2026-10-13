@@ -1,6 +1,6 @@
 # API Chat riêng (đính kèm, cảm xúc, trả lời, nhóm, gọi video)
 
-Frontend gọi qua `src/lib/api/chat-ext.ts` (`chatExtApi`). Kiểu dữ liệu: `src/lib/api/chat-ext-types.ts`, dựa trên `Conversation`, `Message`, `Attachment` trong `src/lib/api/types.ts`. Mock: `src/lib/api/chat-ext-mock.ts`.
+Frontend gọi qua `src/lib/api/chat-ext.ts` (`chatExtApi`). Kiểu dữ liệu: `src/lib/api/chat-ext-types.ts`, dựa trên `Conversation`, `Message`, `Attachment` trong `src/lib/api/types.ts`.
 
 Quy ước chung giống `API_CONTRACT.md`.
 
@@ -48,7 +48,6 @@ Frontend mở `ws(s)://<NEXT_PUBLIC_API_URL>/realtime` (cookie phiên), nhận c
 | `seen` | `conversationId, userId, messageId` | Ai đó đã đọc tới tin |
 | `reaction` | `messageId, reactions` | Cảm xúc của một tin thay đổi |
 
-Mock mô phỏng: sau khi bạn gửi, người kia "đã xem", "đang gõ" rồi trả lời một câu ngắn.
 
 ## Gọi video
 
@@ -57,4 +56,4 @@ Mock mô phỏng: sau khi bạn gửi, người kia "đã xem", "đang gõ" rồ
 | POST | `/conversations/:id/calls` | `{ video: true }` | `CallSession { id, conversationId, iceServers }` |
 | DELETE | `/calls/:id` | | `204`: kết thúc |
 
-Tín hiệu WebRTC (offer, answer, ICE) sẽ đi qua cùng kết nối `/realtime`, định dạng bàn khi làm thật. Hiện màn gọi chỉ bật camera của mình và giả lập phía bên kia.
+Tín hiệu WebRTC (offer, answer, ICE) sẽ đi qua cùng kết nối `/realtime`, định dạng bàn khi làm thật. Hiện màn gọi bật camera của mình; hình của người kia hiện khi backend báo đã kết nối.

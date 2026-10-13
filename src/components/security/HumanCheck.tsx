@@ -8,7 +8,7 @@ import { ApiError } from "@/lib/api/core";
 import { publicConfigApi } from "@/lib/api/public-config";
 import { securityApi, type HumanPass } from "@/lib/api/security";
 import { useApi } from "@/lib/hooks/useApi";
-import { Turnstile } from "./Turnstile";
+import { captchaAvailable, Turnstile } from "./Turnstile";
 
 const KEY = "fp-human";
 const listeners = new Set<() => void>();
@@ -46,7 +46,7 @@ export function HumanCheck() {
   const config = useApi(publicConfigApi.get);
   // Server render: assume fine and draw nothing; the client decides after hydration.
   const valid = useSyncExternalStore(subscribe, hasValidPass, () => true);
-  const enabled = config.status === "ready" && config.data.botCheckEnabled;
+  const enabled = captchaAvailable && config.status === "ready" && config.data.botCheckEnabled;
   const minutes = config.status === "ready" ? config.data.botCheckMinutes : 20;
 
   if (!enabled || valid) return null;

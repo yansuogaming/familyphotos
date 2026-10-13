@@ -70,7 +70,7 @@ Trạng thái mã do frontend suy ra: đã thu hồi (`revoked`), hết hạn (`
 | GET | `/admin/assistant` | | `AssistantConfig { systemPrompt, suggestions[], guestsAllowed, kidDailyLimit (0 = không giới hạn), provider: "claude" \| "openai" }` |
 | PUT | `/admin/assistant` | `AssistantConfig` | `AssistantConfig` |
 
-Khung trợ lý ở mọi trang nên lấy `suggestions` từ đây (hiện đang đọc `assistantSuggestions` trong mock-data). `POST /assistant/messages` phải áp `guestsAllowed` (khách bị chặn trả `403`) và `kidDailyLimit` (quá giới hạn trả `429` kèm `message`).
+Khung trợ lý ở mọi trang lấy câu gợi ý qua `GET /config/public` (`assistantSuggestions`). `POST /assistant/messages` phải áp `guestsAllowed` (khách bị chặn trả `403`) và `kidDailyLimit` (quá giới hạn trả `429` kèm `message`).
 
 ## Cài đặt hệ thống và nhật ký
 

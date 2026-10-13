@@ -1,6 +1,6 @@
 # API bài học (Lý thuyết)
 
-Module frontend: `src/lib/api/lessons.ts` (export `lessonsApi`). Kiểu dữ liệu: `src/lib/api/lesson-types.ts`. Mock: `src/lib/api/lessons-mock.ts`.
+Module frontend: `src/lib/api/lessons.ts` (export `lessonsApi`). Kiểu dữ liệu: `src/lib/api/lesson-types.ts`.
 Dùng ở: trang đọc `/learn/theory`, trang luyện tập `/learn/practice`, trang soạn bài `/admin/lessons`.
 
 Quy ước chung như `API_CONTRACT.md`: JSON UTF-8, cookie httpOnly, lỗi trả `{ "message": "..." }`.
@@ -40,4 +40,3 @@ Tìm không phân biệt hoa thường. Gõ không dấu ("phuong trinh") thì t
 - `Video.url` phải nhúng được trong `<iframe>` (ví dụ `https://www.youtube.com/embed/<id>`). Frontend tự thêm `autoplay=1&rel=0`.
 - `Video.thumbnailUrl` và ảnh trong khối `image`: nên dùng host của backend; nhớ thêm host vào `images.remotePatterns` trong `next.config.ts`.
 - Bài có `sections: []` hiện trạng thái "Bài này đang được soạn".
-- Mock lưu thay đổi trong localStorage (`fp-mock:lessons`, `fp-mock:outlines`) nên chỉnh ở trang quản trị hiện ngay trên trang đọc.

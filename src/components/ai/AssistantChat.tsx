@@ -4,7 +4,13 @@ import { Microphone, PaperPlaneRight, Plus, Sparkle, Waveform } from "@/componen
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api } from "@/lib/api/client";
-import { assistantSuggestions as defaultSuggestions } from "@/lib/api/mock-data";
+/** Shown until the admin sets the family's own suggestions. */
+const defaultSuggestions = [
+  "Giải thích cho con lớp 5 vì sao bầu trời màu xanh",
+  "Dịch sang tiếng Anh: Cả nhà đi Đà Lạt",
+  "Lên kế hoạch học tuần này",
+  "Gửi ảnh trong chat thế nào?",
+];
 import { aiApi } from "@/lib/api/ai";
 import { publicConfigApi } from "@/lib/api/public-config";
 import { useApi } from "@/lib/hooks/useApi";

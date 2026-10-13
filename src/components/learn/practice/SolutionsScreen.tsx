@@ -50,7 +50,7 @@ export function SolutionsScreen() {
   const selected = openId ?? (wide ? items[0]?.id : undefined);
   const open = (id: string | null) => router.push(id ? `${pathname}?exercise=${id}` : pathname, { scroll: !wide });
 
-  const resetDemo = () => {
+  const showSample = () => {
     setGrade(9);
     setSubject("toan");
     setSeries("ket-noi");
@@ -127,7 +127,7 @@ export function SolutionsScreen() {
             {list.status === "error" && <LoadError onRetry={list.reload} what="danh sách bài tập" />}
             {list.status === "ready" &&
               (items.length === 0 ? (
-                <EmptyNote title="Chưa có lời giải cho lựa chọn này" action={<Button variant="secondary" onClick={resetDemo}>Xem Toán 9, Kết nối tri thức</Button>}>
+                <EmptyNote title="Chưa có lời giải cho lựa chọn này" action={<Button variant="secondary" onClick={showSample}>Xem Toán 9, Kết nối tri thức</Button>}>
                   {page ? `Trang ${page} chưa có bài tập nào được giải. ` : ""}Hiện đã có lời giải Toán 9 sách Kết nối tri thức, các sách khác đang được soạn.
                 </EmptyNote>
               ) : (

@@ -2,7 +2,7 @@
 
 Web riêng của một gia đình: kho ảnh, chat trong nhà, góc học tập cho các con (lớp 1 đến 12), trợ lý AI và khu quản trị.
 
-Repo này **chỉ có frontend**. Tất cả dữ liệu đi qua `src/lib/api/`. Nếu chưa đặt `NEXT_PUBLIC_API_URL`, app tự dùng dữ liệu mock nên chạy được ngay, chưa cần backend.
+Repo này **chỉ có frontend**. Tất cả dữ liệu đi qua `src/lib/api/` và lấy từ backend ở địa chỉ `NEXT_PUBLIC_API_URL`. Repo không có dữ liệu mẫu hay tài khoản dùng thử. Chưa có backend thì các màn vẫn mở được nhưng chỉ hiện trạng thái lỗi kết nối.
 
 ## Chạy dự án
 
@@ -10,6 +10,7 @@ Cần Node.js 20 trở lên.
 
 ```bash
 npm install
+cp .env.example .env.local   # rồi điền NEXT_PUBLIC_API_URL
 npm run dev          # http://localhost:3000
 ```
 
@@ -21,14 +22,6 @@ npm run dev          # http://localhost:3000
 | `npm run lint` | ESLint |
 | `npx tsc --noEmit` | Kiểm tra kiểu |
 
-### Tài khoản demo (chỉ dùng với mock)
-
-Có 3 tài khoản demo: người trong nhà, khách và quản trị (vào được `/admin/dashboard`). Email và mật khẩu nằm trong file `DEMO_ACCOUNTS.txt`. File này không được đưa lên git, hãy xin từ người quản lý dự án.
-
-Tài khoản demo không được hiện trên giao diện. Muốn thử đăng nhập bằng QR khi chưa có app điện thoại: mở tab "Mã QR", bấm "Demo: giả lập điện thoại quét".
-
-Bản demo lưu các thay đổi trong `localStorage` của trình duyệt (khoá bắt đầu bằng `fp-mock:`). Muốn quay về dữ liệu gốc thì xoá các khoá này, hoặc bấm "Khôi phục mặc định" trong trang quản trị.
-
 ## Công nghệ
 
 - Next.js 16.4 (App Router, `cacheComponents`), React 19, TypeScript
@@ -37,7 +30,7 @@ Bản demo lưu các thay đổi trong `localStorage` của trình duyệt (kho�
 - Icon: [Morphicons](https://www.morphicons.com/) (biến hình giữa các icon) vẽ các icon nét của `lucide`, gói gọn trong `src/components/ui/icons.tsx`
 - Font qua `next/font`: Bricolage Grotesque, Be Vietnam Pro, Patrick Hand (cả ba có đủ dấu tiếng Việt)
 
-> Next.js 16 khác nhiều so với các bản cũ. Trước khi dùng API lạ, đọc tài liệu đi kèm trong `node_modules/next/dist/docs/` (xem `AGENTS.md`).
+> Next.js 16 khác nhiều so với các bản cũ. Trước khi dùng API lạ, đọc tài liệu đi kèm trong `node_modules/next/dist/docs/`.
 
 ## Các trang
 
@@ -63,7 +56,7 @@ Mọi URL đều bằng tiếng Anh. URL tiếng Việt cũ (`/dang-nhap`, `/anh
 | `/admin/members`, `/admin/albums` | Thành viên, duyệt khách (`#requests`), mã mời (`#invites`); album |
 | `/admin/lessons` | Soạn học liệu |
 | `/admin/assistant` | Trợ lý AI: lời nhắc, câu gợi ý, ai được dùng, khách dùng chung API, kết nối API AI chung |
-| `/admin/system` | Tên nhà, dung lượng, khách tự đăng ký, mã QR, chống bot (captcha, kiểm tra khi vào trang, thời hạn), nhật ký |
+| `/admin/system` | Tên nhà, địa chỉ web, dung lượng, mã QR, chống bot (captcha, kiểm tra khi vào trang, thời hạn), nhật ký |
 
 Quyền truy cập:
 - **Các trang trong `(app)`:** cần đăng nhập. Chưa đăng nhập thì được chuyển về `/login`.
@@ -73,7 +66,7 @@ Quyền truy cập:
 
 ## Chống bot
 
-Cả captcha và kiểm tra khi vào trang đều dùng Cloudflare Turnstile. Nếu chưa đặt `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, app hiện widget demo. Hai phần:
+Cả captcha và kiểm tra khi vào trang đều dùng Cloudflare Turnstile. Nếu chưa đặt `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, app ẩn widget và không gửi `captchaToken`. Hai phần:
 - **Captcha:** ở đăng nhập, đăng ký và đăng nhập quản trị. Token được gửi lên backend trong trường `captchaToken`.
 - **Kiểm tra khi vào trang:** người dùng mở trang nào thì kiểm tra ngay tại trang đó, nếu lần xác minh trước đã quá thời hạn. Admin đặt thời hạn (mặc định 20 phút) trong `/admin/system`.
 
@@ -86,7 +79,7 @@ Chi tiết cho backend: [docs/api/security.md](docs/api/security.md).
 | Quản trị, người trong nhà | API AI chung của nhà, admin cấu hình ở `/admin/assistant` |
 | Khách | Tự thêm API AI của mình ở `/settings#ai`. Admin có thể bật "Khách dùng chung API AI của nhà" |
 
-Khoá API chỉ được gửi lên. Backend lưu mã hoá và chỉ trả về bản rút gọn kiểu `sk-ant-...4f2c`. Chi tiết: [docs/api/ai.md](docs/api/ai.md).
+Khoá API chỉ được gửi lên. Backend lưu mã hoá và chỉ trả về 4 ký tự cuối để hiển thị (ví dụ `....4f2c`). Chi tiết: [docs/api/ai.md](docs/api/ai.md).
 
 ## Cấu trúc thư mục
 
@@ -102,7 +95,7 @@ src/
   lib/
     api/           toàn bộ lớp dữ liệu (xem bên dưới)
     hooks/         useApi, useMediaQuery, useNow
-    session.ts     phiên đăng nhập phía client
+    session.ts     người đang đăng nhập (chỉ để vẽ giao diện, không giữ token)
     theme.ts       sáng / tối / theo máy
 docs/api/          hợp đồng API cho từng mảng
 ```
@@ -114,7 +107,7 @@ docs/api/          hợp đồng API cho từng mảng
    NEXT_PUBLIC_API_URL=https://api.example.com
    NEXT_PUBLIC_TURNSTILE_SITE_KEY=...
    ```
-2. Mỗi mảng có một module trong `src/lib/api/`. Trong mỗi hàm: nếu có `BASE` thì gọi `http(...)`, nếu không thì trả mock. Kiểu dữ liệu nằm trong các file `*-types.ts`.
+2. Mỗi mảng có một module trong `src/lib/api/`, mọi hàm đều gọi `http(...)` trong `core.ts`. Kiểu dữ liệu nằm trong các file `*-types.ts`.
 3. Backend làm đúng hợp đồng là frontend chạy được, không phải sửa giao diện.
 
 | Module | Hợp đồng |
@@ -131,7 +124,7 @@ docs/api/          hợp đồng API cho từng mảng
 | `ai.ts` (`aiApi`): API AI chung và riêng | [docs/api/ai.md](docs/api/ai.md) |
 
 Quy ước chung:
-- Xác thực bằng cookie httpOnly, frontend gửi `credentials: "include"`.
+- Xác thực bằng cookie httpOnly, frontend gửi `credentials: "include"`. Phản hồi `401` làm frontend đăng xuất phía giao diện.
 - Lỗi trả về `{ "message": "..." }` bằng tiếng Việt. Frontend hiển thị nguyên văn câu này.
 - Nội dung bài học tuân theo schema trong `src/lib/api/lesson-types.ts`. Công thức viết dạng TeX đặt giữa hai dấu `$`.
 
@@ -144,14 +137,7 @@ Hướng thiết kế tên là **"Sổ nhà"**: album ảnh bìa nhựa ghép v�
 
 Tài liệu và quy ước:
 - [PRODUCT.md](PRODUCT.md): bối cảnh sản phẩm.
-- [PLAN.md](PLAN.md): kế hoạch.
-- [docs/AGENT_BRIEF.md](docs/AGENT_BRIEF.md): token, thành phần dùng chung và các quy tắc giao diện.
-
-Project có cài sẵn hai bộ skill thiết kế cho Claude Code: [impeccable](https://github.com/pbakaus/impeccable) (`.claude/skills/impeccable`, kèm hook tự quét lỗi thiết kế khi sửa file) và [taste-skill](https://www.tasteskill.dev/) (`.agents/skills/design-taste-frontend`). Kiểm tra thủ công bằng lệnh:
-
-```bash
-.claude/skills/impeccable/scripts/impeccable detect src
-```
+- [docs/FRONTEND_GUIDE.md](docs/FRONTEND_GUIDE.md): token, thành phần dùng chung, quy tắc giao diện và cách thêm một mảng API.
 
 Một số quy tắc chính:
 - Chỉ dùng token màu, không hard-code màu.

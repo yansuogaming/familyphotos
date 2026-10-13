@@ -3,12 +3,15 @@
 import { useState } from "react";
 import { publicConfigApi } from "@/lib/api/public-config";
 import { useApi } from "@/lib/hooks/useApi";
-import { Turnstile, type CaptchaAction } from "./Turnstile";
+import { captchaAvailable, Turnstile, type CaptchaAction } from "./Turnstile";
 
-/** Captcha for a form. While the setting loads, assume it is required. */
+/**
+ * Captcha for a form. Shown when a site key is configured and the admin setting
+ * is on (assumed on while the setting loads). The backend verifies the token.
+ */
 export function useCaptcha(action: CaptchaAction) {
   const config = useApi(publicConfigApi.get);
-  const required = config.status !== "ready" || config.data.captchaOnAuth;
+  const required = captchaAvailable && (config.status !== "ready" || config.data.captchaOnAuth);
   const [token, setToken] = useState<string | null>(null);
   const [key, setKey] = useState(0);
 

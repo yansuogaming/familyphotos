@@ -40,19 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# impeccable ephemeral
-.impeccable/review/
-.impeccable/tmp/
-.impeccable/live/
-.impeccable/build/
-.impeccable/mocks/
-
-# demo credentials (local only)
-DEMO_ACCOUNTS.txt
-
-# local tool state
-.claude/settings.local.json
-.claude/skills/impeccable/scripts/bin/
-.impeccable/hook.cache.json
-.impeccable/questions/
-!.env.example
+# local AI tooling (not part of the frontend)
+.claude/
+.agents/
+.impeccable/
+skills-lock.json

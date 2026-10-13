@@ -1,14 +1,12 @@
 # Product
 
-<!-- impeccable:product-schema 1 -->
-
 ## Platform
 
 web
 
 ## Stack
 
-Next.js (App Router, v16) + TypeScript + Tailwind v4. Frontend only; backend is built separately by another developer against a typed API contract (`src/lib/api`). Until then the frontend runs on mock data.
+Next.js (App Router, v16) + TypeScript + Tailwind v4. Frontend only; backend is built separately by another developer against a typed API contract (`src/lib/api`).
 
 ## Users
 
@@ -27,14 +25,14 @@ It belongs to one family only. Nothing is public, there is no feed and no strang
 - Entry: a landing page that acts as the front door of the family's home, then login or register.
 - Login: email/password, or QR (the web shows a QR code, a member who is already signed in on their phone scans it to sign the browser in, like Zalo Web).
 - Register: the visitor chooses "Đăng ký làm khách" (guest) or "Người trong nhà" (member).
-- Main sections: Ảnh (family photo albums), Chat riêng (private chat, 1-1 and group, with images, files, location, emoji, video call), Học (daily practice goal, streak, Toán, Các môn học / Lý thuyết các môn by grade and subject, Đề thi, Sách), Trợ lý AI (full page and a floating button bottom-right on every app screen).
-- Settings, QR, language switch (VI/EN), light/dark toggle, and logout live in the top bar.
+- Main sections: Ảnh (family photo albums), Chat riêng (private chat, 1-1 and group, with images, files, location, emoji, video call), Học (daily practice goal, streak, Các môn học / Lý thuyết các môn by grade and subject, Đề thi, Sách), Trợ lý AI (full page and a floating button bottom-right on every app screen).
+- Settings, light/dark toggle and the user menu (profile, settings, sign-in on another device, logout) live in the top bar.
 
 ## Capabilities and Constraints
 
-- Vietnamese is the primary language; English is a secondary locale. All fonts must cover Vietnamese diacritics.
+- Vietnamese only for now. All fonts must cover Vietnamese diacritics.
 - Light and dark mode both required.
-- Frontend must not hardcode backend behavior: every data call goes through `src/lib/api` so the backend developer can swap mocks for real endpoints.
+- Frontend must not hardcode backend behavior: every data call goes through `src/lib/api`, which only talks to the backend at NEXT_PUBLIC_API_URL. No mock data, no demo accounts.
 - Undecided: storage limits, roles beyond guest/member, AI provider.
 
 ## Brand Commitments
@@ -45,7 +43,7 @@ It belongs to one family only. Nothing is public, there is no feed and no strang
 
 ## Evidence on Hand
 
-Only screenshots of the previous UI. No real family photos, testimonials or user numbers exist; do not fabricate them. Demo content uses placeholder photos and clearly fictional family data.
+Only screenshots of the previous UI. No real family photos, testimonials or user numbers exist; do not fabricate them. The public landing page uses illustrative placeholder images only.
 
 ## Product Principles
 

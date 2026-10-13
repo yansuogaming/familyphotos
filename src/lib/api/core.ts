@@ -1,9 +1,7 @@
-// Shared plumbing for every API module (src/lib/api/*.ts).
-// When NEXT_PUBLIC_API_URL is set, calls go to the real backend; otherwise
-// each module returns mock data.
+// Shared HTTP plumbing for every API module (src/lib/api/*.ts).
+// The backend lives at NEXT_PUBLIC_API_URL and authenticates with an httpOnly cookie.
 
 export const BASE = process.env.NEXT_PUBLIC_API_URL;
-export const isMock = !BASE;
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -11,56 +9,28 @@ export class ApiError extends Error {
   }
 }
 
+/** Fired when the backend says the session is gone (401), so the UI can sign out. */
+export const UNAUTHORIZED_EVENT = "fp:unauthorized";
+
 export async function http<T>(path: string, init?: RequestInit): Promise<T> {
+  if (!BASE) throw new ApiError(0, "Chưa cấu hình địa chỉ máy chủ (NEXT_PUBLIC_API_URL).");
   const isForm = typeof FormData !== "undefined" && init?.body instanceof FormData;
-  const res = await fetch(`${BASE}${path}`, {
-    ...init,
-    credentials: "include",
-    headers: isForm ? init?.headers : { "Content-Type": "application/json", ...init?.headers },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${BASE}${path}`, {
+      ...init,
+      credentials: "include",
+      headers: isForm ? init?.headers : { "Content-Type": "application/json", ...init?.headers },
+    });
+  } catch (e) {
+    if (e instanceof DOMException && e.name === "AbortError") throw e;
+    throw new ApiError(0, "Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.");
+  }
   if (!res.ok) {
+    if (res.status === 401 && typeof window !== "undefined") window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
     const body = await res.json().catch(() => ({}));
     throw new ApiError(res.status, body.message ?? res.statusText);
   }
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
-}
-
-export const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-export async function fake<T>(value: T, ms = 350): Promise<T> {
-  await wait(ms);
-  return structuredClone(value);
-}
-
-/**
- * Mock-only store that survives reloads (localStorage), so edits made in the
- * admin area show up on the public pages during the demo.
- */
-export function persisted<T>(key: string, initial: T) {
-  const storageKey = `fp-mock:${key}`;
-  const read = (): T => {
-    if (typeof localStorage === "undefined") return structuredClone(initial);
-    try {
-      const raw = localStorage.getItem(storageKey);
-      return raw ? (JSON.parse(raw) as T) : structuredClone(initial);
-    } catch {
-      return structuredClone(initial);
-    }
-  };
-  return {
-    get: read,
-    set(value: T) {
-      localStorage.setItem(storageKey, JSON.stringify(value));
-      return value;
-    },
-    update(fn: (current: T) => T) {
-      const next = fn(read());
-      localStorage.setItem(storageKey, JSON.stringify(next));
-      return next;
-    },
-    reset() {
-      localStorage.removeItem(storageKey);
-    },
-  };
 }

@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useState, type KeyboardEvent } from "react";
 import { Dialog } from "@/components/album/Modal";
 import { buttonClass } from "@/components/ui/Button";
-import { isMock } from "@/lib/api/core";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 /**
@@ -118,11 +117,6 @@ function Scanner({ onClose }: { onClose: () => void }) {
       <p className="max-w-[40ch] text-center text-sm text-ink-2">
         Trên máy kia, mở trang đăng nhập Family Photos và chọn <span className="font-semibold text-ink">Quét mã QR</span>. Rồi hướng camera điện thoại vào mã.
       </p>
-      {isMock && (
-        <button onClick={() => setPhase("found")} className="text-sm font-semibold text-coral-ink underline decoration-dotted">
-          Demo: giả lập quét được mã
-        </button>
-      )}
     </div>
   );
 }

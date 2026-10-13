@@ -8,11 +8,11 @@ export const AI_PROVIDERS: { id: AiProviderId; name: string; body: string; keyHi
     id: "anthropic",
     name: "Anthropic (Claude)",
     body: "Giảng bài kỹ, viết tiếng Việt tự nhiên.",
-    keyHint: "Bắt đầu bằng sk-ant-",
+    keyHint: "Dán API key từ trang quản lý của Anthropic",
     models: ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-4-5-20251001"],
   },
-  { id: "openai", name: "OpenAI (ChatGPT)", body: "Dùng khoá API của tài khoản OpenAI.", keyHint: "Bắt đầu bằng sk-", models: [] },
-  { id: "gemini", name: "Google Gemini", body: "Dùng khoá API từ Google AI Studio.", keyHint: "Bắt đầu bằng AIza", models: [] },
+  { id: "openai", name: "OpenAI (ChatGPT)", body: "Dùng khoá API của tài khoản OpenAI.", keyHint: "Dán API key từ trang quản lý của OpenAI", models: [] },
+  { id: "gemini", name: "Google Gemini", body: "Dùng khoá API từ Google AI Studio.", keyHint: "Dán API key từ Google AI Studio", models: [] },
   { id: "custom", name: "Máy chủ tương thích OpenAI", body: "Tự đặt địa chỉ máy chủ, ví dụ máy chủ AI riêng của nhà.", keyHint: "Theo máy chủ của bạn", models: [] },
 ];
 
@@ -22,7 +22,7 @@ export interface AiKeyConfig {
   model: string;
   /** Only for "custom". */
   baseUrl?: string;
-  /** e.g. "sk-ant-...4f2c". null: no key saved yet. */
+  /** Masked by the backend, last 4 characters only (e.g. "....4f2c"). null: no key saved yet. */
   keyHint: string | null;
   updatedAt: string | null;
 }

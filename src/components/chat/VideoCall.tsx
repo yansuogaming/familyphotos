@@ -2,12 +2,10 @@
 
 import { CameraRotate, Microphone, MicrophoneSlash, PhoneDisconnect, VideoCamera, VideoCameraSlash } from "@/components/ui/icons";
 import { motion, useReducedMotion } from "motion/react";
-import Image from "@/components/ui/Image";
 import { useEffect, useRef, useState } from "react";
 import { Portal, useModal } from "@/components/album/Modal";
 import { Avatar } from "@/components/ui/Avatar";
 import { chatExtApi } from "@/lib/api/chat-ext";
-import { isMock } from "@/lib/api/core";
 
 type Phase = "calling" | "connected" | "ended";
 
@@ -15,7 +13,7 @@ const clock = (s: number) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${S
 
 /**
  * Full-screen video call. Your own camera sits small in a corner.
- * Mock mode: the other side "answers" after a few seconds and shows a still frame.
+ * The other side's video appears once the backend reports the call is connected.
  */
 export function VideoCall({ open, conversationId, title, isGroup, onClose }: { open: boolean; conversationId: string; title: string; isGroup: boolean; onClose: () => void }) {
   return <Portal>{open && <Call conversationId={conversationId} title={title} isGroup={isGroup} onClose={onClose} />}</Portal>;
@@ -48,7 +46,6 @@ function Call({ conversationId, title, isGroup, onClose }: { conversationId: str
     chatExtApi.startCall(conversationId).then((c) => {
       callId.current = c.id;
     }, () => alive && setPhase("ended"));
-    const answer = isMock ? setTimeout(() => alive && setPhase((p) => (p === "calling" ? "connected" : p)), 3200) : undefined;
     const media = navigator.mediaDevices?.getUserMedia
       ? navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true })
       : Promise.reject(new Error("no camera"));
@@ -63,7 +60,6 @@ function Call({ conversationId, title, isGroup, onClose }: { conversationId: str
     );
     return () => {
       alive = false;
-      clearTimeout(answer);
       stream.current?.getTracks().forEach((t) => t.stop());
     };
   }, [conversationId]);
@@ -100,9 +96,6 @@ function Call({ conversationId, title, isGroup, onClose }: { conversationId: str
     >
       {/* the other side */}
       <div className="absolute inset-0 overflow-hidden">
-        {phase === "connected" && (
-          <Image src={`https://picsum.photos/seed/fp-call-${conversationId}/1280/800`} alt="" fill sizes="100vw" className="object-cover" />
-        )}
         <div className={`absolute inset-0 ${phase === "connected" ? "bg-linear-to-b from-[oklch(0_0_0/0.45)] via-transparent to-[oklch(0_0_0/0.55)]" : ""}`} />
       </div>
 

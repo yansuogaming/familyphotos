@@ -13,8 +13,8 @@ Nguồn chuẩn của các kiểu dữ liệu: `src/lib/api/types.ts`. Frontend 
 
 | Method | Path | Body | Trả về |
 |---|---|---|---|
-| POST | `/auth/login` | `{ identifier, password }` (identifier là email hoặc số điện thoại) | `Session`. Chỉ nhận người trong nhà và khách. Tài khoản `admin` trả `403` |
-| POST | `/admin/auth/login` | `{ identifier, password }` | `Session`. Trang `/admin` dùng endpoint này. Chỉ nhận `role: "admin"`, tài khoản khác trả `403` |
+| POST | `/auth/login` | `{ identifier, password, captchaToken }` (identifier là email hoặc số điện thoại) | `Session`. Chỉ nhận người trong nhà và khách. Tài khoản `admin` trả `403` |
+| POST | `/admin/auth/login` | `{ identifier, password, captchaToken }` | `Session`. Trang `/admin` dùng endpoint này. Chỉ nhận `role: "admin"`, tài khoản khác trả `403` |
 | POST | `/auth/register` | `RegisterInput { name, email, password, role, inviteCode?, captchaToken }` | `PendingSignup { id, emailHint, expiresAt, resendAt, codeLength }`. Gửi mã OTP về email, **chưa tạo tài khoản**. Email đã có tài khoản thì trả `409`. Mã mời sai thì trả `400` |
 | POST | `/auth/register/verify` | `{ pendingId, code }` | `Session`. Đúng mã thì tạo tài khoản và đăng nhập luôn. Sai mã trả `400`, message có số lần thử còn lại. Hết hạn trả `410`. Sai quá 5 lần trả `429` |
 | POST | `/auth/register/resend` | `{ pendingId }` | `PendingSignup` mới (mã mới). Gửi lại trước `resendAt` thì trả `429` |
@@ -45,7 +45,7 @@ Các trạng thái: `pending | scanned | confirmed | expired`. Nếu sau này c�
 | GET | `/account/ai` | | `AiAccount[]`. Luồng OAuth để gắn tài khoản AI sẽ bàn sau |
 | DELETE | `/account` | | `{ purgeAt }`: đưa vào hàng chờ xoá 30 ngày, đăng nhập lại thì huỷ |
 
-Frontend lưu phiên đăng nhập trong `src/lib/session.ts`. Khi có backend, frontend gọi `GET /auth/me` lúc mở app để lấy lại thông tin người dùng.
+`Session` chỉ gồm `{ user }`. Thông tin xác thực là cookie httpOnly do backend đặt; frontend không lưu token. Trình duyệt chỉ nhớ người đang đăng nhập để vẽ giao diện ngay. Khi mở app, frontend gọi `GET /auth/me` để kiểm tra lại. Mọi phản hồi `401` khiến frontend tự đăng xuất phía giao diện.
 
 ### Đăng ký có xác nhận email
 

@@ -53,11 +53,11 @@ export interface ConversationMedia {
 export interface CallSession {
   id: string;
   conversationId: string;
-  /** WebRTC config from the backend. Empty in mock mode. */
+  /** WebRTC config from the backend. */
   iceServers: { urls: string | string[]; username?: string; credential?: string }[];
 }
 
-/** Realtime events (WebSocket). Mock mode simulates them after you send a message. */
+/** Realtime events (WebSocket `/realtime`). */
 export type ChatEvent =
   | { type: "typing"; conversationId: string; userId: string; typing: boolean }
   | { type: "message"; message: ChatMessage }

@@ -9,9 +9,8 @@ import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/settings/shared";
 import { adminApi } from "@/lib/api/admin";
 import type { MediaAsset } from "@/lib/api/admin-types";
-import { wait } from "@/lib/api/core";
 import { useApi } from "@/lib/hooks/useApi";
-import { IMAGE_ACCEPT, checkImageFile, readImageFile } from "./image-file";
+import { IMAGE_ACCEPT, assertImageFile, checkImageFile } from "./image-file";
 import { formatSize } from "./library/format";
 import { MediaDetail } from "./library/MediaDetail";
 import { UploadQueue, type UploadRow } from "./library/UploadQueue";
@@ -80,7 +79,7 @@ function Library({ initial }: { initial: MediaAsset[] }) {
 
   const patchRow = (id: string, fn: (r: UploadRow) => UploadRow) => setRows((rs) => rs.map((r) => (r.id === id ? fn(r) : r)));
 
-  /** Fake progress while the file is read and saved; resolves to the new asset or null. */
+  /** Estimated progress while the file uploads; resolves to the new asset or null. */
   async function sendOne(id: string, file: File): Promise<MediaAsset | null> {
     patchRow(id, (r) => ({ ...r, state: "uploading", progress: 0, error: undefined }));
     const timer = window.setInterval(() => {
@@ -88,8 +87,8 @@ function Library({ initial }: { initial: MediaAsset[] }) {
     }, 140);
     timers.current.add(timer);
     try {
-      const [img] = await Promise.all([readImageFile(file), wait(700)]);
-      const asset = await adminApi.media.upload({ file, name: file.name, alt: "", dataUrl: img.dataUrl, width: img.width, height: img.height, sizeBytes: img.sizeBytes });
+      assertImageFile(file);
+      const asset = await adminApi.media.upload({ file, name: file.name, alt: "" });
       patchRow(id, (r) => ({ ...r, state: "done", progress: 100 }));
       setItems((prev) => [asset, ...prev]);
       setFresh((s) => new Set(s).add(asset.id));

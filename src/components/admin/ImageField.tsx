@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { adminApi } from "@/lib/api/admin";
 import type { MediaAsset } from "@/lib/api/admin-types";
 import { useApi } from "@/lib/hooks/useApi";
-import { IMAGE_ACCEPT, readImageFile } from "./image-file";
+import { IMAGE_ACCEPT, assertImageFile } from "./image-file";
 import { EmptyState, ErrorNote, Modal, TextField, errorText, inputClass } from "./ui";
 
 export interface ImageValue {
@@ -55,16 +55,8 @@ export function ImageField({
     setError(null);
     setBusy(true);
     try {
-      const img = await readImageFile(file);
-      const asset = await adminApi.media.upload({
-        file,
-        name: file.name,
-        alt: value.alt,
-        dataUrl: img.dataUrl,
-        width: img.width,
-        height: img.height,
-        sizeBytes: img.sizeBytes,
-      });
+      assertImageFile(file);
+      const asset = await adminApi.media.upload({ file, name: file.name, alt: value.alt });
       onChange({ ...value, url: asset.url, mediaId: asset.id });
     } catch (e) {
       setError(errorText(e, "Chưa tải được ảnh này."));

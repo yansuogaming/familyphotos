@@ -2,7 +2,7 @@
 
 Chữ và ảnh của trang chủ (`/`), trang đăng nhập (`/login`) và trang đăng ký (`/register`). Quản trị viên sửa ở `/admin/content`.
 
-Kiểu dữ liệu: `src/lib/api/site-types.ts` (`SiteContent`, `SiteImage`, `SiteAlbumPhoto`, `SiteSection`). Frontend gọi qua `siteApi` trong `src/lib/api/site.ts`. Nội dung mặc định (giống hệt bản đang chạy) nằm ở `src/lib/api/site-mock.ts` (`defaultSite`), backend nên dùng đúng bản này làm dữ liệu khởi tạo.
+Kiểu dữ liệu: `src/lib/api/site-types.ts` (`SiteContent`, `SiteImage`, `SiteAlbumPhoto`, `SiteSection`). Frontend gọi qua `siteApi` trong `src/lib/api/site.ts`. Nội dung mặc định (giống hệt bản đang chạy) nằm ở `src/lib/api/site-defaults.ts` (`defaultSite`), backend nên dùng đúng bản này làm dữ liệu khởi tạo.
 
 ## Quyền
 
@@ -27,4 +27,4 @@ Kiểu dữ liệu: `src/lib/api/site-types.ts` (`SiteContent`, `SiteImage`, `Si
 
 ## Cách frontend hiển thị
 
-Server render luôn dùng `defaultSite` để trang tĩnh không đổi bố cục. Ở trình duyệt, `useSiteContent()` gọi `GET /site` một lần rồi thay bằng nội dung đã lưu. Ở chế độ mock, nội dung nằm trong localStorage (`fp-mock:site`) nên đổi ở trang quản trị là trang công khai đổi theo ngay, kể cả ở tab khác.
+Server render luôn dùng `defaultSite` để trang tĩnh không đổi bố cục. Ở trình duyệt, `useSiteContent()` gọi `GET /site` một lần rồi thay bằng nội dung đã lưu. Lưu ở trang quản trị thì các trang công khai đang mở trong cùng tab đổi theo ngay.

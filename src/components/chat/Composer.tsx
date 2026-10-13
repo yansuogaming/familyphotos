@@ -6,7 +6,6 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { buttonClass } from "@/components/ui/Button";
 import { Dialog } from "@/components/album/Modal";
-import { isMock } from "@/lib/api/core";
 import { ATTACH_LIMIT_BYTES, ATTACH_MAX_FILES, type ChatMessage, type LocationShare, type SendInput } from "@/lib/api/chat-ext-types";
 import { fileSize } from "./ChatBubble";
 import { EmojiPicker } from "./EmojiPicker";
@@ -274,7 +273,6 @@ export function Composer({
 }
 
 type Loc = Omit<LocationShare, "kind">;
-const DEMO_LOCATION: Loc = { lat: 21.0368, lng: 105.7826, label: "Nhà mình, Cầu Giấy, Hà Nội" };
 
 function LocationDialog({ open, onClose, onSend }: { open: boolean; onClose: () => void; onSend: (l: Loc) => Promise<void> }) {
   return (
@@ -330,11 +328,6 @@ function LocationBody({ onClose, onSend }: { onClose: () => void; onSend: (l: Lo
       {state.kind === "error" && (
         <div className="rounded-[var(--radius-paper)] border border-line bg-paper-2 px-4 py-3">
           <p className="text-sm text-ink-2">{state.reason}</p>
-          {isMock && (
-            <button onClick={() => setState({ kind: "found", loc: DEMO_LOCATION })} className="mt-2 text-sm font-semibold text-coral-ink underline decoration-dotted">
-              Demo: dùng vị trí mẫu
-            </button>
-          )}
         </div>
       )}
       <div className="flex justify-end gap-2">
