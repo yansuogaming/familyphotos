@@ -13,7 +13,31 @@ export interface AlbumShare {
   allowDownload: boolean;
 }
 
-export interface AlbumDetail extends Album {
+/**
+ * Who an album belongs to.
+ * - family: the family's own albums. Guests never see them unless shared with them by name.
+ * - guest: an album a guest made to keep their own memories. Only that guest and family members see it.
+ */
+export type AlbumSpace = "family" | "guest";
+
+/** What the current viewer may do. Computed by the backend per request; the UI only reads it. */
+export interface AlbumAccess {
+  space: AlbumSpace;
+  /** guest albums: the guest who owns it. */
+  owner?: Person;
+  /** A family album a member shared with this guest (read-only for them). */
+  sharedWithMe?: boolean;
+  canUpload: boolean;
+  /** Select, move, delete photos and edit memos. */
+  canManage: boolean;
+  canShare: boolean;
+  /** System album holding someone's loose photos (uploaded without an album). */
+  loose?: boolean;
+}
+
+export interface MediaAlbum extends Album, AlbumAccess {}
+
+export interface AlbumDetail extends MediaAlbum {
   description?: string;
   createdBy: Person;
   /** Everyone who added at least one photo, most photos first. */

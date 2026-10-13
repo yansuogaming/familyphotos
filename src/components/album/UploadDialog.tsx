@@ -5,6 +5,7 @@ import { ArrowClockwise, CaretDown, CheckCircle, CloudArrowUp, ImageSquare, Warn
 import { useEffect, useId, useRef, useState } from "react";
 import { formatBytes } from "@/components/settings/shared";
 import { buttonClass } from "@/components/ui/Button";
+import { useSession } from "@/lib/session";
 import { mediaApi } from "@/lib/api/media";
 import { checkUpload, UPLOAD_ACCEPT } from "@/lib/api/media-types";
 import type { Album, Photo } from "@/lib/api/types";
@@ -22,6 +23,8 @@ interface Item {
 }
 
 const NEW = "__new__";
+/** Upload without an album: the photos become loose photos ("ảnh lẻ"). */
+const LOOSE = "__loose__";
 const PARALLEL = 3;
 
 const size = (n: number) => (n < 1024 * 1024 ? `${Math.max(1, Math.round(n / 1024))} KB` : formatBytes(n));
@@ -56,8 +59,9 @@ export function UploadDialog({
   initialFiles?: File[];
   onUploaded: (albumId: string, photos: Photo[], created?: Album) => void;
 }) {
+  const isGuest = useSession()?.user.role === "guest";
   return (
-    <Dialog open={open} onClose={onClose} title="Thêm ảnh" description="Ảnh sẽ vào album bạn chọn. Cả nhà sẽ thấy ngay." size="lg">
+    <Dialog open={open} onClose={onClose} title="Thêm ảnh" description={isGuest ? "Chỉ bạn và người trong nhà xem được. Khách khác không thấy." : "Cả nhà sẽ thấy ngay."} size="lg">
       <Body albums={albums} albumId={albumId} initialFiles={initialFiles} onUploaded={onUploaded} onClose={onClose} />
     </Dialog>
   );
@@ -78,7 +82,7 @@ function Body({
 }) {
   const id = useId();
   const [items, setItems] = useState<Item[]>(() => toItems(initialFiles));
-  const [target, setTarget] = useState(albumId ?? albums[0]?.id ?? NEW);
+  const [target, setTarget] = useState(albumId ?? LOOSE);
   const [newName, setNewName] = useState("");
   const [phase, setPhase] = useState<"pick" | "uploading" | "done">("pick");
   const [formError, setFormError] = useState<string | null>(null);
@@ -126,7 +130,7 @@ function Body({
     if (target === NEW && !newName.trim()) return setFormError("Đặt tên cho album mới.");
     setPhase("uploading");
 
-    let dest = target;
+    let dest: string | null = target === LOOSE ? null : target;
     let created: Album | undefined;
     try {
       if (target === NEW) {
@@ -139,7 +143,7 @@ function Body({
       setPhase("pick");
       return setFormError("Chưa tạo được album. Thử lại nhé.");
     }
-    setDestTitle(created?.title ?? albums.find((a) => a.id === dest)?.title ?? "album");
+    setDestTitle(dest === null ? "ảnh lẻ" : (created?.title ?? albums.find((a) => a.id === dest)?.title ?? "album"));
 
     const queue = ready.map((i) => i.id);
     const done: Photo[] = [];
@@ -165,7 +169,7 @@ function Body({
     };
     await Promise.all(Array.from({ length: PARALLEL }, worker));
     setPhase("done");
-    if (done.length || created) onUploaded(dest, done, created);
+    if (done.length || created) onUploaded(dest ?? done[0]?.albumId ?? "", done, created);
   }
 
   const doneCount = items.filter((i) => i.status === "done").length;
@@ -185,6 +189,7 @@ function Body({
               onChange={(e) => setTarget(e.target.value)}
               className={`${inputClass} appearance-none pr-10`}
             >
+              <option value={LOOSE}>Không vào album (ảnh lẻ)</option>
               {albums.map((a) => (
                 <option key={a.id} value={a.id}>{a.title}</option>
               ))}

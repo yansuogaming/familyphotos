@@ -2,7 +2,7 @@
 import * as base from "./mock-data";
 import { persisted } from "./core";
 import type { Album, Photo } from "./types";
-import type { AlbumShare, Person, PhotoComment } from "./media-types";
+import type { AlbumShare, AlbumSpace, Person, PhotoComment } from "./media-types";
 
 const pic = (seed: string, w: number, h: number) => `https://picsum.photos/seed/fp-${seed}/${w}/${h}`;
 
@@ -12,6 +12,8 @@ export const people: Record<string, Person> = {
   quan: { id: "u-quan", name: "Bố Minh Quân" },
   na: { id: "u-na", name: "Khánh Na" },
   ba: { id: "u-ba", name: "Bà nội" },
+  lan: { id: "u-co", name: "Cô Lan" },
+  tu: { id: "u-tu", name: "Chú Tư Hải" },
 };
 
 const iso = (d: Date) =>
@@ -29,7 +31,30 @@ const memoryAlbums: Album[] = [
   { id: "na-lop-1", title: "Na vào lớp 1", coverUrl: pic("lop1", 600, 760), photoCount: 14, takenFrom: yearsAgo(4), takenTo: yearsAgo(4) },
 ];
 
-export const seedAlbums: Album[] = [...base.albums, ...memoryAlbums];
+/** Albums guests made for their own memories. Each guest sees only their own. */
+const guestAlbums: Album[] = [
+  { id: "co-lan-ghe-nha", title: "Cô Lan ghé nhà", coverUrl: pic("colan", 600, 760), photoCount: 6, takenFrom: "2026-09-21", takenTo: "2026-09-21" },
+  { id: "chu-tu-di-hue", title: "Chú Tư đi Huế", coverUrl: pic("hue", 600, 760), photoCount: 5, takenFrom: "2026-08-02", takenTo: "2026-08-04" },
+];
+
+export const seedAlbums: Album[] = [...base.albums, ...memoryAlbums, ...guestAlbums];
+
+export interface AccessRule {
+  space: AlbumSpace;
+  /** guest albums only */
+  ownerId?: string;
+  /** family albums: guests (user ids) allowed to view it. */
+  sharedWith: string[];
+}
+
+/** Albums missing here are family albums shared with nobody. */
+const accessSeed: Record<string, AccessRule> = {
+  "co-lan-ghe-nha": { space: "guest", ownerId: people.lan.id, sharedWith: [] },
+  "chu-tu-di-hue": { space: "guest", ownerId: people.tu.id, sharedWith: [] },
+  "tet-2026": { space: "family", sharedWith: [people.lan.id] },
+};
+
+export const ownerOf = (id?: string) => Object.values(people).find((p) => p.id === id);
 
 const details: Record<string, { description?: string; createdBy: Person }> = {
   "tet-2026": { description: "Ba ngày Tết ở nhà bà nội, Nam Định.", createdBy: people.ha },
@@ -39,6 +64,8 @@ const details: Record<string, { description?: string; createdBy: Person }> = {
   "que-noi": { description: "Nghỉ Tết dương lịch ở quê.", createdBy: people.bao },
   "ba-vi": { description: "Đi cắm trại một đêm ở Ba Vì.", createdBy: people.quan },
   "na-lop-1": { createdBy: people.ha },
+  "co-lan-ghe-nha": { description: "Ghé thăm cả nhà dịp Trung thu.", createdBy: people.lan },
+  "chu-tu-di-hue": { description: "Chuyến đi Huế của chú.", createdBy: people.tu },
 };
 export const albumMeta = (id: string) => details[id] ?? { createdBy: people.ha };
 
@@ -50,6 +77,8 @@ const memos: Record<string, string[]> = {
   "que-noi": ["Rơm phơi đầy sân", "Bếp củi của bà", "Thả diều trên đê", "Cá kho niêu đất", "Con Mướp ngủ trên ghế"],
   "ba-vi": ["Lều dựng hơi lệch", "Nướng ngô buổi tối", "Sáng sớm trên đỉnh", "Bố nhóm lửa"],
   "na-lop-1": ["Ngày đầu đi học", "Bố đưa Na tới cổng", "Lớp 1B"],
+  "co-lan-ghe-nha": ["Bánh nướng cô mang tới", "Cô với bà ngồi uống trà"],
+  "chu-tu-di-hue": ["Cầu Trường Tiền", "Chè Huế"],
 };
 
 const uploaders = [people.ha, people.quan, people.bao, people.ha, people.na, people.ba];
@@ -81,7 +110,7 @@ function generate(album: Album): Photo[] {
       height: ht,
       takenAt: iso(new Date(from + day * 864e5)),
       memo: i % 3 === 0 ? bank[(i / 3) % Math.max(1, bank.length)] : undefined,
-      uploadedBy: uploaders[h % uploaders.length],
+      uploadedBy: ownerOf(accessSeed[album.id]?.ownerId) ?? uploaders[h % uploaders.length],
     });
   }
   return out.sort((a, b) => a.takenAt.localeCompare(b.takenAt));
@@ -125,6 +154,7 @@ export const store = {
   comments: persisted<Record<string, PhotoComment[]>>("media:comments", {}),
   albums: persisted<Album[]>("media:albums", []),
   shares: persisted<Record<string, AlbumShare>>("media:shares", {}),
+  access: persisted<Record<string, AccessRule>>("media:access", accessSeed),
 };
 
 /** Photos uploaded in this tab. Kept in memory only: blob URLs die with the page. */

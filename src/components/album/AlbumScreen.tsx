@@ -9,6 +9,7 @@ import {
   Trash,
   UploadSimple,
   X,
+  Eye,
 } from "@phosphor-icons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
@@ -23,7 +24,6 @@ import { mediaApi } from "@/lib/api/media";
 import type { AlbumDetail, AlbumShare } from "@/lib/api/media-types";
 import type { Album, Photo } from "@/lib/api/types";
 import { useApi } from "@/lib/hooks/useApi";
-import { useSession } from "@/lib/session";
 import { DropOverlay } from "./DropOverlay";
 import { Lightbox, photoToItem } from "./Lightbox";
 import { ConfirmDialog } from "./Modal";
@@ -53,12 +53,12 @@ export function AlbumScreen() {
 function AlbumView({ id }: { id: string }) {
   const toast = useToast();
   const reduce = useReducedMotion();
-  const s = useSession();
-  // Guests can add photos to keep their memories; managing the album stays with the family.
-  const canUpload = !!s;
-  const canEdit = !!s && s.user.role !== "guest";
-
   const detail = useApi(() => mediaApi.album(id), [id]);
+  // The API says what this viewer may do; the UI never guesses from the role.
+  const perm = detail.status === "ready" ? detail.data : null;
+  const canUpload = !!perm?.canUpload;
+  const canEdit = !!perm?.canManage;
+  const canShare = !!perm?.canShare;
   const first = useApi(() => mediaApi.photos(id), [id]);
   const [share, setShare] = useState<AlbumShare | null | undefined>(undefined);
   const [more, setMore] = useState<Photo[]>([]);
@@ -254,7 +254,7 @@ function AlbumView({ id }: { id: string }) {
                 <Button onClick={() => { setDropped([]); setDialog("upload"); }}>
                   <UploadSimple size={18} weight="bold" /> Thêm ảnh
                 </Button>
-                {canEdit && (
+                {canShare && (
                   <Button variant="secondary" onClick={() => setDialog("share")}>
                     <ShareNetwork size={18} /> {album.share ? "Đang chia sẻ" : "Chia sẻ cho khách"}
                   </Button>
@@ -269,6 +269,14 @@ function AlbumView({ id }: { id: string }) {
                   </button>
                 )}
               </div>
+            )}
+            {perm && !canUpload && (
+              <p className="mt-6 flex items-center gap-2 text-sm text-on-cover/85">
+                <Eye size={18} className="shrink-0" />
+                {perm.sharedWithMe
+                  ? "Nhà chia sẻ album này cho bạn xem. Bạn không thêm hay sửa ảnh ở đây."
+                  : `Album riêng của ${perm.owner?.name ?? "khách"}. Người trong nhà chỉ xem, không sửa.`}
+              </p>
             )}
           </div>
         </div>
@@ -352,7 +360,7 @@ function AlbumView({ id }: { id: string }) {
       <UploadDialog
         open={dialog === "upload"}
         onClose={() => setDialog(null)}
-        albums={albums.status === "ready" ? albums.data : [detail.data]}
+        albums={albums.status === "ready" ? albums.data.filter((a) => a.canUpload) : [detail.data]}
         albumId={id}
         initialFiles={dropped}
         onUploaded={(to, ps) => {

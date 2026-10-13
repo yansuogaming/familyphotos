@@ -34,7 +34,9 @@ function Body({ fromAlbumId, onClose, onMoved }: { fromAlbumId: string; onClose:
   const [pick, setPick] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const list = albums.status === "ready" ? albums.data.filter((a) => a.id !== fromAlbumId) : [];
+  // Photos only move between albums of the same kind (family to family, a guest's own albums).
+  const from = albums.status === "ready" ? albums.data.find((a) => a.id === fromAlbumId) : undefined;
+  const list = albums.status === "ready" ? albums.data.filter((a) => a.id !== fromAlbumId && a.canUpload && a.space === from?.space) : [];
 
   async function move() {
     const to = list.find((a) => a.id === pick);

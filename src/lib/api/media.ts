@@ -6,7 +6,9 @@ import * as base from "./mock-data";
 import * as mock from "./media-mock";
 import type { Album, Photo } from "./types";
 import type {
+  AlbumAccess,
   AlbumDetail,
+  MediaAlbum,
   AlbumShare,
   Memory,
   NewAlbumInput,
@@ -24,6 +26,75 @@ const meNow = (): Person => {
   const u = typeof localStorage === "undefined" ? null : session.get()?.user;
   return { id: u?.id ?? base.me.id, name: u?.name ?? base.me.name };
 };
+
+const viewer = () => {
+  const u = typeof localStorage === "undefined" ? null : session.get()?.user;
+  return { id: u?.id ?? base.me.id, isGuest: u?.role === "guest" };
+};
+
+// ---------- access (the backend must enforce the same rules server-side) ----------
+
+const NONE: AlbumAccess = { space: "family", canUpload: false, canManage: false, canShare: false };
+
+/** What the current viewer may do with an album, or null when they may not even see it. */
+function accessFor(albumId: string): AlbumAccess | null {
+  const rule = mock.store.access.get()[albumId] ?? { space: "family" as const, sharedWith: [] };
+  const v = viewer();
+  if (rule.space === "family") {
+    if (!v.isGuest) return { space: "family", canUpload: true, canManage: true, canShare: true };
+    if (rule.sharedWith.includes(v.id)) return { ...NONE, sharedWithMe: true };
+    return null;
+  }
+  const owner = mock.ownerOf(rule.ownerId) ?? (rule.ownerId === v.id ? meNow() : undefined);
+  if (rule.ownerId === v.id) return { space: "guest", owner, canUpload: true, canManage: true, canShare: false };
+  if (!v.isGuest) return { ...NONE, space: "guest", owner };
+  return null;
+}
+
+/** Each person's loose photos ("ảnh lẻ") live in a system album with this id. */
+export const looseAlbumId = (userId: string) => `anh-le-${userId}`;
+const isLoose = (albumId: string) => albumId.startsWith("anh-le-");
+
+function visibleAlbums(): MediaAlbum[] {
+  return allAlbums().flatMap((a) => {
+    const acc = accessFor(a.id);
+    if (!acc || (isLoose(a.id) && a.photoCount === 0)) return [];
+    return [{ ...a, ...acc, loose: isLoose(a.id) || undefined }];
+  });
+}
+
+/** Creates (once) the system album that holds this person's loose photos. */
+function ensureLooseAlbum(): string {
+  const me = meNow();
+  const id = looseAlbumId(me.id);
+  if (!mock.store.albums.get().some((a) => a.id === id)) {
+    const today = new Date().toISOString().slice(0, 10);
+    mock.store.albums.update((a) => [
+      ...a,
+      { id, title: `Ảnh lẻ của ${me.name}`, coverUrl: `https://picsum.photos/seed/fp-le-${me.id}/600/760`, photoCount: 0, takenFrom: today, takenTo: today },
+    ]);
+    const v = viewer();
+    mock.store.access.update((acc) => ({
+      ...acc,
+      [id]: v.isGuest ? { space: "guest", ownerId: v.id, sharedWith: [] } : { space: "family", sharedWith: [] },
+    }));
+  }
+  return id;
+}
+
+/** Feed and memories: members see family photos only; guests see their own plus what was shared with them. */
+function feedAlbumIds() {
+  const isGuest = viewer().isGuest;
+  return new Set(visibleAlbums().filter((a) => (isGuest ? true : a.space === "family")).map((a) => a.id));
+}
+
+const notFound = () => wait(250).then(() => { throw new ApiError(404, "Không tìm thấy album này."); });
+const forbidden = () => wait(200).then(() => { throw new ApiError(403, "Bạn không có quyền làm việc này."); });
+
+function photoAccess(photoId: string) {
+  const photo = allPhotos().find((p) => p.id === photoId);
+  return photo ? accessFor(photo.albumId) : null;
+}
 
 // ---------- mock helpers ----------
 
@@ -148,15 +219,17 @@ const shareUrl = (albumId: string) =>
 // ---------- API ----------
 
 export const mediaApi = {
-  albums(): Promise<Album[]> {
+  /** Only albums the viewer may see, each with what they may do. */
+  albums(): Promise<MediaAlbum[]> {
     if (BASE) return http("/albums");
-    return fake(allAlbums());
+    return fake(visibleAlbums());
   },
 
   album(id: string): Promise<AlbumDetail> {
     if (BASE) return http(`/albums/${id}`);
-    const album = allAlbums().find((a) => a.id === id);
-    if (!album) return wait(300).then(() => { throw new ApiError(404, "Không tìm thấy album này."); });
+    // Hidden albums answer 404, not 403, so a guest cannot tell they exist.
+    const album = visibleAlbums().find((a) => a.id === id);
+    if (!album) return notFound();
     const byPerson = new Map<string, { person: Person; n: number }>();
     for (const p of allPhotos().filter((p) => p.albumId === id)) {
       const e = byPerson.get(p.uploadedBy.id) ?? { person: p.uploadedBy, n: 0 };
@@ -175,6 +248,7 @@ export const mediaApi = {
   /** Oldest first. `cursor` comes from the previous page. */
   photos(albumId: string, cursor?: string | null): Promise<PhotoPage> {
     if (BASE) return http(`/albums/${albumId}/photos?limit=${PAGE}${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`);
+    if (!accessFor(albumId)) return notFound();
     const list = allPhotos().filter((p) => p.albumId === albumId).sort((a, b) => a.takenAt.localeCompare(b.takenAt));
     const start = cursor ? Number(cursor) : 0;
     const end = start + PAGE;
@@ -183,13 +257,20 @@ export const mediaApi = {
 
   recent(): Promise<Photo[]> {
     if (BASE) return http("/photos?sort=recent");
-    const ids = new Set(base.photos.map((p) => p.id));
-    const live = allPhotos();
-    return fake([...mock.uploaded.slice().reverse(), ...live.filter((p) => ids.has(p.id))].filter((p) => live.some((l) => l.id === p.id)));
+    const scope = feedAlbumIds();
+    const live = allPhotos().filter((p) => scope.has(p.albumId));
+    const liveIds = new Set(live.map((p) => p.id));
+    const featured = new Set(base.photos.map((p) => p.id));
+    const uploaded = mock.uploaded.slice().reverse().filter((p) => liveIds.has(p.id));
+    const rest = live
+      .filter((p) => !uploaded.some((u) => u.id === p.id) && (featured.has(p.id) || viewer().isGuest))
+      .sort((a, b) => b.takenAt.localeCompare(a.takenAt));
+    return fake([...uploaded, ...rest].slice(0, 24));
   },
 
   updateMemo(photoId: string, memo: string): Promise<Photo> {
     if (BASE) return http(`/photos/${photoId}`, { method: "PATCH", body: JSON.stringify({ memo }) });
+    if (!photoAccess(photoId)?.canManage) return forbidden();
     mock.store.memos.update((m) => ({ ...m, [photoId]: memo.trim() }));
     const photo = allPhotos().find((p) => p.id === photoId);
     if (!photo) return wait(200).then(() => { throw new ApiError(404, "Ảnh không còn nữa."); });
@@ -198,12 +279,15 @@ export const mediaApi = {
 
   deletePhotos(ids: string[]): Promise<void> {
     if (BASE) return http("/photos/delete", { method: "POST", body: JSON.stringify({ ids }) });
+    if (!ids.every((id) => photoAccess(id)?.canManage)) return forbidden();
     mock.store.removed.update((r) => [...new Set([...r, ...ids])]);
     return fake(undefined, 450);
   },
 
   movePhotos(ids: string[], albumId: string): Promise<void> {
     if (BASE) return http("/photos/move", { method: "POST", body: JSON.stringify({ ids, albumId }) });
+    const dest = accessFor(albumId);
+    if (!dest?.canUpload || !ids.every((id) => photoAccess(id)?.canManage && photoAccess(id)?.space === dest.space)) return forbidden();
     mock.store.moved.update((m) => ({ ...m, ...Object.fromEntries(ids.map((id) => [id, albumId])) }));
     return fake(undefined, 450);
   },
@@ -221,11 +305,13 @@ export const mediaApi = {
 
   social(photoId: string): Promise<PhotoSocial> {
     if (BASE) return http(`/photos/${photoId}/social`);
+    if (!photoAccess(photoId)) return notFound();
     return fake(social(photoId), 250);
   },
 
   setLike(photoId: string, liked: boolean): Promise<PhotoSocial> {
     if (BASE) return http(`/photos/${photoId}/like`, { method: liked ? "PUT" : "DELETE" });
+    if (!photoAccess(photoId)) return notFound();
     const me = meNow().id;
     mock.store.likes.update((l) => {
       const cur = (l[photoId] ?? []).filter((id) => id !== me);
@@ -236,17 +322,21 @@ export const mediaApi = {
 
   addComment(photoId: string, text: string): Promise<PhotoComment> {
     if (BASE) return http(`/photos/${photoId}/comments`, { method: "POST", body: JSON.stringify({ text }) });
+    if (!photoAccess(photoId)) return notFound();
     const c: PhotoComment = { id: crypto.randomUUID(), photoId, author: meNow(), text: text.trim(), createdAt: new Date().toISOString() };
     mock.store.comments.update((all) => ({ ...all, [photoId]: [...(all[photoId] ?? []), c] }));
     return fake(c, 300);
   },
 
-  async upload(albumId: string, file: File, opts: UploadOptions = {}): Promise<Photo> {
+  /** `albumId: null` uploads a loose photo that belongs to no album. */
+  async upload(albumId: string | null, file: File, opts: UploadOptions = {}): Promise<Photo> {
     if (BASE) {
       const form = new FormData();
       form.append("file", file);
-      return xhrUpload<Photo>(`/albums/${albumId}/photos`, form, opts);
+      return xhrUpload<Photo>(albumId ? `/albums/${albumId}/photos` : "/photos", form, opts);
     }
+    if (albumId === null) albumId = ensureLooseAlbum();
+    if (!accessFor(albumId)?.canUpload) throw new ApiError(403, "Bạn chỉ thêm được ảnh vào album của mình.");
     await fakeUpload(file, opts);
     const url = URL.createObjectURL(file);
     const { width, height } = await readSize(url);
@@ -256,7 +346,8 @@ export const mediaApi = {
     return photo;
   },
 
-  async createAlbum(input: NewAlbumInput): Promise<Album> {
+  /** Guests get a private guest album; members get a family album. */
+  async createAlbum(input: NewAlbumInput): Promise<MediaAlbum> {
     if (BASE) {
       const form = new FormData();
       form.append("title", input.title);
@@ -275,11 +366,17 @@ export const mediaApi = {
       takenTo: input.takenTo || input.takenFrom,
     };
     mock.store.albums.update((a) => [album, ...a]);
-    return fake(album, 500);
+    const v = viewer();
+    mock.store.access.update((acc) => ({
+      ...acc,
+      [album.id]: v.isGuest ? { space: "guest", ownerId: v.id, sharedWith: [] } : { space: "family", sharedWith: [] },
+    }));
+    return fake({ ...album, ...accessFor(album.id)! }, 500);
   },
 
   share(albumId: string, input: ShareInput): Promise<AlbumShare> {
     if (BASE) return http(`/albums/${albumId}/share`, { method: "PUT", body: JSON.stringify(input) });
+    if (!accessFor(albumId)?.canShare) return forbidden();
     const prev = mock.store.shares.get()[albumId];
     const share: AlbumShare = {
       url: prev?.url ?? shareUrl(albumId),
@@ -293,6 +390,7 @@ export const mediaApi = {
 
   unshare(albumId: string): Promise<void> {
     if (BASE) return http(`/albums/${albumId}/share`, { method: "DELETE" });
+    if (!accessFor(albumId)?.canShare) return forbidden();
     mock.store.shares.update((s) => {
       const next = { ...s };
       delete next[albumId];
@@ -307,8 +405,9 @@ export const mediaApi = {
     const year = date.getFullYear();
     if (BASE) return http(`/memories/on-this-day?date=${year}-${md}`);
     const albums = allAlbums();
+    const scope = feedAlbumIds();
     const groups = new Map<string, Photo[]>();
-    for (const p of allPhotos()) {
+    for (const p of allPhotos().filter((p) => scope.has(p.albumId))) {
       const y = Number(p.takenAt.slice(0, 4));
       if (p.takenAt.slice(5, 10) !== md || y >= year) continue;
       const key = `${y}|${p.albumId}`;
