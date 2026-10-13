@@ -23,6 +23,7 @@ import type {
 
 import { ApiError, BASE, fake, http, wait } from "./core";
 import { mockPublicConfig } from "./public-config";
+import { mockRequireCaptcha } from "./security";
 import { practiceApi } from "./practice";
 
 export { ApiError, isMock } from "./core";
@@ -36,8 +37,13 @@ const qrExpires = new Map<string, number>();
 export const api = {
   auth: {
     /** Family and guests only. Admin accounts are refused here and use adminLogin. */
-    login(identifier: string, password: string): Promise<Session> {
-      if (BASE) return http("/auth/login", { method: "POST", body: JSON.stringify({ identifier, password }) });
+    login(identifier: string, password: string, captchaToken?: string | null): Promise<Session> {
+      if (BASE) return http("/auth/login", { method: "POST", body: JSON.stringify({ identifier, password, captchaToken }) });
+      try {
+        mockRequireCaptcha(captchaToken);
+      } catch (e) {
+        return wait(300).then(() => { throw e; });
+      }
       const account = mock.demoAccounts.find((a) => a.identifier === identifier.trim().toLowerCase() && a.password === password);
       if (!account) return wait(500).then(() => { throw new ApiError(401, "Sai email/số điện thoại hoặc mật khẩu."); });
       if (account.user.role === "admin")
@@ -45,16 +51,26 @@ export const api = {
       return fake({ user: account.user, token: "demo" }, 600);
     },
     /** Admin door (/quan-tri/dang-nhap). Refuses every non-admin account. */
-    adminLogin(identifier: string, password: string): Promise<Session> {
-      if (BASE) return http("/admin/auth/login", { method: "POST", body: JSON.stringify({ identifier, password }) });
+    adminLogin(identifier: string, password: string, captchaToken?: string | null): Promise<Session> {
+      if (BASE) return http("/admin/auth/login", { method: "POST", body: JSON.stringify({ identifier, password, captchaToken }) });
+      try {
+        mockRequireCaptcha(captchaToken);
+      } catch (e) {
+        return wait(300).then(() => { throw e; });
+      }
       const account = mock.demoAccounts.find((a) => a.identifier === identifier.trim().toLowerCase() && a.password === password);
       if (!account) return wait(600).then(() => { throw new ApiError(401, "Sai email hoặc mật khẩu."); });
       if (account.user.role !== "admin")
         return wait(600).then(() => { throw new ApiError(403, "Tài khoản này không có quyền quản trị."); });
       return fake({ user: account.user, token: "demo-admin" }, 700);
     },
-    register(input: { name: string; identifier: string; password: string; role: "member" | "guest"; inviteCode?: string }): Promise<Session> {
+    register(input: { name: string; identifier: string; password: string; role: "member" | "guest"; inviteCode?: string; captchaToken?: string | null }): Promise<Session> {
       if (BASE) return http("/auth/register", { method: "POST", body: JSON.stringify(input) });
+      try {
+        mockRequireCaptcha(input.captchaToken);
+      } catch (e) {
+        return wait(300).then(() => { throw e; });
+      }
       return fake({ user: { ...mock.me, name: input.name, role: input.role }, token: "demo" }, 700);
     },
     createQrSession(): Promise<QrLoginSession> {

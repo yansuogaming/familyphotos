@@ -17,6 +17,8 @@ const NAME_MAX = 60;
 const QUOTA_MIN = 1;
 const QUOTA_MAX = 200;
 const QR_OPTIONS = [30, 60, 90, 120];
+const BOT_OPTIONS = [5, 10, 20, 30, 60, 120, 240, 720, 1440];
+const minutesLabel = (m: number) => (m < 60 ? `${m} phút` : m % 60 === 0 ? `${m / 60} giờ` : `${m} phút`);
 const PAGE_SIZE = 10;
 
 type Draft = Omit<SystemSettings, "quotaPerUserGb"> & { quotaPerUserGb: string };
@@ -133,6 +135,7 @@ function SystemForm({ initial, onSaved }: { initial: SystemSettings; onSaved: ()
   }
 
   const qrOptions = QR_OPTIONS.includes(draft.qrTtlSeconds) ? QR_OPTIONS : [...QR_OPTIONS, draft.qrTtlSeconds].sort((a, b) => a - b);
+  const botOptions = BOT_OPTIONS.includes(draft.botCheckMinutes) ? BOT_OPTIONS : [...BOT_OPTIONS, draft.botCheckMinutes].sort((a, b) => a - b);
 
   return (
     <div className="max-w-2xl">
@@ -185,6 +188,41 @@ function SystemForm({ initial, onSaved }: { initial: SystemSettings; onSaved: ()
       >
         {qrOptions.map((s) => (
           <option key={s} value={s}>{s} giây</option>
+        ))}
+      </SelectField>
+
+      <h3 className="mt-12 text-lg font-semibold">Chống bot</h3>
+      <p className="mt-1 max-w-[60ch] text-sm text-ink-2">
+        Dùng Cloudflare Turnstile. Người thật chỉ cần bấm một lần, thường không phải giải câu đố.
+      </p>
+      <div className="mt-3 border-y border-line divide-y divide-line">
+        <SwitchRow
+          checked={draft.captchaOnAuth}
+          onChange={(captchaOnAuth) => patch({ captchaOnAuth })}
+          label="Captcha khi đăng nhập và đăng ký"
+          description="Áp dụng cho trang đăng nhập, đăng ký và đăng nhập quản trị."
+        />
+        <SwitchRow
+          checked={draft.botCheckEnabled}
+          onChange={(botCheckEnabled) => patch({ botCheckEnabled })}
+          label="Kiểm tra khi vào trang"
+          description={
+            draft.botCheckEnabled
+              ? "Ai mở một trang bất kỳ mà lần kiểm tra trước đã hết hạn thì được hỏi lại ngay ở trang đó."
+              : "Đang tắt: không kiểm tra khi vào trang."
+          }
+        />
+      </div>
+      <SelectField
+        className="mt-6 max-w-xs"
+        label="Kiểm tra lại sau"
+        value={draft.botCheckMinutes}
+        disabled={!draft.botCheckEnabled}
+        onChange={(e) => patch({ botCheckMinutes: Number(e.target.value) })}
+        hint="Mặc định 20 phút. Ngắn hơn thì chặt hơn nhưng hỏi nhiều hơn."
+      >
+        {botOptions.map((m) => (
+          <option key={m} value={m}>{minutesLabel(m)}</option>
         ))}
       </SelectField>
 

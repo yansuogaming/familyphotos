@@ -2,6 +2,7 @@
 // demo keeps changes after a reload.
 import { albums as baseAlbums, assistantSuggestions } from "./mock-data";
 import { ApiError, persisted } from "./core";
+import { SECURITY_DEFAULTS } from "./admin-types";
 import type {
   Actor,
   AdminAlbum,
@@ -116,7 +117,8 @@ const assistant: AssistantConfig = {
   systemPrompt:
     "Bạn là trợ lý của gia đình. Trả lời bằng tiếng Việt, ngắn gọn, thân thiện. Khi trẻ hỏi bài, gợi ý từng bước để các con tự làm, không đưa đáp án ngay. Không chia sẻ ảnh hay thông tin của nhà ra ngoài.",
   suggestions: [...assistantSuggestions],
-  guestsAllowed: false,
+  guestsAllowed: true,
+  guestsUseSharedKey: false,
   kidDailyLimit: 30,
   provider: "claude",
 };
@@ -126,7 +128,11 @@ const system: SystemSettings = {
   quotaPerUserGb: 5,
   allowGuestSelfSignup: true,
   qrTtlSeconds: 60,
+  ...SECURITY_DEFAULTS,
 };
+
+/** Demo data saved before the security settings existed gets the defaults. */
+export const systemSettings = (): SystemSettings => ({ ...SECURITY_DEFAULTS, ...adminStore.get().system });
 
 const audit: AuditEntry[] = [
   { id: "a1", at: "2026-10-12T21:40:00", actor: quan, action: "Tạo mã mời", target: "NHA-4821 cho bà ngoại" },

@@ -1,61 +1,93 @@
 "use client";
 
-import { ArrowSquareOut, Bell, BellSlash, Check, Warning } from "@phosphor-icons/react";
+import { Bell, BellSlash, Check, Sparkle, Warning } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/Button";
 import { SwitchRow } from "@/components/ui/Switch";
 import { api } from "@/lib/api/client";
-import type { AiAccount, UserSettings } from "@/lib/api/types";
+import { LoadError } from "@/components/album/PhotosScreen";
+import { AiKeyForm } from "@/components/ai/AiKeyForm";
+import { aiApi } from "@/lib/api/ai";
+import { AI_PROVIDERS, type AiAccess } from "@/lib/api/ai-types";
+import type { UserSettings } from "@/lib/api/types";
 import { useApi } from "@/lib/hooks/useApi";
-import { session } from "@/lib/session";
+import { session, useSession } from "@/lib/session";
 import { setThemePref, useThemePref, type ThemePref } from "@/lib/theme";
 import { formatBytes, Section, useToast } from "./shared";
 
 /* ---------- Trợ lý AI ---------- */
 
-const providers: Record<AiAccount["provider"], { name: string; note: string }> = {
-  claude: { name: "Claude", note: "Của Anthropic. Giỏi giảng bài và viết văn." },
-  openai: { name: "ChatGPT / Codex", note: "Của OpenAI. Dùng chung tài khoản ChatGPT." },
-};
-
+/**
+ * Family members and admins use the family's shared key (set in the admin area).
+ * Guests add their own key, unless the admin lets guests share the family key.
+ */
 export function AiSection() {
   const toast = useToast();
-  const loaded = useApi(api.account.aiAccounts);
-  const [overrides, setOverrides] = useState<Record<string, boolean>>({});
+  const isGuest = useSession()?.user.role === "guest";
+  const access = useApi(aiApi.access);
 
   return (
-    <Section id="tro-ly-ai" title="Tài khoản AI riêng" description="Gắn tài khoản AI của bạn để Trợ lý AI trả lời bằng gói bạn đang dùng. Không gắn thì dùng gói chung của nhà.">
-      {loaded.status === "loading" && <div className="h-28 animate-pulse rounded-[var(--radius-paper)] bg-paper-2" />}
-      {loaded.status === "ready" && (
-        <ul className="grid gap-3 sm:grid-cols-2">
-          {loaded.data.map((a) => {
-            const connected = overrides[a.provider] ?? a.connected;
-            const p = providers[a.provider];
-            return (
-              <li key={a.provider} className={`flex flex-col gap-4 rounded-[var(--radius-paper)] border p-5 ${connected ? "border-coral/60 bg-coral-wash/40" : "border-line"}`}>
-                <div>
-                  <p className="flex items-center gap-2 font-display text-xl font-semibold">
-                    {p.name}
-                    {connected && <Check size={18} weight="bold" className="text-coral-ink" aria-label="Đã gắn" />}
-                  </p>
-                  <p className="mt-1 text-sm text-ink-2">{connected ? `Đã gắn: ${a.label ?? "tài khoản của bạn"}` : p.note}</p>
-                </div>
-                {connected ? (
-                  <Button variant="ghost" size="sm" className="w-fit" onClick={() => { setOverrides((o) => ({ ...o, [a.provider]: false })); toast(`Đã gỡ ${p.name}`); }}>
-                    Gỡ tài khoản
-                  </Button>
-                ) : (
-                  <Button variant="secondary" size="sm" className="w-fit" onClick={() => { setOverrides((o) => ({ ...o, [a.provider]: true })); toast(`Đã gắn ${p.name}`); }}>
-                    <ArrowSquareOut size={16} /> Đăng nhập {p.name}
-                  </Button>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+    <Section
+      id="ai"
+      title={isGuest ? "API AI của bạn" : "Trợ lý AI"}
+      description={isGuest ? "Thêm khoá API của bạn để dùng Trợ lý AI. Khoá chỉ dùng cho tài khoản của bạn." : undefined}
+    >
+      {access.status === "loading" && <div className="h-28 animate-pulse rounded-[var(--radius-paper)] bg-paper-2" />}
+      {access.status === "error" && <LoadError onRetry={access.reload} what="cài đặt AI" />}
+      {access.status === "ready" && (
+        <>
+          <AiStatus access={access.data} isGuest={isGuest} />
+          {isGuest && access.data.canAddOwnKey && (
+            <div className="mt-8">
+              <AiKeyForm
+                initial={access.data.own}
+                onSave={async (input) => {
+                  const saved = await aiApi.mine.save(input);
+                  toast("Đã lưu API AI của bạn");
+                  return saved;
+                }}
+                onTest={aiApi.mine.test}
+                onRemove={async () => {
+                  await aiApi.mine.remove();
+                  toast("Đã xoá API AI của bạn");
+                }}
+                saveLabel="Lưu API của tôi"
+              />
+            </div>
+          )}
+        </>
       )}
     </Section>
+  );
+}
+
+function AiStatus({ access, isGuest }: { access: AiAccess; isGuest: boolean }) {
+  const provider = access.using ? AI_PROVIDERS.find((p) => p.id === access.using!.provider)?.name : null;
+  const line =
+    access.mode === "none"
+      ? access.reason
+      : access.mode === "shared"
+        ? isGuest
+          ? "Bạn đang dùng API AI chung của nhà. Thêm khoá riêng bên dưới nếu muốn dùng gói của bạn."
+          : "Bạn dùng API AI chung của nhà, do quản trị cấu hình. Không cần thêm gì."
+        : "Trợ lý đang dùng API AI riêng của bạn.";
+  return (
+    <div className="flex items-start gap-4 rounded-[var(--radius-paper)] border border-line bg-paper-2 p-5">
+      <Sparkle size={26} weight="fill" className={`shrink-0 ${access.mode === "none" ? "text-ink-3" : "text-coral-ink"}`} />
+      <div className="min-w-0">
+        <p className="font-semibold">{access.mode === "none" ? "Trợ lý AI chưa dùng được" : "Trợ lý AI đang bật"}</p>
+        <p className="mt-0.5 text-sm text-ink-2">{line}</p>
+        {access.using && (
+          <p className="tabular mt-2 text-sm text-ink-3">
+            {provider}, model <span className="font-semibold text-ink-2">{access.using.model}</span>
+          </p>
+        )}
+        {isGuest && !access.sharedAllowed && access.canAddOwnKey && (
+          <p className="mt-2 text-sm text-ink-3">Nhà không cho khách dùng chung API, nên bạn cần khoá của riêng mình.</p>
+        )}
+      </div>
+    </div>
   );
 }
 

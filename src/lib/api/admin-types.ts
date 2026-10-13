@@ -103,6 +103,8 @@ export interface AssistantConfig {
   /** Prompts shown as chips in the assistant panel, in order. */
   suggestions: string[];
   guestsAllowed: boolean;
+  /** Guests may use the family's shared API key. Off: each guest adds their own key in Cài đặt. */
+  guestsUseSharedKey: boolean;
   /** Questions per day for kids (members with a grade). 0 = unlimited. */
   kidDailyLimit: number;
   provider: AiProvider;
@@ -113,7 +115,15 @@ export interface SystemSettings {
   quotaPerUserGb: number;
   allowGuestSelfSignup: boolean;
   qrTtlSeconds: number;
+  /** Cloudflare Turnstile on login, register and admin login. */
+  captchaOnAuth: boolean;
+  /** Human check whenever someone opens a page and their last check has expired. */
+  botCheckEnabled: boolean;
+  /** Minutes a passed human check stays valid. */
+  botCheckMinutes: number;
 }
+
+export const SECURITY_DEFAULTS = { captchaOnAuth: true, botCheckEnabled: true, botCheckMinutes: 20 } as const;
 
 export interface AuditEntry {
   id: string;

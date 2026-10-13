@@ -1,5 +1,5 @@
 // Settings the admin controls that public pages need to read (no admin rights).
-import { adminStore } from "./admin-mock";
+import { adminStore, systemSettings } from "./admin-mock";
 import { BASE, fake, http } from "./core";
 
 export interface PublicConfig {
@@ -7,15 +7,22 @@ export interface PublicConfig {
   assistantGuestsAllowed: boolean;
   allowGuestSelfSignup: boolean;
   qrTtlSeconds: number;
+  captchaOnAuth: boolean;
+  botCheckEnabled: boolean;
+  botCheckMinutes: number;
 }
 
 export function mockPublicConfig(): PublicConfig {
   const db = adminStore.get();
+  const sys = systemSettings();
   return {
     assistantSuggestions: db.assistant.suggestions,
     assistantGuestsAllowed: db.assistant.guestsAllowed,
-    allowGuestSelfSignup: db.system.allowGuestSelfSignup,
-    qrTtlSeconds: db.system.qrTtlSeconds,
+    allowGuestSelfSignup: sys.allowGuestSelfSignup,
+    qrTtlSeconds: sys.qrTtlSeconds,
+    captchaOnAuth: sys.captchaOnAuth,
+    botCheckEnabled: sys.botCheckEnabled,
+    botCheckMinutes: sys.botCheckMinutes,
   };
 }
 

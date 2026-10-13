@@ -1,9 +1,11 @@
 "use client";
 
 import { Microphone, PaperPlaneRight, Plus, Sparkle, Waveform } from "@phosphor-icons/react";
+import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api } from "@/lib/api/client";
 import { assistantSuggestions as defaultSuggestions } from "@/lib/api/mock-data";
+import { aiApi } from "@/lib/api/ai";
 import { publicConfigApi } from "@/lib/api/public-config";
 import { useApi } from "@/lib/hooks/useApi";
 import type { AssistantMessage } from "@/lib/api/types";
@@ -15,6 +17,8 @@ export function AssistantChat({ wide = false, context }: { wide?: boolean; conte
   const [thinking, setThinking] = useState(false);
   const end = useRef<HTMLDivElement>(null);
   const config = useApi(publicConfigApi.get);
+  const access = useApi(aiApi.access);
+  const blocked = access.status === "ready" && access.data.mode === "none" ? access.data : null;
   const assistantSuggestions = config.status === "ready" ? config.data.assistantSuggestions : defaultSuggestions;
 
   useEffect(() => {
@@ -49,7 +53,18 @@ export function AssistantChat({ wide = false, context }: { wide?: boolean; conte
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6">
         <div className={`flex flex-col gap-5 ${measure}`}>
-          {history.length === 0 ? (
+          {blocked ? (
+            <div className="flex flex-col gap-2 pt-4" role="status">
+              <Sparkle size={28} className="text-ink-3" />
+              <p className="font-display text-2xl font-semibold">Trợ lý chưa dùng được</p>
+              <p className="max-w-[48ch] text-ink-2">{blocked.reason}</p>
+              {blocked.canAddOwnKey && (
+                <Link href="/settings#ai" className="mt-2 w-fit font-semibold text-coral-ink underline">
+                  Thêm API AI của bạn
+                </Link>
+              )}
+            </div>
+          ) : history.length === 0 ? (
             <div className="flex flex-col gap-2 pt-4">
               <Sparkle size={28} weight="fill" className="text-coral-ink" />
               <p className="font-display text-2xl font-semibold">Hỏi mình bất cứ điều gì.</p>
@@ -84,7 +99,7 @@ export function AssistantChat({ wide = false, context }: { wide?: boolean; conte
 
       <div className="border-t border-line px-4 pb-4 pt-3">
         <div className={measure}>
-          {history.length === 0 && (
+          {history.length === 0 && !blocked && (
             <div className="mb-3 flex flex-wrap gap-2">
               {assistantSuggestions.map((s) => (
                 <button
@@ -104,6 +119,7 @@ export function AssistantChat({ wide = false, context }: { wide?: boolean; conte
             <label htmlFor="assistant-input" className="sr-only">Câu hỏi cho trợ lý</label>
             <input
               id="assistant-input"
+              disabled={!!blocked}
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               placeholder="Hỏi bất cứ điều gì..."
@@ -119,7 +135,7 @@ export function AssistantChat({ wide = false, context }: { wide?: boolean; conte
             <button
               type="submit"
               aria-label="Gửi"
-              disabled={!draft.trim() || thinking}
+              disabled={!draft.trim() || thinking || !!blocked}
               className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-coral text-on-coral transition-[opacity,transform] active:scale-95 disabled:opacity-40"
             >
               <PaperPlaneRight size={18} weight="fill" />

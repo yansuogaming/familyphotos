@@ -4,6 +4,7 @@ import { Eye, EyeSlash, ShieldCheck } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
+import { CAPTCHA_MISSING, useCaptcha } from "@/components/security/useCaptcha";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
 import { api, ApiError } from "@/lib/api/client";
@@ -31,7 +32,8 @@ function AdminLoginForm() {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [errors, setErrors] = useState<{ identifier?: string; password?: string; form?: string }>({});
+  const [errors, setErrors] = useState<{ identifier?: string; password?: string; captcha?: string; form?: string }>({});
+  const captcha = useCaptcha("admin-login");
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,15 +43,17 @@ function AdminLoginForm() {
     const next: typeof errors = {};
     if (!identifier) next.identifier = "Nhập email quản trị.";
     if (!password) next.password = "Nhập mật khẩu.";
+    if (captcha.missing) next.captcha = CAPTCHA_MISSING;
     setErrors(next);
     if (Object.keys(next).length) return;
 
     setBusy(true);
     try {
-      session.set(await api.auth.adminLogin(identifier, password));
+      session.set(await api.auth.adminLogin(identifier, password, captcha.token));
       router.replace("/quan-tri");
     } catch (err) {
       setErrors({ form: err instanceof ApiError ? err.message : "Không kết nối được. Thử lại sau ít phút." });
+      captcha.reset();
       setBusy(false);
     }
   }
@@ -81,6 +85,12 @@ function AdminLoginForm() {
             </IconButton>
           }
         />
+        {captcha.widget && (
+          <div className="flex flex-col gap-2">
+            {captcha.widget}
+            {errors.captcha && !captcha.token && <p className="text-sm text-danger">{errors.captcha}</p>}
+          </div>
+        )}
         <Button type="submit" size="lg" disabled={busy} className="mt-2 w-full">
           {busy ? "Đang kiểm tra..." : "Vào trang quản trị"}
         </Button>

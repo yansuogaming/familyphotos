@@ -1,6 +1,6 @@
 // Admin area data (/quan-tri). Every endpoint is admin-only; see docs/api/admin.md.
 import { ApiError, BASE, fake, http, wait } from "./core";
-import { adminStore, logMockAudit, mockActor, mockRequireAdmin, writeDb } from "./admin-mock";
+import { adminStore, logMockAudit, mockActor, mockRequireAdmin, systemSettings, writeDb } from "./admin-mock";
 import { siteStore } from "./site-mock";
 import type {
   AdminAlbum,
@@ -287,7 +287,8 @@ export const adminApi = {
   assistant: {
     get(): Promise<AssistantConfig> {
       if (BASE) return http("/admin/assistant");
-      return asAdmin(() => adminStore.get().assistant);
+      // Older demo data may predate guestsUseSharedKey.
+      return asAdmin(() => ({ ...adminStore.get().assistant, guestsUseSharedKey: adminStore.get().assistant.guestsUseSharedKey ?? false }));
     },
     save(config: AssistantConfig): Promise<AssistantConfig> {
       if (BASE) return http("/admin/assistant", json("PUT", config));
@@ -302,7 +303,7 @@ export const adminApi = {
   system: {
     get(): Promise<SystemSettings> {
       if (BASE) return http("/admin/system");
-      return asAdmin(() => adminStore.get().system);
+      return asAdmin(() => systemSettings());
     },
     save(s: SystemSettings): Promise<SystemSettings> {
       if (BASE) return http("/admin/system", json("PUT", s));

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { SiteText } from "@/components/admin/site/SiteSlots";
+import { CAPTCHA_MISSING, useCaptcha } from "@/components/security/useCaptcha";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
 import { QrLogin } from "@/components/ui/QrLogin";
@@ -68,7 +69,8 @@ function PasswordForm() {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [errors, setErrors] = useState<{ identifier?: string; password?: string; form?: string }>({});
+  const [errors, setErrors] = useState<{ identifier?: string; password?: string; captcha?: string; form?: string }>({});
+  const captcha = useCaptcha("login");
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -77,15 +79,17 @@ function PasswordForm() {
     const next: typeof errors = {};
     if (!identifier) next.identifier = "Nhập email hoặc số điện thoại.";
     if (!password) next.password = "Nhập mật khẩu.";
+    if (captcha.missing) next.captcha = CAPTCHA_MISSING;
     setErrors(next);
     if (Object.keys(next).length) return;
 
     setBusy(true);
     try {
-      session.set(await api.auth.login(identifier, password));
+      session.set(await api.auth.login(identifier, password, captcha.token));
       router.push("/anh");
     } catch (err) {
       setErrors({ form: err instanceof ApiError ? err.message : "Không kết nối được. Thử lại sau ít phút." });
+      captcha.reset();
       setBusy(false);
     }
   }
@@ -119,6 +123,12 @@ function PasswordForm() {
           Quên mật khẩu?
         </Link>
       </div>
+      {captcha.widget && (
+        <div className="flex flex-col gap-2">
+          {captcha.widget}
+          {errors.captcha && !captcha.token && <p className="text-sm text-danger">{errors.captcha}</p>}
+        </div>
+      )}
       <Button type="submit" size="lg" disabled={busy} className="mt-2 w-full">
         {busy ? "Đang mở cửa..." : "Vào nhà"}
       </Button>

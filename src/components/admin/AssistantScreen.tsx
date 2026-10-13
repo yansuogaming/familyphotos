@@ -1,14 +1,15 @@
 "use client";
 
 import { ArrowDown, ArrowUp, Check, Microphone, PaperPlaneRight, PencilSimple, Plus, Sparkle, Trash, X } from "@phosphor-icons/react";
-import Link from "next/link";
 import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { Section, useToast } from "@/components/settings/shared";
 import { Button, IconButton } from "@/components/ui/Button";
 import { SwitchRow } from "@/components/ui/Switch";
+import { AiKeyForm } from "@/components/ai/AiKeyForm";
 import { adminApi } from "@/lib/api/admin";
-import type { AiProvider, AssistantConfig } from "@/lib/api/admin-types";
+import { aiApi } from "@/lib/api/ai";
+import type { AssistantConfig } from "@/lib/api/admin-types";
 import { useApi } from "@/lib/hooks/useApi";
 import { SaveBar } from "./SaveBar";
 import { PageHeader, TextArea, TextField, errorText, inputClass } from "./ui";
@@ -47,8 +48,27 @@ export function AssistantScreen() {
         {config.status === "loading" && <FormSkeleton />}
         {config.status === "error" && <LoadError onRetry={config.reload} what="cài đặt trợ lý" />}
         {config.status === "ready" && <AssistantForm key={JSON.stringify(config.data)} initial={config.data} />}
+        <SharedKeySection />
       </div>
     </div>
+  );
+}
+
+/** The family's shared API key. Saved on its own, never part of the draft above. */
+function SharedKeySection() {
+  const shared = useApi(() => aiApi.shared.get(), []);
+  return (
+    <Section
+      id="api-ai"
+      title="Kết nối API AI"
+      description="Người trong nhà và quản trị dùng chung khoá này. Khách chỉ dùng được khi bạn bật Khách dùng chung API AI ở trên."
+    >
+      {shared.status === "loading" && <div className="h-72 max-w-2xl animate-pulse rounded-[var(--radius-paper)] bg-paper-2" />}
+      {shared.status === "error" && <LoadError onRetry={shared.reload} what="cấu hình API AI" />}
+      {shared.status === "ready" && (
+        <AiKeyForm initial={shared.data} onSave={aiApi.shared.save} onTest={aiApi.shared.test} saveLabel="Lưu API chung" />
+      )}
+    </Section>
   );
 }
 
@@ -171,7 +191,18 @@ function AssistantForm({ initial }: { initial: AssistantConfig }) {
               checked={draft.guestsAllowed}
               onChange={(guestsAllowed) => patch({ guestsAllowed })}
               label="Khách được dùng trợ lý"
-              description="Tắt thì khách vẫn xem được album được chia sẻ, nhưng không thấy khung trợ lý."
+              description="Tắt thì khách không dùng được trợ lý, kể cả khi có API riêng."
+            />
+            <SwitchRow
+              checked={draft.guestsUseSharedKey}
+              disabled={!draft.guestsAllowed}
+              onChange={(guestsUseSharedKey) => patch({ guestsUseSharedKey })}
+              label="Khách dùng chung API AI của nhà"
+              description={
+                draft.guestsUseSharedKey
+                  ? "Khách chưa có API riêng sẽ dùng API chung. Chi phí tính vào tài khoản của nhà."
+                  : "Đang tắt: mỗi khách tự thêm API AI của mình trong Cài đặt mới dùng được trợ lý."
+              }
             />
           </div>
           <TextField
@@ -193,10 +224,6 @@ function AssistantForm({ initial }: { initial: AssistantConfig }) {
             }
           />
         </div>
-      </Section>
-
-      <Section id="nha-cung-cap" title="Nhà cung cấp mặc định">
-        <ProviderPicker value={draft.provider} onChange={(provider) => patch({ provider })} />
       </Section>
 
       <SaveBar dirty={dirty} saving={saving} onSave={save} onReset={reset} error={saveError} savedAt={savedAt} />
@@ -407,42 +434,3 @@ function ChatPreview({ items }: { items: string[] }) {
   );
 }
 
-const providers: { id: AiProvider; name: string; body: string }[] = [
-  { id: "claude", name: "Claude", body: "Của Anthropic. Giảng bài kỹ, viết tiếng Việt tự nhiên." },
-  { id: "openai", name: "ChatGPT", body: "Của OpenAI. Nhanh, quen thuộc với nhiều người." },
-];
-
-function ProviderPicker({ value, onChange }: { value: AiProvider; onChange: (v: AiProvider) => void }) {
-  return (
-    <fieldset className="max-w-2xl">
-      <legend className="max-w-[60ch] text-ink-2">
-        Trợ lý dùng gói chung của nhà với nhà cung cấp này. Ai muốn dùng gói riêng thì gắn tài khoản AI của mình trong{" "}
-        <Link href="/cai-dat#tro-ly-ai" className="font-semibold text-coral-ink underline underline-offset-2">Cài đặt</Link>.
-      </legend>
-      <div className="mt-4 overflow-hidden rounded-[var(--radius-paper)] border border-line">
-        {providers.map((p) => {
-          const on = value === p.id;
-          return (
-            <label
-              key={p.id}
-              className={`flex min-h-14 cursor-pointer items-start gap-3 border-b border-line px-4 py-3.5 transition-colors last:border-b-0 has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-coral ${on ? "bg-coral-wash" : "hover:bg-paper-2"}`}
-            >
-              <input
-                type="radio"
-                name="ai-provider"
-                value={p.id}
-                checked={on}
-                onChange={() => onChange(p.id)}
-                className="mt-1 size-4 shrink-0 accent-[var(--coral)]"
-              />
-              <span className="min-w-0">
-                <span className={`block font-semibold ${on ? "text-coral-ink" : ""}`}>{p.name}</span>
-                <span className="block text-sm text-ink-2">{p.body}</span>
-              </span>
-            </label>
-          );
-        })}
-      </div>
-    </fieldset>
-  );
-}

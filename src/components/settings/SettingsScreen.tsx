@@ -10,7 +10,7 @@ import { ToastProvider } from "./shared";
 const toc = [
   { id: "ho-so", label: "Hồ sơ" },
   { id: "bao-mat", label: "Bảo mật" },
-  { id: "tro-ly-ai", label: "Tài khoản AI riêng" },
+  { id: "ai", label: "Trợ lý AI" },
   { id: "dung-luong", label: "Dung lượng" },
   { id: "rieng-tu", label: "Riêng tư" },
   { id: "giao-dien", label: "Giao diện và ngôn ngữ" },

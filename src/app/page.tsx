@@ -87,7 +87,8 @@ export default function Home() {
               <SiteText k="landing.photos.body" />
             </p>
           </div>
-          <div className="mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-6 sm:px-6 lg:px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]">
+          {/* Phones swipe the shelf; wider screens lay it out as a grid aligned with the heading. */}
+          <div className="mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-6 [scrollbar-width:none] sm:px-6 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-5 lg:overflow-visible lg:pb-0">
             {showcase.map((a) => (
               <AlbumCover
                 key={a.title}
@@ -95,7 +96,7 @@ export default function Home() {
                 title={a.title}
                 coverUrl={a.coverUrl}
                 meta={a.meta}
-                className="w-56 shrink-0 snap-start sm:w-64"
+                className="w-56 shrink-0 snap-start sm:w-64 lg:w-auto"
               />
             ))}
           </div>
