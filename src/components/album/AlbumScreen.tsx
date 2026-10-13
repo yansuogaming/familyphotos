@@ -54,6 +54,8 @@ function AlbumView({ id }: { id: string }) {
   const toast = useToast();
   const reduce = useReducedMotion();
   const s = useSession();
+  // Guests can add photos to keep their memories; managing the album stays with the family.
+  const canUpload = !!s;
   const canEdit = !!s && s.user.role !== "guest";
 
   const detail = useApi(() => mediaApi.album(id), [id]);
@@ -79,7 +81,7 @@ function AlbumView({ id }: { id: string }) {
       setDropped(files);
       setDialog("upload");
     },
-    canEdit && dialog === null && detail.status === "ready",
+    canUpload && dialog === null && detail.status === "ready",
   );
 
   const photos = useMemo(() => {
@@ -247,15 +249,17 @@ function AlbumView({ id }: { id: string }) {
                 <p className="text-sm text-on-cover/80">{names} đã góp ảnh</p>
               </div>
             )}
-            {canEdit && (
+            {canUpload && (
               <div className="mt-6 flex flex-wrap gap-2">
                 <Button onClick={() => { setDropped([]); setDialog("upload"); }}>
                   <UploadSimple size={18} weight="bold" /> Thêm ảnh
                 </Button>
-                <Button variant="secondary" onClick={() => setDialog("share")}>
-                  <ShareNetwork size={18} /> {album.share ? "Đang chia sẻ" : "Chia sẻ cho khách"}
-                </Button>
-                {photos.length > 0 && (
+                {canEdit && (
+                  <Button variant="secondary" onClick={() => setDialog("share")}>
+                    <ShareNetwork size={18} /> {album.share ? "Đang chia sẻ" : "Chia sẻ cho khách"}
+                  </Button>
+                )}
+                {canEdit && photos.length > 0 && (
                   <button
                     onClick={() => (selecting ? endSelect() : setSelecting(true))}
                     aria-pressed={selecting}
@@ -278,9 +282,9 @@ function AlbumView({ id }: { id: string }) {
           <div className="oli oli-margin rounded-[var(--radius-paper)] border border-line py-14 pl-20 pr-6">
             <p className="font-display text-2xl font-semibold">Album còn trống.</p>
             <p className="mt-2 max-w-[48ch] text-ink-2">
-              {canEdit ? "Kéo ảnh từ máy vào trang này, hoặc bấm Thêm ảnh." : "Cả nhà chưa thêm ảnh nào vào album này."}
+              {canUpload ? "Kéo ảnh từ máy vào trang này, hoặc bấm Thêm ảnh." : "Cả nhà chưa thêm ảnh nào vào album này."}
             </p>
-            {canEdit && (
+            {canUpload && (
               <Button className="mt-6" onClick={() => setDialog("upload")}>
                 <UploadSimple size={18} weight="bold" /> Thêm ảnh
               </Button>

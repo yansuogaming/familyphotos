@@ -31,7 +31,8 @@ function Photos() {
   const router = useRouter();
   const toast = useToast();
   const s = useSession();
-  const canEdit = !!s && s.user.role !== "guest";
+  // Everyone signed in, guests included, can create albums and upload photos.
+  const canEdit = !!s;
 
   const [dialog, setDialog] = useState<null | "upload" | "album">(null);
   const [dropped, setDropped] = useState<File[]>([]);
