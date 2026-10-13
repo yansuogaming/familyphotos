@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, EyeSlash, ShieldCheck } from "@phosphor-icons/react";
+import { ShieldCheck, Morph, icons } from "@/components/ui/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
@@ -11,14 +11,14 @@ import { api, ApiError } from "@/lib/api/client";
 import { session, useSession } from "@/lib/session";
 import { AdminCover, WrongAccount } from "./AdminGate";
 
-/** The admin's own door. Family and guests sign in at /dang-nhap instead. */
+/** The admin's own door. Family and guests sign in at /login instead. */
 export function AdminLoginScreen() {
   const s = useSession();
   const router = useRouter();
   const isAdmin = s?.user.role === "admin";
 
   useEffect(() => {
-    if (isAdmin) router.replace("/quan-tri");
+    if (isAdmin) router.replace("/admin/dashboard");
   }, [isAdmin, router]);
 
   return (
@@ -50,7 +50,7 @@ function AdminLoginForm() {
     setBusy(true);
     try {
       session.set(await api.auth.adminLogin(identifier, password, captcha.token));
-      router.replace("/quan-tri");
+      router.replace("/admin/dashboard");
     } catch (err) {
       setErrors({ form: err instanceof ApiError ? err.message : "Không kết nối được. Thử lại sau ít phút." });
       captcha.reset();
@@ -81,7 +81,7 @@ function AdminLoginForm() {
           error={errors.password}
           trailing={
             <IconButton type="button" label={show ? "Ẩn mật khẩu" : "Hiện mật khẩu"} onClick={() => setShow((v) => !v)}>
-              {show ? <EyeSlash size={20} /> : <Eye size={20} />}
+              <Morph icon={show ? icons.EyeSlash : icons.Eye} size={20} />
             </IconButton>
           }
         />
@@ -98,7 +98,7 @@ function AdminLoginForm() {
 
       <p className="mt-7 text-center text-sm text-ink-2">
         Không phải quản trị?{" "}
-        <Link href="/dang-nhap" className="font-semibold text-coral-ink underline">Về trang đăng nhập chính</Link>
+        <Link href="/login" className="font-semibold text-coral-ink underline">Về trang đăng nhập chính</Link>
       </p>
     </div>
   );

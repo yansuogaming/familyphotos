@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, PencilSimple } from "@phosphor-icons/react";
+import { Check, PencilSimple } from "@/components/ui/icons";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useState, type KeyboardEvent, type ReactNode } from "react";

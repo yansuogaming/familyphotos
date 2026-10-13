@@ -1,6 +1,6 @@
 "use client";
 
-import { Microphone, PaperPlaneRight, Plus, Sparkle, Waveform } from "@phosphor-icons/react";
+import { Microphone, PaperPlaneRight, Plus, Sparkle, Waveform } from "@/components/ui/icons";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api } from "@/lib/api/client";

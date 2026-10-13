@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkle } from "@phosphor-icons/react";
+import { Sparkle } from "@/components/ui/icons";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 

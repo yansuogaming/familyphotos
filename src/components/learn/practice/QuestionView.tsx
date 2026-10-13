@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Minus, X } from "@phosphor-icons/react";
+import { Check, Minus, X } from "@/components/ui/icons";
 import { useId } from "react";
 import { RichText } from "@/components/learn/Math";
 import { isCorrect } from "@/lib/api/practice";

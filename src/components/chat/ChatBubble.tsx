@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowBendUpLeft, DownloadSimple, FilePdf, FileText, MapPin, Smiley } from "@phosphor-icons/react";
+import { ArrowBendUpLeft, DownloadSimple, FilePdf, FileText, MapPin, Smiley } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useState, type MouseEvent, type ReactNode } from "react";

@@ -1,6 +1,6 @@
 # API nội dung trang công khai (site)
 
-Chữ và ảnh của trang chủ (`/`), trang đăng nhập (`/dang-nhap`) và trang đăng ký (`/dang-ky`). Quản trị viên sửa ở `/quan-tri/noi-dung`.
+Chữ và ảnh của trang chủ (`/`), trang đăng nhập (`/login`) và trang đăng ký (`/register`). Quản trị viên sửa ở `/admin/content`.
 
 Kiểu dữ liệu: `src/lib/api/site-types.ts` (`SiteContent`, `SiteImage`, `SiteAlbumPhoto`, `SiteSection`). Frontend gọi qua `siteApi` trong `src/lib/api/site.ts`. Nội dung mặc định (giống hệt bản đang chạy) nằm ở `src/lib/api/site-mock.ts` (`defaultSite`), backend nên dùng đúng bản này làm dữ liệu khởi tạo.
 

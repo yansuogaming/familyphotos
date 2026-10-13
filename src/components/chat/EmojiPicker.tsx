@@ -11,7 +11,7 @@ import {
   Smiley,
   UsersThree,
   type Icon,
-} from "@phosphor-icons/react";
+} from "@/components/ui/icons";
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { EMOJI_GROUPS, recentEmoji, rememberEmoji } from "./emoji";

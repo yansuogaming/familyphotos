@@ -1,6 +1,6 @@
 "use client";
 
-import { Desktop, DeviceMobile, DeviceTablet, Eye, EyeSlash, QrCode, SignOut } from "@phosphor-icons/react";
+import { Desktop, DeviceMobile, DeviceTablet, QrCode, SignOut, Morph, icons } from "@/components/ui/icons";
 import { useState, useSyncExternalStore, type FormEvent } from "react";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
@@ -45,7 +45,7 @@ function PasswordBlock() {
 
   const eye = (
     <IconButton type="button" label={show ? "Ẩn mật khẩu" : "Hiện mật khẩu"} onClick={() => setShow((s) => !s)}>
-      {show ? <EyeSlash size={20} /> : <Eye size={20} />}
+      <Morph icon={show ? icons.EyeSlash : icons.Eye} size={20} />
     </IconButton>
   );
 
@@ -83,7 +83,7 @@ function QrSignInBlock() {
     <>Bấm <span className="font-semibold text-ink">Quét mã QR</span> ở đây rồi hướng camera vào mã trên màn hình.</>,
   ];
   return (
-    <div id="may-tinh" className="scroll-mt-24">
+    <div id="link-device" className="scroll-mt-24">
       <Block title="Đăng nhập trên máy tính">
         <ol className="flex flex-col gap-3">
           {steps.map((s, i) => (
@@ -165,7 +165,7 @@ function DevicesBlock() {
 
 export function SecuritySection() {
   return (
-    <Section id="bao-mat" title="Bảo mật" description="Mật khẩu, đăng nhập bằng điện thoại và những nơi bạn đang đăng nhập.">
+    <Section id="security" title="Bảo mật" description="Mật khẩu, đăng nhập bằng điện thoại và những nơi bạn đang đăng nhập.">
       <div className="divide-y divide-line">
         <PasswordBlock />
         <QrSignInBlock />

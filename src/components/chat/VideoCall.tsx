@@ -1,6 +1,6 @@
 "use client";
 
-import { CameraRotate, Microphone, MicrophoneSlash, PhoneDisconnect, VideoCamera, VideoCameraSlash } from "@phosphor-icons/react";
+import { CameraRotate, Microphone, MicrophoneSlash, PhoneDisconnect, VideoCamera, VideoCameraSlash } from "@/components/ui/icons";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";

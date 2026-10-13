@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- previews may be local data URLs */
-import { ArrowCounterClockwise, CheckCircle, Images, MagnifyingGlass, UploadSimple } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, CheckCircle, Images, MagnifyingGlass, UploadSimple } from "@/components/ui/icons";
 import { useId, useRef, useState, type DragEvent } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { Button } from "@/components/ui/Button";

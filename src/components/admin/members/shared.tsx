@@ -24,7 +24,7 @@ export function useLocalList<T>(data: T[] | undefined) {
 
 export type TabKey = "members" | "requests" | "invites";
 
-const slugOf: Record<TabKey, string> = { members: "", requests: "cho-duyet", invites: "ma-moi" };
+const slugOf: Record<TabKey, string> = { members: "", requests: "requests", invites: "invites" };
 
 const hashListeners = new Set<() => void>();
 
@@ -39,10 +39,10 @@ function subscribeHash(cb: () => void) {
 
 const readHash = () => window.location.hash;
 
-/** Selected tab lives in the URL hash (#cho-duyet, #ma-moi) so other pages can link to it. */
+/** Selected tab lives in the URL hash (#requests, #invites) so other pages can link to it. */
 export function useHashTab(): [TabKey, (t: TabKey) => void] {
   const hash = useSyncExternalStore(subscribeHash, readHash, () => "");
-  const tab: TabKey = hash === "#cho-duyet" ? "requests" : hash === "#ma-moi" ? "invites" : "members";
+  const tab: TabKey = hash === "#requests" ? "requests" : hash === "#invites" ? "invites" : "members";
   const setTab = useCallback((t: TabKey) => {
     const { pathname, search } = window.location;
     const url = slugOf[t] ? `${pathname}${search}#${slugOf[t]}` : `${pathname}${search}`;

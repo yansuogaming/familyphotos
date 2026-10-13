@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft } from "@/components/ui/icons";
 import { useCallback, useState, type ReactNode } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { useToast } from "@/components/settings/shared";

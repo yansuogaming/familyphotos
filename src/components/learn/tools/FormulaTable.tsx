@@ -1,6 +1,6 @@
 "use client";
 
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import { MagnifyingGlass } from "@/components/ui/icons";
 import { useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { Math as TeX, RichText } from "@/components/learn/Math";

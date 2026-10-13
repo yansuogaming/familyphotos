@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowCounterClockwise, Check, Trash, X } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, Check, Trash, X } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
@@ -19,7 +19,7 @@ const groupKey = (m: Mistake) => `${m.subject.id}-${m.grade}`;
 const groupName = (m: Mistake) => `${m.subject.name} ${m.grade}`;
 const shortDate = (iso: string) => new Date(iso).toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" });
 
-/** /hoc/on-tap: questions answered wrong, by subject. A right answer clears them. */
+/** /learn/on-tap: questions answered wrong, by subject. A right answer clears them. */
 export function ReviewScreen() {
   const mistakes = useApi(practiceApi.mistakes);
   const [filter, setFilter] = useState("all");
@@ -36,13 +36,13 @@ export function ReviewScreen() {
   if (session)
     return (
       <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 lg:py-8">
-        <LearnHeader title="Ôn câu sai" backHref="/hoc/on-tap" backLabel="Về danh sách câu sai" />
+        <LearnHeader title="Ôn câu sai" backHref="/learn/review" backLabel="Về danh sách câu sai" />
         <div className="mt-8">
           <PracticeSession
             title={active === "all" ? "Tất cả câu sai" : groups.find(([k]) => k === active)?.[1] ?? "Câu sai"}
             mode="review"
             items={session.map((m) => ({ question: m.question, setId: m.setId, source: m.setTitle }))}
-            exitHref="/hoc/on-tap"
+            exitHref="/learn/review"
             exitLabel="Về danh sách"
             onExit={() => {
               setSession(null);
@@ -73,7 +73,7 @@ export function ReviewScreen() {
           <EmptyNote
             title="Chưa có câu sai nào, giỏi lắm"
             action={
-              <Link href="/hoc/luyen-tap" className={buttonClass("primary")}>
+              <Link href="/learn/practice" className={buttonClass("primary")}>
                 Đi luyện tập
               </Link>
             }

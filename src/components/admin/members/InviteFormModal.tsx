@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy } from "@phosphor-icons/react";
+import { Copy } from "@/components/ui/icons";
 import { useState, type FormEvent } from "react";
 import { useToast } from "@/components/settings/shared";
 import { Button } from "@/components/ui/Button";

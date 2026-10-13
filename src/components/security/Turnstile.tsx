@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowClockwise, CheckCircle, ShieldCheck } from "@phosphor-icons/react";
+import { ArrowClockwise, CheckCircle, ShieldCheck } from "@/components/ui/icons";
 import { useEffect, useRef, useState } from "react";
 
 /**

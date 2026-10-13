@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Check, NotePencil, Play, Sparkle } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, Check, NotePencil, Play, Sparkle } from "@/components/ui/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -28,7 +28,7 @@ export function lessonAnchors(lesson: LessonDetail, outline: SubjectOutline | nu
   return list;
 }
 
-export const practiceHref = (id: string) => `/hoc/luyen-tap?bai=${encodeURIComponent(id)}`;
+export const practiceHref = (id: string) => `/learn/practice?lesson=${encodeURIComponent(id)}`;
 
 export function askAi(lesson: LessonDetail) {
   window.dispatchEvent(
@@ -255,7 +255,7 @@ function Drafting({ canEdit, onAskAi }: { canEdit: boolean; onAskAi: () => void 
           <Sparkle size={18} /> Hỏi AI về bài này
         </button>
         {canEdit && (
-          <Link href="/quan-tri/hoc-lieu" className={buttonClass("secondary", "md")}>
+          <Link href="/admin/lessons" className={buttonClass("secondary", "md")}>
             <NotePencil size={18} /> Soạn bài này
           </Link>
         )}

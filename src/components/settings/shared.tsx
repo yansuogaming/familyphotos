@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle } from "@phosphor-icons/react";
+import { CheckCircle } from "@/components/ui/icons";
 import { AnimatePresence, motion } from "motion/react";
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
 

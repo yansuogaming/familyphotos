@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Ticket } from "@phosphor-icons/react";
+import { Plus, Ticket } from "@/components/ui/icons";
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 import { useNow } from "@/lib/hooks/useNow";
 import { useToast } from "@/components/settings/shared";

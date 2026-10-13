@@ -11,7 +11,7 @@ Gộp hai cuốn sổ quen thuộc nhất trong nhà người Việt: **album �
 | Điểm nhấn | Cam san hô (giữ theo thương hiệu): nút chính, dấu tích đỏ kiểu cô chấm bài, dải ruy băng đánh dấu "đang ở đây / đang học dở" | |
 
 - **Font**: Bricolage Grotesque (tiêu đề), Be Vietnam Pro (nội dung), Patrick Hand (chỉ dùng cho dòng ghi chú viết tay dưới ảnh). Cả ba đều có đủ dấu tiếng Việt.
-- **Icon**: Phosphor, một bộ duy nhất. **Hiệu ứng chuyển động**: thư viện Motion; tự tắt khi người dùng bật "giảm chuyển động" (reduce motion).
+- **Icon**: Morphicons (biến hình giữa các icon) với bộ icon nét Lucide. **Hiệu ứng chuyển động**: thư viện Motion; tự tắt khi người dùng bật "giảm chuyển động" (reduce motion).
 - **Đặc trưng riêng**: ảnh nằm trong túi nhựa có dòng ghi chú; ruy băng cam đánh dấu phòng đang mở trên thanh menu và bài đang học dở; mục lục kiểu vở (có dòng chấm dẫn) thay cho 4 thẻ giống nhau.
 - **Tuân theo hai bộ skill**: không dùng Inter, không gradient tím, không xếp 3 thẻ ngang bằng nhau, không có nhãn nhỏ phía trên tiêu đề (eyebrow), không dùng em-dash, nút không bị xuống dòng, chữ đạt tương phản WCAG AA, đủ các trạng thái loading/rỗng/lỗi.
 
@@ -22,19 +22,19 @@ Hai bộ skill đã được cài vào project (`.claude/skills/impeccable`, `.a
 | Route | Nội dung | Trạng thái |
 |---|---|---|
 | `/` | Landing: album mở + QR đăng nhập ngay tại trang, các mục Ảnh, Chat, Học, Trợ lý AI, Riêng tư | Xong |
-| `/dang-nhap` | Tab Mã QR (đếm ngược 60 giây, đã quét, hết hạn, lỗi) và tab Mật khẩu (kiểm tra ô nhập, báo lỗi) | Xong |
-| `/dang-ky` | "Bạn là ai?": Người trong nhà (cần mã mời) / Khách (chờ người nhà duyệt) | Xong |
-| `/anh` | Kệ album + ảnh mới thêm (dạng masonry), có loading/rỗng/lỗi | Demo |
+| `/login` | Tab Mã QR (đếm ngược 60 giây, đã quét, hết hạn, lỗi) và tab Mật khẩu (kiểm tra ô nhập, báo lỗi) | Xong |
+| `/register` | "Bạn là ai?": Người trong nhà (cần mã mời) / Khách (chờ người nhà duyệt) | Xong |
+| `/photos` | Kệ album + ảnh mới thêm (dạng masonry), có loading/rỗng/lỗi | Demo |
 | `/chat` | Danh sách cuộc trò chuyện + khung chat + ô soạn tin (ảnh, tệp, vị trí, biểu cảm), gọi video | Demo |
-| `/hoc` | 10 ô mục tiêu hằng ngày, chuỗi ngày học, phần "đang học dở", mục lục | Demo |
-| `/hoc/ly-thuyet` | Chọn lớp 1-12, chọn môn, mục lục chủ đề, bài học có lề đỏ, phần "Trong bài này" | Demo |
-| `/tro-ly` + nút nổi | Trợ lý AI toàn trang và khung trượt ra từ nút nổi ở góc phải mọi trang | Demo |
-| `/cai-dat` | Hồ sơ dạng "nhãn vở" (sửa thông tin, đổi ảnh đại diện), bảo mật (đổi mật khẩu, đăng nhập bằng QR, thiết bị), tài khoản AI riêng, dung lượng, riêng tư, giao diện, thông báo, xoá tài khoản | Xong |
+| `/learn` | 10 ô mục tiêu hằng ngày, chuỗi ngày học, phần "đang học dở", mục lục | Demo |
+| `/learn/theory` | Chọn lớp 1-12, chọn môn, mục lục chủ đề, bài học có lề đỏ, phần "Trong bài này" | Demo |
+| `/assistant` + nút nổi | Trợ lý AI toàn trang và khung trượt ra từ nút nổi ở góc phải mọi trang | Demo |
+| `/settings` | Hồ sơ dạng "nhãn vở" (sửa thông tin, đổi ảnh đại diện), bảo mật (đổi mật khẩu, đăng nhập bằng QR, thiết bị), tài khoản AI riêng, dung lượng, riêng tư, giao diện, thông báo, xoá tài khoản | Xong |
 | Menu avatar | Hiện ở thanh trên cùng sau khi đăng nhập: sửa thông tin, cài đặt, đăng nhập máy khác, đăng xuất | Xong |
 
 **Tài khoản demo**: xem file `DEMO_ACCOUNTS.txt` (không hiển thị trên giao diện, không commit lên git).
 
-Các trang trong app đều yêu cầu đăng nhập. Chưa đăng nhập thì tự chuyển về `/dang-nhap`.
+Các trang trong app đều yêu cầu đăng nhập. Chưa đăng nhập thì tự chuyển về `/login`.
 
 Chạy: `npm run dev` rồi mở http://localhost:3000. Dữ liệu là mock (tên gia đình hư cấu, ảnh từ picsum).
 

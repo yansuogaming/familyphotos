@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- attachment previews are local blob URLs */
-import { ArrowBendUpLeft, FileText, ImageSquare, MapPin, Paperclip, PaperPlaneRight, Plus, Smiley, WarningCircle, X } from "@phosphor-icons/react";
+import { ArrowBendUpLeft, FileText, ImageSquare, MapPin, Paperclip, PaperPlaneRight, Plus, Smiley, WarningCircle, X } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { buttonClass } from "@/components/ui/Button";

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight } from "@/components/ui/icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
@@ -13,21 +13,21 @@ import { mmss, Pomodoro, usePomodoro, type PomodoroState } from "./Pomodoro";
 import { UnitConverter } from "./UnitConverter";
 
 const tools = [
-  { id: "may-tinh", title: "Máy tính", desc: "Cộng trừ nhân chia, căn, luỹ thừa, sin cos tan." },
-  { id: "giai-phuong-trinh", title: "Giải phương trình", desc: "Bậc nhất, bậc hai và hệ hai ẩn, có lời giải từng bước." },
-  { id: "cong-thuc", title: "Bảng công thức", desc: "Toán, Vật lí, Hoá học từ lớp 6 đến lớp 12." },
-  { id: "dong-ho", title: "Đồng hồ học", desc: "Học 25 phút, nghỉ 5 phút. Hết giờ có chuông báo." },
-  { id: "doi-don-vi", title: "Đổi đơn vị", desc: "Độ dài, khối lượng, diện tích, thời gian, nhiệt độ." },
+  { id: "calculator", title: "Máy tính", desc: "Cộng trừ nhân chia, căn, luỹ thừa, sin cos tan." },
+  { id: "equations", title: "Giải phương trình", desc: "Bậc nhất, bậc hai và hệ hai ẩn, có lời giải từng bước." },
+  { id: "formulas", title: "Bảng công thức", desc: "Toán, Vật lí, Hoá học từ lớp 6 đến lớp 12." },
+  { id: "timer", title: "Đồng hồ học", desc: "Học 25 phút, nghỉ 5 phút. Hết giờ có chuông báo." },
+  { id: "units", title: "Đổi đơn vị", desc: "Độ dài, khối lượng, diện tích, thời gian, nhiệt độ." },
 ] as const;
 type ToolId = (typeof tools)[number]["id"];
 
-/** /hoc/tien-ich. `?cu=<toolId>` picks the tool. On phones the list and the tool are separate screens. */
+/** /learn/tien-ich. `?tool=<toolId>` picks the tool. On phones the list and the tool are separate screens. */
 export function ToolsScreen() {
-  const param = useSearchParams().get("cu");
+  const param = useSearchParams().get("tool");
   const wide = useMediaQuery("(min-width: 1024px)");
   const pomodoro = usePomodoro();
   const picked = tools.find((t) => t.id === param)?.id;
-  const active: ToolId | undefined = picked ?? (wide ? "may-tinh" : undefined);
+  const active: ToolId | undefined = picked ?? (wide ? "calculator" : undefined);
   const tool = tools.find((t) => t.id === active);
 
   return (
@@ -39,11 +39,11 @@ export function ToolsScreen() {
           <ol className="lg:sticky lg:top-24">
             {tools.map((t) => {
               const on = t.id === active;
-              const timer = t.id === "dong-ho" && (pomodoro.running || pomodoro.left !== pomodoro.total);
+              const timer = t.id === "timer" && (pomodoro.running || pomodoro.left !== pomodoro.total);
               return (
                 <li key={t.id} className="border-b border-line lg:border-0">
                   <Link
-                    href={`/hoc/tien-ich?cu=${t.id}`}
+                    href={`/learn/tools?tool=${t.id}`}
                     scroll={false}
                     aria-current={on ? "page" : undefined}
                     className={`group relative flex items-start gap-3 py-4 pl-6 pr-2 transition-colors lg:py-3 ${on ? "text-ink" : "text-ink-2 hover:text-ink"}`}
@@ -76,7 +76,7 @@ export function ToolsScreen() {
         {tool && (
           <section aria-labelledby="cong-cu" className="min-w-0">
             {!wide && (
-              <Link href="/hoc/tien-ich" scroll={false} className="mb-4 inline-flex h-10 items-center gap-1.5 rounded-full pl-2 pr-4 text-sm font-semibold text-ink-2 hover:bg-paper-2 hover:text-ink">
+              <Link href="/learn/tools" scroll={false} className="mb-4 inline-flex h-10 items-center gap-1.5 rounded-full pl-2 pr-4 text-sm font-semibold text-ink-2 hover:bg-paper-2 hover:text-ink">
                 <ArrowLeft size={18} /> Tất cả công cụ
               </Link>
             )}
@@ -96,15 +96,15 @@ export function ToolsScreen() {
 
 function ToolBody({ id, pomodoro }: { id: ToolId; pomodoro: PomodoroState }): ReactNode {
   switch (id) {
-    case "may-tinh":
+    case "calculator":
       return <Calculator />;
-    case "giai-phuong-trinh":
+    case "equations":
       return <EquationSolver />;
-    case "cong-thuc":
+    case "formulas":
       return <FormulaTable />;
-    case "dong-ho":
+    case "timer":
       return <Pomodoro p={pomodoro} />;
-    case "doi-don-vi":
+    case "units":
       return <UnitConverter />;
   }
 }

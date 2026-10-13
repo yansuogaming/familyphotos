@@ -1,6 +1,6 @@
 "use client";
 
-import { ShieldCheck } from "@phosphor-icons/react";
+import { ShieldCheck } from "@/components/ui/icons";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Logo } from "@/components/brand/Logo";
@@ -90,7 +90,7 @@ function CheckScreen({ path, minutes }: { path: string; minutes: number }) {
       <div
         ref={card}
         tabIndex={-1}
-        className="w-full max-w-md rounded-[var(--radius-paper)] bg-paper p-7 text-ink shadow-[0_24px_60px_-20px_oklch(0_0_0/0.6)] outline-none sm:p-9"
+        className="w-full max-w-md rounded-[var(--radius-paper)] bg-paper p-7 text-ink shadow-[0_24px_60px_-20px_oklch(0_0_0/0.6)] outline-none focus-visible:outline-none sm:p-9"
       >
         <ShieldCheck size={32} weight="fill" className="text-coral-ink" />
         <h1 id="human-check-title" className="mt-4 text-3xl font-bold">Kiểm tra nhanh</h1>

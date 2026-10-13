@@ -24,7 +24,7 @@ Câu hỏi luyện tập gửi kèm đáp án để chấm ngay trên máy (đâ
 |---|---|---|---|
 | GET | `/practice/catalog` | | `PracticeCatalogEntry[]`: lớp, môn, chủ đề, các bài có câu luyện (`questionCount`, `best` là điểm cao nhất trên 10) |
 | GET | `/practice/sets/:id` | | `PracticeSet`. `id` trùng id bài học, ví dụ `toan-9-c1-b1`. `404` khi bài chưa có câu luyện |
-| GET | `/practice/today` | | `PracticeToday { goal, done, streakDays }`. Dùng chung với ô "Mục tiêu hôm nay" ở /hoc |
+| GET | `/practice/today` | | `PracticeToday { goal, done, streakDays }`. Dùng chung với ô "Mục tiêu hôm nay" ở /learn |
 | POST | `/practice/answers` | `AnswerRecord { setId, questionId, correct, skipped?, mode? }` | `PracticeToday` mới. Sai thì thêm vào danh sách câu sai (tăng `wrongCount`). `mode: "review"` và đúng thì xoá khỏi danh sách |
 | POST | `/practice/attempts` | `FinishRecord { setId, correct, total, wrongIds }` | `PracticeAttempt` (backend tính `score` = correct / total x 10, 1 chữ số thập phân) |
 | GET | `/practice/attempts?set=:id` | | `PracticeAttempt[]`, mới nhất trước |

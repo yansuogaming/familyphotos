@@ -163,7 +163,7 @@ export const practiceApi = {
   /** One practice set, e.g. "toan-9-c1-b1". 404 when the lesson has no exercises yet. */
   set: async (id: string): Promise<PracticeSet> => (BASE ? http(`/practice/sets/${encodeURIComponent(id)}`) : fake(findSet(id))),
 
-  /** Today's goal, shared with /hoc (DailyTicks). */
+  /** Today's goal, shared with /learn (DailyTicks). */
   today: (): Promise<PracticeToday> => (BASE ? http("/practice/today") : fake(readToday(), 200)),
 
   /** Record one checked question. Updates today's count and the mistake list. */

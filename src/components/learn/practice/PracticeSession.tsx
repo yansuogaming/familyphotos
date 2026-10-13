@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowClockwise, ArrowCounterClockwise, ArrowRight, Check, ChatCircleDots, Lightbulb, SkipForward, X } from "@phosphor-icons/react";
+import { ArrowClockwise, ArrowCounterClockwise, ArrowRight, Check, ChatCircleDots, Lightbulb, SkipForward, X } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -472,7 +472,7 @@ function ResultSheet({
           {mode === "practice" && (
             <p className="mt-4 text-sm text-ink-2">
               Các câu sai đã được ghi vào{" "}
-              <Link href="/hoc/on-tap" className="font-semibold text-coral-ink underline">
+              <Link href="/learn/review" className="font-semibold text-coral-ink underline">
                 Ôn tập
               </Link>
               {theoryHref && (

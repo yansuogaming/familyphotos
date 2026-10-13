@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowCounterClockwise, ArrowRight, Fire } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowRight, Fire } from "@/components/ui/icons";
 import Link from "next/link";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { ButtonLink } from "@/components/ui/Button";
@@ -37,17 +37,17 @@ export function LearnHome() {
               </p>
             </div>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/hoc/luyen-tap?bai=toan-9-c1-b1" size="lg">
+              <ButtonLink href="/learn/practice?lesson=toan-9-c1-b1" size="lg">
                 {today.data.done >= today.data.goal ? "Luyện thêm" : `Học tiếp ${today.data.goal - today.data.done} câu`} <ArrowRight size={18} weight="bold" />
               </ButtonLink>
-              <ButtonLink href="/hoc/on-tap" size="lg" variant="secondary">
+              <ButtonLink href="/learn/review" size="lg" variant="secondary">
                 <ArrowCounterClockwise size={18} /> Ôn câu sai
               </ButtonLink>
             </div>
 
             {today.data.resume && (
               <Link
-                href={`/hoc/ly-thuyet?lop=${today.data.resume.grade}&mon=${slugify(today.data.resume.subject)}&chu-de=${today.data.resume.topicIndex}`}
+                href={`/learn/theory?grade=${today.data.resume.grade}&subject=${slugify(today.data.resume.subject)}&topic=${today.data.resume.topicIndex}`}
                 className="group relative mt-12 flex items-center gap-4 rounded-[var(--radius-paper)] border border-line bg-paper py-4 pl-12 pr-5 paper-shadow transition-colors hover:border-coral"
               >
                 <span className="absolute -top-2 left-4 h-[calc(100%+1.25rem)] w-4 bg-coral [clip-path:polygon(0_0,100%_0,100%_100%,50%_calc(100%-8px),0_100%)]" aria-hidden="true" />

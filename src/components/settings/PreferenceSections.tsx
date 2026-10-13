@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, BellSlash, Check, Sparkle, Warning } from "@phosphor-icons/react";
+import { Bell, BellSlash, Check, Sparkle, Warning } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/Button";
@@ -97,7 +97,7 @@ export function StorageSection() {
   const loaded = useApi(api.account.storage);
   if (loaded.status !== "ready") {
     return (
-      <Section id="dung-luong" title="Dung lượng">
+      <Section id="storage" title="Dung lượng">
         <div className="h-28 animate-pulse rounded-[var(--radius-paper)] bg-paper-2" />
       </Section>
     );
@@ -112,7 +112,7 @@ export function StorageSection() {
   const nearlyFull = usedBytes / quotaBytes > 0.9;
 
   return (
-    <Section id="dung-luong" title="Dung lượng" description="Ảnh, video và tệp bạn tải lên đều tính vào đây.">
+    <Section id="storage" title="Dung lượng" description="Ảnh, video và tệp bạn tải lên đều tính vào đây.">
       <p className="tabular font-display text-5xl font-bold tracking-tight">
         {formatBytes(usedBytes)} <span className="text-2xl font-semibold text-ink-3">/ {formatBytes(quotaBytes)}</span>
       </p>
@@ -163,7 +163,7 @@ function useSettings() {
 export function PrivacySection() {
   const { value, patch } = useSettings();
   return (
-    <Section id="rieng-tu" title="Riêng tư">
+    <Section id="privacy" title="Riêng tư">
       {!value ? (
         <div className="h-28 animate-pulse rounded-[var(--radius-paper)] bg-paper-2" />
       ) : (
@@ -213,7 +213,7 @@ export function NotificationSection() {
   const on = permission === "granted" && !!value?.notifications.enabled;
 
   return (
-    <Section id="thong-bao" title="Thông báo" description="Được báo khi có tin nhắn hoặc cuộc gọi mới, kể cả khi bạn đang làm việc khác.">
+    <Section id="notifications" title="Thông báo" description="Được báo khi có tin nhắn hoặc cuộc gọi mới, kể cả khi bạn đang làm việc khác.">
       <div className="flex flex-wrap items-center gap-4 rounded-[var(--radius-paper)] border border-line bg-paper-2 p-5">
         {on ? <Bell size={28} weight="fill" className="text-coral-ink" /> : <BellSlash size={28} className="text-ink-3" />}
         <div className="mr-auto min-w-0">
@@ -269,7 +269,7 @@ export function AppearanceSection() {
   const [lang, setLang] = useState<"vi" | "en">("vi");
 
   return (
-    <Section id="giao-dien" title="Giao diện và ngôn ngữ">
+    <Section id="appearance" title="Giao diện và ngôn ngữ">
       <p className="mb-3 font-semibold" id="theme-label">Giao diện</p>
       <div role="radiogroup" aria-labelledby="theme-label" className="grid max-w-xl grid-cols-3 gap-3">
         {themes.map((t) => {
@@ -331,7 +331,7 @@ export function DangerSection() {
   }
 
   return (
-    <Section id="xoa" title="Xoá tài khoản" tone="danger" description="Tài khoản vào hàng chờ và bị xoá vĩnh viễn sau 30 ngày. Đăng nhập lại trước hạn để khôi phục. Ảnh và tài liệu bạn đã tải lên vẫn ở lại trong album của nhà.">
+    <Section id="delete-account" title="Xoá tài khoản" tone="danger" description="Tài khoản vào hàng chờ và bị xoá vĩnh viễn sau 30 ngày. Đăng nhập lại trước hạn để khôi phục. Ảnh và tài liệu bạn đã tải lên vẫn ở lại trong album của nhà.">
       {!open ? (
         <Button variant="secondary" className="border-danger/50 text-danger hover:border-danger hover:bg-danger/10" onClick={() => setOpen(true)}>
           Xoá tài khoản của tôi

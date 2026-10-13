@@ -1,6 +1,6 @@
 "use client";
 
-import { CloudArrowUp } from "@phosphor-icons/react";
+import { CloudArrowUp } from "@/components/ui/icons";
 import { AnimatePresence, motion } from "motion/react";
 import { Portal } from "./Modal";
 

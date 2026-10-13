@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- library images may be local data URLs */
-import { Copy, Trash } from "@phosphor-icons/react";
+import { Copy, Trash } from "@/components/ui/icons";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { formatDateTime, useToast } from "@/components/settings/shared";

@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpenText, ChatsCircle, Images, LockKey, Sparkle } from "@phosphor-icons/react/ssr";
+import { ArrowRight, BookOpenText, ChatsCircle, Images, LockKey, Sparkle } from "@/components/ui/icons";
 import Link from "next/link";
 import { AiDemo } from "@/components/ai/AiDemo";
 import { AreaIndex } from "@/components/learn/AreaIndex";
@@ -14,10 +14,10 @@ import { HeroTitle, PrivacyPoints, SiteText } from "@/components/admin/site/Site
 import { learningAreas } from "@/lib/api/mock-data";
 
 const nav = [
-  { href: "#anh", label: "Ảnh", icon: Images },
+  { href: "#photos", label: "Ảnh", icon: Images },
   { href: "#chat", label: "Chat riêng", icon: ChatsCircle },
-  { href: "#hoc", label: "Học", icon: BookOpenText },
-  { href: "#tro-ly", label: "Trợ lý AI", icon: Sparkle },
+  { href: "#learn", label: "Học", icon: BookOpenText },
+  { href: "#assistant", label: "Trợ lý AI", icon: Sparkle },
 ];
 
 /**
@@ -47,10 +47,10 @@ export default function Home() {
           </nav>
           <div className="flex items-center gap-1">
             <ThemeToggle />
-            <Link href="/dang-ky" className="hidden rounded-full px-4 py-2 text-sm font-semibold text-ink-2 hover:text-ink sm:block">
+            <Link href="/register" className="hidden rounded-full px-4 py-2 text-sm font-semibold text-ink-2 hover:text-ink sm:block">
               Đăng ký
             </Link>
-            <ButtonLink href="/dang-nhap" size="sm">Vào nhà</ButtonLink>
+            <ButtonLink href="/login" size="sm">Vào nhà</ButtonLink>
           </div>
         </div>
       </header>
@@ -66,7 +66,7 @@ export default function Home() {
               <SiteText k="landing.heroLead" />
             </p>
             <div className="flex flex-col gap-6">
-              <ButtonLink href="/dang-nhap" size="lg" className="w-fit">
+              <ButtonLink href="/login" size="lg" className="w-fit">
                 Vào nhà <ArrowRight size={18} weight="bold" />
               </ButtonLink>
               <div className="hidden lg:block">
@@ -80,7 +80,7 @@ export default function Home() {
         </section>
 
         {/* Ảnh: a shelf of albums, one per occasion */}
-        <section id="anh" className="scroll-mt-20 border-t border-line bg-paper-2 py-20 lg:py-28">
+        <section id="photos" className="scroll-mt-20 border-t border-line bg-paper-2 py-20 lg:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <h2 className="max-w-2xl text-3xl font-bold sm:text-5xl"><SiteText k="landing.photos.title" /></h2>
             <p className="mt-4 max-w-[58ch] text-lg text-ink-2">
@@ -92,7 +92,7 @@ export default function Home() {
             {showcase.map((a) => (
               <AlbumCover
                 key={a.title}
-                href="/dang-nhap"
+                href="/login"
                 title={a.title}
                 coverUrl={a.coverUrl}
                 meta={a.meta}
@@ -118,7 +118,7 @@ export default function Home() {
         </section>
 
         {/* Học: the notebook's table of contents */}
-        <section id="hoc" className="scroll-mt-20 border-y border-line">
+        <section id="learn" className="scroll-mt-20 border-y border-line">
           <div className="oli py-20 lg:py-28">
             <div className="oli-margin mx-auto max-w-5xl pl-20 pr-4 sm:pr-6">
               <h2 className="text-3xl font-bold sm:text-5xl"><SiteText k="landing.learn.title" /></h2>
@@ -130,14 +130,14 @@ export default function Home() {
               </div>
 
               <div className="mt-14">
-                <AreaIndex areas={learningAreas} linkTo="/dang-nhap" />
+                <AreaIndex areas={learningAreas} linkTo="/login" />
               </div>
             </div>
           </div>
         </section>
 
         {/* Trợ lý AI */}
-        <section id="tro-ly" className="scroll-mt-20 py-20 lg:py-28">
+        <section id="assistant" className="scroll-mt-20 py-20 lg:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <h2 className="max-w-3xl text-3xl font-bold sm:text-5xl"><SiteText k="landing.assistant.title" /></h2>
             <p className="mt-4 mb-12 max-w-[56ch] text-lg text-ink-2">
@@ -165,8 +165,8 @@ export default function Home() {
           <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-4 sm:px-6 md:flex-row md:items-center">
             <h2 className="text-3xl font-bold sm:text-4xl"><SiteText k="landing.closing" /></h2>
             <div className="flex items-center gap-3">
-              <ButtonLink href="/dang-ky" variant="secondary" size="lg">Đăng ký</ButtonLink>
-              <ButtonLink href="/dang-nhap" size="lg">
+              <ButtonLink href="/register" variant="secondary" size="lg">Đăng ký</ButtonLink>
+              <ButtonLink href="/login" size="lg">
                 Vào nhà <ArrowRight size={18} weight="bold" />
               </ButtonLink>
             </div>

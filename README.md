@@ -23,7 +23,7 @@ npm run dev          # http://localhost:3000
 
 ### Tài khoản demo (chỉ dùng với mock)
 
-Có 3 tài khoản demo: người trong nhà, khách và quản trị (vào được `/quan-tri`). Email và mật khẩu nằm trong file `DEMO_ACCOUNTS.txt`. File này không được đưa lên git, hãy xin từ người quản lý dự án.
+Có 3 tài khoản demo: người trong nhà, khách và quản trị (vào được `/admin/dashboard`). Email và mật khẩu nằm trong file `DEMO_ACCOUNTS.txt`. File này không được đưa lên git, hãy xin từ người quản lý dự án.
 
 Tài khoản demo không được hiện trên giao diện. Muốn thử đăng nhập bằng QR khi chưa có app điện thoại: mở tab "Mã QR", bấm "Demo: giả lập điện thoại quét".
 
@@ -33,36 +33,60 @@ Bản demo lưu các thay đổi trong `localStorage` của trình duyệt (kho�
 
 - Next.js 16.4 (App Router, `cacheComponents`), React 19, TypeScript
 - Tailwind CSS v4, token màu OKLCH trong `src/app/globals.css`
-- `motion` (hiệu ứng), `@phosphor-icons/react` (icon), `katex` (công thức toán), `qrcode.react` (mã QR)
+- `motion` (hiệu ứng), `katex` (công thức toán), `qrcode.react` (mã QR)
+- Icon: [Morphicons](https://www.morphicons.com/) (biến hình giữa các icon) vẽ các icon nét của `lucide`, gói gọn trong `src/components/ui/icons.tsx`
 - Font qua `next/font`: Bricolage Grotesque, Be Vietnam Pro, Patrick Hand (cả ba có đủ dấu tiếng Việt)
 
 > Next.js 16 khác nhiều so với các bản cũ. Trước khi dùng API lạ, đọc tài liệu đi kèm trong `node_modules/next/dist/docs/` (xem `AGENTS.md`).
 
 ## Các trang
 
+Mọi URL đều bằng tiếng Anh. URL tiếng Việt cũ (`/dang-nhap`, `/anh`, `/hoc/...`, `/quan-tri/...`) tự chuyển hướng sang URL mới, cấu hình trong `next.config.ts`.
+
 | Route | Nội dung |
 |---|---|
 | `/` | Landing: album mở, đăng nhập QR ngay tại trang, giới thiệu các phòng |
-| `/dang-nhap`, `/dang-ky` | Đăng nhập (QR hoặc mật khẩu), đăng ký (người trong nhà cần mã mời, khách chờ duyệt) |
-| `/anh`, `/anh/[id]` | Kệ album, ảnh mới, "Ngày này năm xưa", chi tiết album, xem ảnh lớn, tải ảnh lên |
+| `/login`, `/register` | Đăng nhập (QR hoặc mật khẩu) và đăng ký. Chỉ dành cho người trong nhà và khách |
+| `/photos`, `/photos/[id]` | Album của nhà và album của khách để riêng, chi tiết album, xem ảnh lớn, tải ảnh lên (có ảnh lẻ không cần album) |
 | `/chat` | Chat 1-1 và nhóm: ảnh, tệp, vị trí, emoji, trả lời, cảm xúc, gọi video |
-| `/hoc` | Mục tiêu hằng ngày, chuỗi ngày học, bài đang học dở, mục lục |
-| `/hoc/ly-thuyet` | Đọc bài: mục lục và "Trong bài này" ẩn/hiện được, toàn màn hình, video, công thức, tự kiểm |
-| `/hoc/luyen-tap`, `/hoc/on-tap` | Luyện tập có chấm điểm, ôn câu sai |
-| `/hoc/giai-bai-tap` | Lời giải SGK theo bộ sách, xem từng bước |
-| `/hoc/toan`, `/hoc/de-thi`, `/hoc/sach` | Dạng bài Toán, thư viện đề (làm bài có giờ), kệ sách và trình đọc |
-| `/hoc/tien-ich` | Máy tính, giải phương trình, bảng công thức, đồng hồ học, đổi đơn vị |
-| `/tro-ly` | Trợ lý AI toàn trang (nút nổi góc phải có ở mọi trang trong app) |
-| `/cai-dat` | Hồ sơ, bảo mật, thiết bị, tài khoản AI, dung lượng, riêng tư, giao diện, thông báo |
-| `/quan-tri/dang-nhap` | Trang đăng nhập riêng của quản trị (không dùng chung `/dang-nhap`) |
-| `/quan-tri/*` | Chỉ vai trò `admin`: tổng quan, nội dung trang (đổi ảnh và chữ ở landing, đăng nhập, đăng ký), thư viện ảnh, thành viên và mã mời, album, học liệu (soạn bài), trợ lý AI, cài đặt hệ thống |
+| `/learn` | Mục tiêu hằng ngày, chuỗi ngày học, bài đang học dở, mục lục |
+| `/learn/theory` | Đọc bài (`?grade=9&subject=toan&lesson=...`): mục lục ẩn/hiện, toàn màn hình, video, công thức, tự kiểm |
+| `/learn/practice`, `/learn/review` | Luyện tập có chấm điểm (`?lesson=`), ôn câu sai |
+| `/learn/solutions` | Lời giải SGK theo bộ sách (`?exercise=`) |
+| `/learn/math`, `/learn/exams`, `/learn/books` | Dạng bài Toán, thư viện đề (`?exam=&take=1`), kệ sách (`?book=&page=`) |
+| `/learn/tools` | Máy tính, giải phương trình, bảng công thức, đồng hồ học, đổi đơn vị (`?tool=`) |
+| `/assistant` | Trợ lý AI toàn trang. Nút nổi ở góc phải có trên mọi trang trong app |
+| `/settings` | Hồ sơ, bảo mật, thiết bị, API AI (khách), dung lượng, riêng tư, giao diện, thông báo |
+| `/admin` | **Trang đăng nhập quản trị** (cửa riêng) |
+| `/admin/dashboard` | Tổng quan |
+| `/admin/content`, `/admin/library` | Chữ và ảnh của landing, đăng nhập, đăng ký; thư viện ảnh |
+| `/admin/members`, `/admin/albums` | Thành viên, duyệt khách (`#requests`), mã mời (`#invites`); album |
+| `/admin/lessons` | Soạn học liệu |
+| `/admin/assistant` | Trợ lý AI: lời nhắc, câu gợi ý, ai được dùng, khách dùng chung API, kết nối API AI chung |
+| `/admin/system` | Tên nhà, dung lượng, khách tự đăng ký, mã QR, chống bot (captcha, kiểm tra khi vào trang, thời hạn), nhật ký |
 
-Các trang trong `(app)` yêu cầu đăng nhập, chưa đăng nhập thì được chuyển về `/dang-nhap`.
+Quyền truy cập:
+- **Các trang trong `(app)`:** cần đăng nhập. Chưa đăng nhập thì được chuyển về `/login`.
+- **Khu quản trị, chưa đăng nhập:** chuyển về `/admin`.
+- **Khu quản trị, đang đăng nhập bằng tài khoản khách hoặc người trong nhà:** báo lỗi "chỉ dành cho quản trị" và yêu cầu đăng xuất trước.
+- **Tài khoản quản trị:** không đăng nhập được ở `/login`.
 
-Khu quản trị có cửa riêng:
-- **Chưa đăng nhập:** vào `/quan-tri/*` thì được chuyển về `/quan-tri/dang-nhap`.
-- **Đang đăng nhập bằng tài khoản khách hoặc người trong nhà:** trang báo lỗi "chỉ dành cho quản trị" và yêu cầu đăng xuất trước.
-- **Tài khoản quản trị:** không đăng nhập được ở `/dang-nhap`.
+## Chống bot
+
+Cả captcha và kiểm tra khi vào trang đều dùng Cloudflare Turnstile. Nếu chưa đặt `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, app hiện widget demo. Hai phần:
+- **Captcha:** ở đăng nhập, đăng ký và đăng nhập quản trị. Token được gửi lên backend trong trường `captchaToken`.
+- **Kiểm tra khi vào trang:** người dùng mở trang nào thì kiểm tra ngay tại trang đó, nếu lần xác minh trước đã quá thời hạn. Admin đặt thời hạn (mặc định 20 phút) trong `/admin/system`.
+
+Chi tiết cho backend: [docs/api/security.md](docs/api/security.md).
+
+## Trợ lý AI và API AI
+
+| Người dùng | Dùng API nào |
+|---|---|
+| Quản trị, người trong nhà | API AI chung của nhà, admin cấu hình ở `/admin/assistant` |
+| Khách | Tự thêm API AI của mình ở `/settings#ai`. Admin có thể bật "Khách dùng chung API AI của nhà" |
+
+Khoá API chỉ được gửi lên. Backend lưu mã hoá và chỉ trả về bản rút gọn kiểu `sk-ant-...4f2c`. Chi tiết: [docs/api/ai.md](docs/api/ai.md).
 
 ## Cấu trúc thư mục
 
@@ -85,9 +109,10 @@ docs/api/          hợp đồng API cho từng mảng
 
 ## Nối backend
 
-1. Đặt URL backend trong `.env.local`:
+1. Chép `.env.example` thành `.env.local`, rồi điền:
    ```
    NEXT_PUBLIC_API_URL=https://api.example.com
+   NEXT_PUBLIC_TURNSTILE_SITE_KEY=...
    ```
 2. Mỗi mảng có một module trong `src/lib/api/`. Trong mỗi hàm: nếu có `BASE` thì gọi `http(...)`, nếu không thì trả mock. Kiểu dữ liệu nằm trong các file `*-types.ts`.
 3. Backend làm đúng hợp đồng là frontend chạy được, không phải sửa giao diện.
@@ -102,6 +127,8 @@ docs/api/          hợp đồng API cho từng mảng
 | `site.ts` (`siteApi`): chữ và ảnh của trang công khai | [docs/api/site.md](docs/api/site.md) |
 | `admin.ts` (`adminApi`): quản trị | [docs/api/admin.md](docs/api/admin.md) |
 | `public-config.ts`: cấu hình công khai do admin đặt | `GET /config/public` |
+| `security.ts` (`securityApi`): kiểm tra người thật | [docs/api/security.md](docs/api/security.md) |
+| `ai.ts` (`aiApi`): API AI chung và riêng | [docs/api/ai.md](docs/api/ai.md) |
 
 Quy ước chung:
 - Xác thực bằng cookie httpOnly, frontend gửi `credentials: "include"`.
@@ -131,5 +158,5 @@ Một số quy tắc chính:
 - Giao diện sáng và tối đều phải đẹp.
 - Không dùng em-dash trong chữ hiển thị.
 - Mọi màn dữ liệu có đủ trạng thái đang tải, rỗng và lỗi.
-- Icon chỉ lấy từ Phosphor.
+- Icon chỉ lấy từ `@/components/ui/icons` (Morphicons + Lucide). Icon cần đổi hình theo trạng thái thì dùng `<Morph icon={...} />`.
 - Hiệu ứng phải tôn trọng cài đặt `prefers-reduced-motion`.

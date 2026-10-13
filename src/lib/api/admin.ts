@@ -1,4 +1,4 @@
-// Admin area data (/quan-tri). Every endpoint is admin-only; see docs/api/admin.md.
+// Admin area data (/admin/dashboard). Every endpoint is admin-only; see docs/api/admin.md.
 import { ApiError, BASE, fake, http, wait } from "./core";
 import { adminStore, logMockAudit, mockActor, mockRequireAdmin, systemSettings, writeDb } from "./admin-mock";
 import { siteStore } from "./site-mock";

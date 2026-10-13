@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, CaretDown, NotePencil, Sparkle, VideoCamera } from "@phosphor-icons/react";
+import { ArrowRight, CaretDown, NotePencil, Sparkle, VideoCamera } from "@/components/ui/icons";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";

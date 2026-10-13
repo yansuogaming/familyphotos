@@ -1,6 +1,6 @@
 "use client";
 
-import { ChatCircle, Check, MagnifyingGlass, VideoCamera } from "@phosphor-icons/react";
+import { ChatCircle, Check, MagnifyingGlass, VideoCamera } from "@/components/ui/icons";
 import { useId, useState, type FormEvent } from "react";
 import { Dialog, inputClass } from "@/components/album/Modal";
 import { Avatar } from "@/components/ui/Avatar";

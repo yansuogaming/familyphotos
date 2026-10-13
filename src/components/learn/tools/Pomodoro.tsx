@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowClockwise, Bell, BellSlash, Check, Pause, Play, SkipForward } from "@phosphor-icons/react";
+import { ArrowClockwise, Bell, BellSlash, Check, Pause, Play, SkipForward } from "@/components/ui/icons";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 

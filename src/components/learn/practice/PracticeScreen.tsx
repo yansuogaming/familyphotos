@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowCounterClockwise, ArrowRight } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowRight } from "@/components/ui/icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -15,9 +15,9 @@ import { useSession } from "@/lib/session";
 import { PracticeSession } from "./PracticeSession";
 import { Chips, EmptyNote, grades, LearnHeader } from "./shared";
 
-/** /hoc/luyen-tap. `?bai=<lessonId>` opens a session straight away. */
+/** /learn/luyen-tap. `?lesson=<lessonId>` opens a session straight away. */
 export function PracticeScreen() {
-  const id = useSearchParams().get("bai");
+  const id = useSearchParams().get("lesson");
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 lg:py-8">
       <LearnHeader title="Luyện tập" modes />
@@ -37,10 +37,10 @@ function SetLoader({ id }: { id: string }) {
           title="Bài này chưa có câu luyện tập"
           action={
             <>
-              <Link href="/hoc/luyen-tap" className={buttonClass("primary")}>
+              <Link href="/learn/practice" className={buttonClass("primary")}>
                 Chọn bài khác
               </Link>
-              <Link href="/hoc/ly-thuyet" className={buttonClass("secondary")}>
+              <Link href="/learn/theory" className={buttonClass("secondary")}>
                 Đọc lý thuyết
               </Link>
             </>
@@ -58,8 +58,8 @@ function SetLoader({ id }: { id: string }) {
       title={s.title}
       setId={s.id}
       items={s.questions.map((question) => ({ question, setId: s.id }))}
-      exitHref="/hoc/luyen-tap"
-      theoryHref={`/hoc/ly-thuyet?bai=${s.id}`}
+      exitHref="/learn/practice"
+      theoryHref={`/learn/theory?lesson=${s.id}`}
     />
   );
 }
@@ -150,7 +150,7 @@ function Picker() {
                       <ol className="mt-1">
                         {t.lessons.map((l) => (
                           <li key={l.id}>
-                            <Link href={`/hoc/luyen-tap?bai=${l.id}`} className="group flex min-h-12 items-baseline gap-3 py-2.5">
+                            <Link href={`/learn/practice?lesson=${l.id}`} className="group flex min-h-12 items-baseline gap-3 py-2.5">
                               <span className="tabular w-12 shrink-0 text-sm text-ink-3">Bài {l.index}</span>
                               <span className="min-w-0 font-medium transition-colors group-hover:text-coral-ink">{l.title}</span>
                               <span className="mx-1 hidden flex-1 -translate-y-[0.3em] border-b-2 border-dotted border-rule sm:block" aria-hidden="true" />
@@ -196,7 +196,7 @@ function Picker() {
             mistakes.data.length ? (
               <>
                 <p className="mt-1 text-sm text-ink-2">Có {mistakes.data.length} câu đang chờ con làm lại.</p>
-                <Link href="/hoc/on-tap" className={buttonClass("secondary", "md", "mt-4 w-full")}>
+                <Link href="/learn/review" className={buttonClass("secondary", "md", "mt-4 w-full")}>
                   <ArrowCounterClockwise size={18} /> Ôn câu sai
                 </Link>
               </>

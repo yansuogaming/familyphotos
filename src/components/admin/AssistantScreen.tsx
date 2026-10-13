@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Check, Microphone, PaperPlaneRight, PencilSimple, Plus, Sparkle, Trash, X } from "@phosphor-icons/react";
+import { ArrowDown, ArrowUp, Check, Microphone, PaperPlaneRight, PencilSimple, Plus, Sparkle, Trash, X } from "@/components/ui/icons";
 import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { Section, useToast } from "@/components/settings/shared";

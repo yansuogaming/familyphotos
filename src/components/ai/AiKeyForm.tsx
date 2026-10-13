@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle, Eye, EyeSlash, LockKey, Plugs, WarningCircle } from "@phosphor-icons/react";
+import { CheckCircle, LockKey, Plugs, WarningCircle, Morph, icons } from "@/components/ui/icons";
 import { useId, useState, type FormEvent } from "react";
 import { formatDateTime } from "@/components/settings/shared";
 import { Button, IconButton } from "@/components/ui/Button";
@@ -167,7 +167,7 @@ export function AiKeyForm({
         hint="Khoá được gửi thẳng lên máy chủ và mã hoá. Sau khi lưu, không ai xem lại được toàn bộ khoá."
         trailing={
           <IconButton type="button" label={show ? "Ẩn khoá" : "Hiện khoá"} onClick={() => setShow((v) => !v)}>
-            {show ? <EyeSlash size={20} /> : <Eye size={20} />}
+            <Morph icon={show ? icons.EyeSlash : icons.Eye} size={20} />
           </IconButton>
         }
       />

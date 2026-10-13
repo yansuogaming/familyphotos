@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowCounterClockwise, Check, Eye, EyeSlash, Lightbulb, X } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, Check, Lightbulb, X, Morph, icons } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { type ReactNode, useId, useState } from "react";
@@ -170,7 +170,7 @@ function QuestionBlock({ prompt, hint, answer }: { prompt: string; hint?: string
           </button>
         )}
         <button className={toggle} aria-expanded={showAnswer} aria-controls={`${uid}-answer`} onClick={() => setShowAnswer((v) => !v)}>
-          {showAnswer ? <EyeSlash size={18} /> : <Eye size={18} />}
+          <Morph icon={showAnswer ? icons.EyeSlash : icons.Eye} size={18} />
           {showAnswer ? "Ẩn đáp án" : "Xem đáp án"}
         </button>
       </div>

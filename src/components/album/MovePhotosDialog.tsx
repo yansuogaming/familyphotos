@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "@phosphor-icons/react";
+import { Check } from "@/components/ui/icons";
 import Image from "next/image";
 import { useState } from "react";
 import { buttonClass } from "@/components/ui/Button";

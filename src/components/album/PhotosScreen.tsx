@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowClockwise, FolderPlus, LockKey, UploadSimple } from "@phosphor-icons/react";
+import { ArrowClockwise, FolderPlus, LockKey, UploadSimple } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 import { ToastProvider, useToast } from "@/components/settings/shared";
@@ -120,7 +120,7 @@ function Photos() {
                       {shelf.albums.map((a) => (
                         <AlbumCover
                           key={a.id}
-                          href={`/anh/${a.id}`}
+                          href={`/photos/${a.id}`}
                           title={a.title}
                           coverUrl={a.coverUrl}
                           meta={a.space === "guest" && !isGuest && a.owner ? `${a.owner.name}, ${a.photoCount} ảnh` : `${a.photoCount} ảnh, ${new Date(a.takenFrom).getFullYear()}`}
@@ -188,7 +188,7 @@ function Photos() {
         onCreated={(a) => {
           setDialog(null);
           toast(`Đã tạo album ${a.title}`);
-          router.push(`/anh/${a.id}`);
+          router.push(`/photos/${a.id}`);
         }}
       />
       <DropOverlay show={dragging} />

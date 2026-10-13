@@ -1,6 +1,6 @@
 "use client";
 
-import { WarningCircle, X } from "@phosphor-icons/react";
+import { WarningCircle, X } from "@/components/ui/icons";
 import { useEffect, useId, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { Button, IconButton } from "@/components/ui/Button";
 import { ApiError } from "@/lib/api/core";

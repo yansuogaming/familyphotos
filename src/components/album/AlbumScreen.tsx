@@ -10,7 +10,7 @@ import {
   UploadSimple,
   X,
   Eye,
-} from "@phosphor-icons/react";
+} from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -149,7 +149,7 @@ function AlbumView({ id }: { id: string }) {
           <div className="oli oli-margin mt-6 rounded-[var(--radius-paper)] border border-line py-14 pl-20 pr-6">
             <p className="font-hand text-3xl text-ink">Không có album này trong sổ.</p>
             <p className="mt-2 max-w-[48ch] text-ink-2">Có thể album đã bị xoá hoặc đường dẫn bị gõ nhầm.</p>
-            <Link href="/anh" className={buttonClass("primary", "md", "mt-6")}>Xem tất cả album</Link>
+            <Link href="/photos" className={buttonClass("primary", "md", "mt-6")}>Xem tất cả album</Link>
           </div>
         ) : (
           <div className="mt-6"><LoadError onRetry={detail.reload} what="album" /></div>
@@ -412,7 +412,7 @@ function SelAction({ label, onClick, disabled, danger, children }: { label: stri
 
 function BackLink() {
   return (
-    <Link href="/anh" className="inline-flex h-10 items-center gap-2 rounded-full pr-3 text-sm font-semibold text-ink-2 hover:text-ink">
+    <Link href="/photos" className="inline-flex h-10 items-center gap-2 rounded-full pr-3 text-sm font-semibold text-ink-2 hover:text-ink">
       <ArrowLeft size={18} /> Tất cả album
     </Link>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, ArrowUp, CaretRight, DotsThree, PencilSimple, Plus, Trash } from "@phosphor-icons/react";
+import { ArrowDown, ArrowUp, CaretRight, DotsThree, PencilSimple, Plus, Trash } from "@/components/ui/icons";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { LessonSummary, SubjectOutline, TopicSummary } from "@/lib/api/lesson-types";

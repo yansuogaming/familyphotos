@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, CaretDown, ChatCircleDots, Eye, EyeSlash, Play, VideoCamera } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, CaretDown, ChatCircleDots, Eye, EyeSlash, Play, VideoCamera } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -26,11 +26,11 @@ const subjectsFor = (grade: number) =>
 
 const seriesOptions = (Object.keys(seriesNames) as BookSeries[]).map((s) => ({ value: s, label: seriesNames[s] }));
 
-/** /hoc/giai-bai-tap. `?bt=<exerciseId>` opens one exercise. */
+/** /learn/giai-bai-tap. `?exercise=<exerciseId>` opens one exercise. */
 export function SolutionsScreen() {
   const router = useRouter();
   const pathname = usePathname();
-  const openId = useSearchParams().get("bt");
+  const openId = useSearchParams().get("exercise");
   const wide = useMediaQuery("(min-width: 1024px)");
 
   const [grade, setGrade] = useState(9);
@@ -48,7 +48,7 @@ export function SolutionsScreen() {
 
   const items = list.status === "ready" ? list.data : [];
   const selected = openId ?? (wide ? items[0]?.id : undefined);
-  const open = (id: string | null) => router.push(id ? `${pathname}?bt=${id}` : pathname, { scroll: !wide });
+  const open = (id: string | null) => router.push(id ? `${pathname}?exercise=${id}` : pathname, { scroll: !wide });
 
   const resetDemo = () => {
     setGrade(9);

@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- cover preview is a local blob URL */
-import { ImageSquare, X } from "@phosphor-icons/react";
+import { ImageSquare, X } from "@/components/ui/icons";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { buttonClass } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";

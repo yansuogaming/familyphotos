@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, EnvelopeSimple, Phone } from "@phosphor-icons/react";
+import { Check, EnvelopeSimple, Phone } from "@/components/ui/icons";
 import { useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { useToast } from "@/components/settings/shared";

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowClockwise, CheckCircle, WarningCircle, X } from "@phosphor-icons/react";
+import { ArrowClockwise, CheckCircle, WarningCircle, X } from "@/components/ui/icons";
 import { Button, IconButton } from "@/components/ui/Button";
 import { formatSize } from "./format";
 

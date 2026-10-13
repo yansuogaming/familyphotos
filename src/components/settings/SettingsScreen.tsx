@@ -8,14 +8,14 @@ import { SecuritySection } from "./SecuritySection";
 import { ToastProvider } from "./shared";
 
 const toc = [
-  { id: "ho-so", label: "Hồ sơ" },
-  { id: "bao-mat", label: "Bảo mật" },
+  { id: "profile", label: "Hồ sơ" },
+  { id: "security", label: "Bảo mật" },
   { id: "ai", label: "Trợ lý AI" },
-  { id: "dung-luong", label: "Dung lượng" },
-  { id: "rieng-tu", label: "Riêng tư" },
-  { id: "giao-dien", label: "Giao diện và ngôn ngữ" },
-  { id: "thong-bao", label: "Thông báo" },
-  { id: "xoa", label: "Xoá tài khoản" },
+  { id: "storage", label: "Dung lượng" },
+  { id: "privacy", label: "Riêng tư" },
+  { id: "appearance", label: "Giao diện và ngôn ngữ" },
+  { id: "notifications", label: "Thông báo" },
+  { id: "delete-account", label: "Xoá tài khoản" },
 ];
 
 /** Highlights the section currently near the top of the viewport. */
@@ -67,7 +67,7 @@ export function SettingsScreen() {
                     <a
                       href={`#${t.id}`}
                       aria-current={on ? "true" : undefined}
-                      className={`relative flex items-center py-2 pl-6 text-[0.95rem] transition-colors ${on ? "font-semibold text-ink" : "text-ink-2 hover:text-ink"} ${t.id === "xoa" && !on ? "text-ink-3" : ""}`}
+                      className={`relative flex items-center py-2 pl-6 text-[0.95rem] transition-colors ${on ? "font-semibold text-ink" : "text-ink-2 hover:text-ink"} ${t.id === "delete-account" && !on ? "text-ink-3" : ""}`}
                     >
                       <span
                         aria-hidden="true"

@@ -1,14 +1,14 @@
 "use client";
 
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft } from "@/components/ui/icons";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { StudyModeTabs } from "@/components/learn/StudyModeTabs";
 
-/** Page title row shared by every /hoc sub-page. `modes` shows the four study-mode tabs. */
+/** Page title row shared by every /learn sub-page. `modes` shows the four study-mode tabs. */
 export function LearnHeader({
   title,
-  backHref = "/hoc",
+  backHref = "/learn",
   backLabel = "Về trang Học",
   modes = false,
   children,

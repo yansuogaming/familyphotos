@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- previews may be local data URLs */
-import { ArrowRight, BookOpenText, ChatsCircle, HouseLine, Images, LockKey, QrCode, Password, Sparkle, UserCirclePlus } from "@phosphor-icons/react";
+import { ArrowRight, BookOpenText, ChatsCircle, HouseLine, Images, LockKey, QrCode, Password, Sparkle, UserCirclePlus } from "@/components/ui/icons";
 import type { ReactNode } from "react";
 import { LogoMark } from "@/components/brand/Logo";
 import type { SiteContent } from "@/lib/api/site-types";

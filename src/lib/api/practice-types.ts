@@ -1,6 +1,6 @@
-// Types for practice (/hoc/luyen-tap, /hoc/on-tap, /hoc/toan), worked
-// textbook exercises (/hoc/giai-bai-tap), exams (/hoc/de-thi), books
-// (/hoc/sach) and study tools (/hoc/tien-ich). Builds on lesson-types.ts.
+// Types for practice (/learn/luyen-tap, /learn/on-tap, /learn/math), worked
+// textbook exercises (/learn/solutions), exams (/learn/exams), books
+// (/learn/books) and study tools (/learn/tools). Builds on lesson-types.ts.
 // Text fields marked "rich" may contain inline TeX between $...$.
 
 import type { QuizQuestion, Subject, Video } from "./lesson-types";
@@ -73,7 +73,7 @@ export interface AnswerRecord {
   questionId: string;
   correct: boolean;
   skipped?: boolean;
-  /** "review" when the answer comes from /hoc/on-tap (a correct answer clears the mistake). */
+  /** "review" when the answer comes from /learn/review (a correct answer clears the mistake). */
   mode?: "practice" | "review";
 }
 

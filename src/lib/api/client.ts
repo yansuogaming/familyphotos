@@ -50,7 +50,7 @@ export const api = {
         return wait(500).then(() => { throw new ApiError(403, "Tài khoản này chỉ đăng nhập được ở trang quản trị."); });
       return fake({ user: account.user, token: "demo" }, 600);
     },
-    /** Admin door (/quan-tri/dang-nhap). Refuses every non-admin account. */
+    /** Admin door (/admin). Refuses every non-admin account. */
     adminLogin(identifier: string, password: string, captchaToken?: string | null): Promise<Session> {
       if (BASE) return http("/admin/auth/login", { method: "POST", body: JSON.stringify({ identifier, password, captchaToken }) });
       try {

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowsLeftRight } from "@phosphor-icons/react";
+import { ArrowsLeftRight } from "@/components/ui/icons";
 import { useState } from "react";
 import { Chips, SelectField } from "@/components/learn/practice/shared";
 import { IconButton } from "@/components/ui/Button";

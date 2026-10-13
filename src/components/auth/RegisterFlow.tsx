@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, HouseLine, UserCirclePlus } from "@phosphor-icons/react";
+import { ArrowLeft, HouseLine, UserCirclePlus } from "@/components/ui/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
@@ -28,7 +28,7 @@ export function RegisterFlow() {
         <p className="mt-3 text-ink-2">
           {copy.sentBody}
         </p>
-        <Link href="/dang-nhap" className="mt-8 inline-block font-semibold text-coral-ink underline">
+        <Link href="/login" className="mt-8 inline-block font-semibold text-coral-ink underline">
           Quay lại đăng nhập
         </Link>
       </div>
@@ -66,7 +66,7 @@ export function RegisterFlow() {
         </div>
         <p className="mt-8 text-center text-sm text-ink-2">
           Đã có tài khoản?{" "}
-          <Link href="/dang-nhap" className="font-semibold text-coral-ink underline">Quay lại đăng nhập</Link>
+          <Link href="/login" className="font-semibold text-coral-ink underline">Quay lại đăng nhập</Link>
         </p>
       </div>
     );
@@ -103,7 +103,7 @@ function RegisterForm({ role, onBack, onGuestDone }: { role: Exclude<Role, "admi
     if (!s) return;
     if (role === "guest") return onGuestDone();
     session.set({ ...s, user: { ...s.user, email: d.identifier } });
-    router.push("/anh");
+    router.push("/photos");
   }
 
   return (

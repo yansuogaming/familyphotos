@@ -1,6 +1,6 @@
 "use client";
 
-import { CaretDown, GearSix, QrCode, ShieldStar, SignOut, UserCircleGear } from "@phosphor-icons/react";
+import { CaretDown, GearSix, QrCode, ShieldStar, SignOut, UserCircleGear } from "@/components/ui/icons";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -36,7 +36,7 @@ export function UserMenu() {
   async function logout() {
     await api.auth.logout();
     session.clear();
-    router.push("/dang-nhap");
+    router.push("/login");
   }
 
   const item = "flex w-full items-center gap-3 rounded-[var(--radius-paper)] px-3 py-2.5 text-left text-sm font-medium text-ink-2 hover:bg-paper-2 hover:text-ink";
@@ -75,14 +75,14 @@ export function UserMenu() {
             </div>
             <div className="border-t border-line pt-2">
               {user.role === "admin" && (
-                <Link role="menuitem" href="/quan-tri" onClick={() => setOpen(false)} className={`${item} font-semibold text-ink`}>
+                <Link role="menuitem" href="/admin/dashboard" onClick={() => setOpen(false)} className={`${item} font-semibold text-ink`}>
                   <ShieldStar size={20} weight="fill" className="text-coral-ink" /> Trang quản trị
                 </Link>
               )}
-              <Link role="menuitem" href="/cai-dat#ho-so" onClick={() => setOpen(false)} className={item}>
+              <Link role="menuitem" href="/settings#profile" onClick={() => setOpen(false)} className={item}>
                 <UserCircleGear size={20} /> Sửa thông tin cá nhân
               </Link>
-              <Link role="menuitem" href="/cai-dat" onClick={() => setOpen(false)} className={item}>
+              <Link role="menuitem" href="/settings" onClick={() => setOpen(false)} className={item}>
                 <GearSix size={20} /> Cài đặt
               </Link>
               <button

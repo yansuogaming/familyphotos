@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowClockwise, Check, Clock, PaperPlaneTilt, X } from "@phosphor-icons/react";
+import { ArrowClockwise, Check, Clock, PaperPlaneTilt, X } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -157,7 +157,7 @@ function Attempt({ exam, onRestart }: { exam: ExamDetail; onRestart: () => void 
                   <Button variant="secondary" onClick={onRestart}>
                     <ArrowClockwise size={18} /> Làm lại
                   </Button>
-                  <Link href="/hoc/de-thi" className={buttonClass("ghost")}>
+                  <Link href="/learn/exams" className={buttonClass("ghost")}>
                     Về thư viện
                   </Link>
                 </div>

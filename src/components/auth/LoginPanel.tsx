@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, EyeSlash, QrCode, Password } from "@phosphor-icons/react";
+import { QrCode, Password, Morph, icons } from "@/components/ui/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
@@ -57,7 +57,7 @@ export function LoginPanel() {
 
       <p className="mt-8 text-center text-sm text-ink-2">
         Chưa có tài khoản?{" "}
-        <Link href="/dang-ky" className="font-semibold text-coral-ink underline">
+        <Link href="/register" className="font-semibold text-coral-ink underline">
           Đăng ký
         </Link>
       </p>
@@ -86,7 +86,7 @@ function PasswordForm() {
     setBusy(true);
     try {
       session.set(await api.auth.login(identifier, password, captcha.token));
-      router.push("/anh");
+      router.push("/photos");
     } catch (err) {
       setErrors({ form: err instanceof ApiError ? err.message : "Không kết nối được. Thử lại sau ít phút." });
       captcha.reset();
@@ -110,7 +110,7 @@ function PasswordForm() {
         error={errors.password}
         trailing={
           <IconButton type="button" label={show ? "Ẩn mật khẩu" : "Hiện mật khẩu"} onClick={() => setShow((s) => !s)}>
-            {show ? <EyeSlash size={20} /> : <Eye size={20} />}
+            <Morph icon={show ? icons.EyeSlash : icons.Eye} size={20} />
           </IconButton>
         }
       />
@@ -119,7 +119,7 @@ function PasswordForm() {
           <input type="checkbox" name="remember" defaultChecked className="size-4 accent-[var(--coral)]" />
           Nhớ máy này
         </label>
-        <Link href="/dang-nhap" className="font-semibold text-ink-2 underline hover:text-ink">
+        <Link href="/login" className="font-semibold text-ink-2 underline hover:text-ink">
           Quên mật khẩu?
         </Link>
       </div>

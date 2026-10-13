@@ -18,7 +18,7 @@ import {
   WarningCircle,
   XCircle,
   type Icon,
-} from "@phosphor-icons/react";
+} from "@/components/ui/icons";
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useRef, useState, type DragEvent, type ReactNode } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
@@ -52,7 +52,7 @@ import {
 } from "./model";
 
 /** Where "Xem như học sinh" goes. The reader has no per-lesson route yet. */
-export const STUDENT_HREF = "/hoc/ly-thuyet";
+export const STUDENT_HREF = "/learn/theory";
 
 const blockIcons: Record<BlockType, Icon> = {
   paragraph: TextAlignLeft,

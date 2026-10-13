@@ -1,6 +1,6 @@
 "use client";
 
-import { ShieldWarning, SignOut } from "@phosphor-icons/react";
+import { ShieldWarning, SignOut } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { Logo } from "@/components/brand/Logo";
@@ -9,7 +9,7 @@ import { api } from "@/lib/api/client";
 import { roleLabel, type User } from "@/lib/api/types";
 import { session, useSession } from "@/lib/session";
 
-export const ADMIN_LOGIN = "/quan-tri/dang-nhap";
+export const ADMIN_LOGIN = "/admin";
 
 /** The admin area's own backdrop: the closed album cover, the same in light and dark. */
 export function AdminCover({ children }: { children: ReactNode }) {
@@ -49,7 +49,7 @@ export function WrongAccount({ user }: { user: User }) {
         <Button onClick={switchAccount} disabled={busy}>
           <SignOut size={18} /> {busy ? "Đang đăng xuất..." : "Đăng xuất"}
         </Button>
-        <ButtonLink href="/anh" variant="secondary">Về trang chính</ButtonLink>
+        <ButtonLink href="/photos" variant="secondary">Về trang chính</ButtonLink>
       </div>
     </div>
   );

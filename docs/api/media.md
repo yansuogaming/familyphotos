@@ -43,7 +43,7 @@ Giới hạn tải lên phía frontend: JPG, PNG, WEBP, GIF, HEIC/HEIF, tối đ
 | PUT | `/albums/:id/share` | `ShareInput { expiresInDays: 7 \| 30 \| null, allowDownload }` | `AlbumShare { url, createdAt, expiresAt, allowDownload }`. Gọi lại thì giữ `url`, đổi tuỳ chọn |
 | DELETE | `/albums/:id/share` | | `204`, đường dẫn cũ hết hiệu lực |
 
-`url` do backend tạo (mock đang dùng dạng `/khach/album/<id>-<mã>`). Trang công khai cho khách mở đường dẫn này chưa có ở frontend, cần bàn thêm.
+`url` do backend tạo (mock đang dùng dạng `/share/album/<id>-<mã>`). Trang công khai cho khách mở đường dẫn này chưa có ở frontend, cần bàn thêm.
 
 ## Kỷ niệm
 

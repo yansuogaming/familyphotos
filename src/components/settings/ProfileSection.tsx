@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, PencilSimple, Trash } from "@phosphor-icons/react";
+import { Camera, PencilSimple, Trash } from "@/components/ui/icons";
 import { useRef, useState, type FormEvent } from "react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
@@ -85,7 +85,7 @@ export function ProfileSection({ user }: { user: User }) {
   }
 
   return (
-    <Section id="ho-so" title="Hồ sơ" description="Cả nhà thấy tên, ảnh và tên gọi của bạn. Email và số điện thoại chỉ bạn thấy.">
+    <Section id="profile" title="Hồ sơ" description="Cả nhà thấy tên, ảnh và tên gọi của bạn. Email và số điện thoại chỉ bạn thấy.">
       <div className="relative rounded-[14px] border-2 border-coral/70 bg-paper p-1.5">
         <div className="oli rounded-[10px] border border-coral/40 p-5 sm:p-7">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start">

@@ -16,8 +16,8 @@ export function RequireSession({ children, role }: { children: ReactNode; role?:
   const allowed = !!s && (!role || s.user.role === role);
 
   useEffect(() => {
-    if (s === null) router.replace("/dang-nhap");
-    else if (s && role && s.user.role !== role) router.replace("/anh");
+    if (s === null) router.replace("/login");
+    else if (s && role && s.user.role !== role) router.replace("/photos");
   }, [s, role, router]);
 
   return (

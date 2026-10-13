@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpenText, ChatsCircle, GearSix, Images, Sparkle } from "@phosphor-icons/react";
+import { BookOpenText, ChatsCircle, GearSix, Images, Sparkle } from "@/components/ui/icons";
 import { LayoutGroup, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,10 +9,10 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { UserMenu } from "./UserMenu";
 
 export const rooms = [
-  { href: "/anh", label: "Ảnh", icon: Images },
+  { href: "/photos", label: "Ảnh", icon: Images },
   { href: "/chat", label: "Chat riêng", icon: ChatsCircle },
-  { href: "/hoc", label: "Học", icon: BookOpenText },
-  { href: "/tro-ly", label: "Trợ lý AI", icon: Sparkle },
+  { href: "/learn", label: "Học", icon: BookOpenText },
+  { href: "/assistant", label: "Trợ lý AI", icon: Sparkle },
 ];
 
 const isActive = (path: string, href: string) => path === href || path.startsWith(`${href}/`);
@@ -35,7 +35,7 @@ export function TopBar() {
     <>
       <header className="sticky top-0 z-30 border-b border-line bg-paper/90 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-4 px-4 sm:px-6">
-          <Logo href="/anh" />
+          <Logo href="/photos" />
           <LayoutGroup id="rooms-top">
             <nav className="mx-auto hidden items-center gap-1 md:flex" aria-label="Các phòng">
               {rooms.map(({ href, label, icon: Icon }) => {
@@ -58,8 +58,8 @@ export function TopBar() {
             </nav>
           </LayoutGroup>
           <div className="ml-auto flex items-center gap-0.5 md:ml-0">
-            <Link href="/cai-dat" aria-label="Cài đặt" title="Cài đặt" className="inline-flex size-10 items-center justify-center rounded-full text-ink-2 hover:bg-paper-3 hover:text-ink">
-              <GearSix size={20} weight={isActive(path, "/cai-dat") ? "fill" : "regular"} className={isActive(path, "/cai-dat") ? "text-coral-ink" : ""} />
+            <Link href="/settings" aria-label="Cài đặt" title="Cài đặt" className="inline-flex size-10 items-center justify-center rounded-full text-ink-2 hover:bg-paper-3 hover:text-ink">
+              <GearSix size={20} weight={isActive(path, "/settings") ? "fill" : "regular"} className={isActive(path, "/settings") ? "text-coral-ink" : ""} />
             </Link>
             <span className="group/tt relative hidden sm:block">
               <button

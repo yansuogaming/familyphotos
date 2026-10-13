@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowCounterClockwise, ArrowSquareOut, Eye, EyeSlash } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowSquareOut, Morph, icons } from "@/components/ui/icons";
 import { useMemo, useState, type ReactNode } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { useToast } from "@/components/settings/shared";
@@ -17,8 +17,8 @@ import { LandingPreview, LoginPreview, RegisterPreview } from "./ContentPreview"
 type Page = "landing" | "login" | "register";
 const pages: { id: Page; label: string; href: string }[] = [
   { id: "landing", label: "Trang chủ", href: "/" },
-  { id: "login", label: "Trang đăng nhập", href: "/dang-nhap" },
-  { id: "register", label: "Trang đăng ký", href: "/dang-ky" },
+  { id: "login", label: "Trang đăng nhập", href: "/login" },
+  { id: "register", label: "Trang đăng ký", href: "/register" },
 ];
 
 type Errors = Record<string, string>;
@@ -225,7 +225,7 @@ function Editor({ initial }: { initial: SiteContent }) {
       </div>
 
       <button onClick={() => setShowPreview((v) => !v)} aria-expanded={showPreview} className="mt-4 inline-flex h-10 items-center gap-2 rounded-full border border-line px-4 text-sm font-semibold text-ink-2 hover:text-ink xl:hidden">
-        {showPreview ? <EyeSlash size={16} /> : <Eye size={16} />} {showPreview ? "Ẩn xem trước" : "Xem trước"}
+        <Morph icon={showPreview ? icons.EyeSlash : icons.Eye} size={16} /> {showPreview ? "Ẩn xem trước" : "Xem trước"}
       </button>
       {showPreview && <div className="mt-4 xl:hidden">{preview}</div>}
 

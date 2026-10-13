@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Prohibit } from "@phosphor-icons/react";
+import { Copy, Prohibit } from "@/components/ui/icons";
 import { useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { useToast } from "@/components/settings/shared";

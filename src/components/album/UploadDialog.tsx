@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- previews are local blob URLs */
-import { ArrowClockwise, CaretDown, CheckCircle, CloudArrowUp, ImageSquare, WarningCircle, X } from "@phosphor-icons/react";
+import { ArrowClockwise, CaretDown, CheckCircle, CloudArrowUp, ImageSquare, WarningCircle, X } from "@/components/ui/icons";
 import { useEffect, useId, useRef, useState } from "react";
 import { formatBytes } from "@/components/settings/shared";
 import { buttonClass } from "@/components/ui/Button";

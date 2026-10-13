@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- covers may be local data URLs */
-import { Images, MagnifyingGlass, PencilSimple, Trash } from "@phosphor-icons/react";
+import { Images, MagnifyingGlass, PencilSimple, Trash } from "@/components/ui/icons";
 import { useMemo, useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { Button, IconButton } from "@/components/ui/Button";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Copy, LinkBreak } from "@phosphor-icons/react";
+import { Check, Copy, LinkBreak } from "@/components/ui/icons";
 import { useState } from "react";
 import { buttonClass } from "@/components/ui/Button";
 import { SwitchRow } from "@/components/ui/Switch";

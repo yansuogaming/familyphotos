@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- library images may be local data URLs */
-import { ImageSquare, MagnifyingGlass, UploadSimple } from "@phosphor-icons/react";
+import { ImageSquare, MagnifyingGlass, UploadSimple } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useRef, useState, type DragEvent } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";

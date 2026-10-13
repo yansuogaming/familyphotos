@@ -1,5 +1,5 @@
-// Lesson content schema shared by the reader (/hoc/ly-thuyet), practice
-// (/hoc/luyen-tap) and the admin lesson editor (/quan-tri/hoc-lieu).
+// Lesson content schema shared by the reader (/learn/theory), practice
+// (/learn/practice) and the admin lesson editor (/admin/lessons).
 // Text fields marked "rich" may contain inline TeX between $...$ (see RichText).
 
 export interface Subject {

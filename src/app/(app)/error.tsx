@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowClockwise, Images } from "@phosphor-icons/react";
+import { ArrowClockwise, Images } from "@/components/ui/icons";
 import { useEffect } from "react";
 import { Button, ButtonLink } from "@/components/ui/Button";
 
@@ -20,7 +20,7 @@ export default function AppError({ error, retry }: { error: Error & { digest?: s
           <Button onClick={() => retry()}>
             <ArrowClockwise size={18} weight="bold" /> Thử lại
           </Button>
-          <ButtonLink href="/anh" variant="secondary">
+          <ButtonLink href="/photos" variant="secondary">
             <Images size={18} /> Về trang Ảnh
           </ButtonLink>
         </div>

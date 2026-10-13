@@ -1,7 +1,7 @@
 # API bài học (Lý thuyết)
 
 Module frontend: `src/lib/api/lessons.ts` (export `lessonsApi`). Kiểu dữ liệu: `src/lib/api/lesson-types.ts`. Mock: `src/lib/api/lessons-mock.ts`.
-Dùng ở: trang đọc `/hoc/ly-thuyet`, trang luyện tập `/hoc/luyen-tap`, trang soạn bài `/quan-tri/hoc-lieu`.
+Dùng ở: trang đọc `/learn/theory`, trang luyện tập `/learn/practice`, trang soạn bài `/admin/lessons`.
 
 Quy ước chung như `API_CONTRACT.md`: JSON UTF-8, cookie httpOnly, lỗi trả `{ "message": "..." }`.
 
@@ -33,8 +33,8 @@ Tìm không phân biệt hoa thường. Gõ không dấu ("phuong trinh") thì t
 ## Ghi chú cho backend
 
 - `LessonDetail.topic`, `index`, `lessonCount`, `prev`, `next` do backend tính từ outline (bài trước/sau có thể ở chủ đề kề bên).
-- `id` bài nên ổn định vì nằm trên URL: `/hoc/ly-thuyet?lop=9&mon=toan&bai=toan-9-c1-b1` và `/hoc/luyen-tap?bai=toan-9-c1-b1`.
-- Trang đọc còn nhận `?lop=5&mon=tieng-viet&chu-de=2` (mở bài đầu của chủ đề thứ 2), dùng cho "Đang học dở" ở `/hoc`.
+- `id` bài nên ổn định vì nằm trên URL: `/learn/theory?grade=9&subject=toan&lesson=toan-9-c1-b1` và `/learn/practice?lesson=toan-9-c1-b1`.
+- Trang đọc còn nhận `?grade=5&subject=tieng-viet&topic=2` (mở bài đầu của chủ đề thứ 2), dùng cho "Đang học dở" ở `/learn`.
 - `subjectId` là slug không dấu của tên môn (`toan`, `tieng-viet`, `khoa-hoc-tu-nhien`...).
 - Chữ có thể chứa công thức giữa hai dấu `$` (xem chú thích "rich" trong `lesson-types.ts`). Khối `math` là công thức đứng riêng một dòng, không có `$`.
 - `Video.url` phải nhúng được trong `<iframe>` (ví dụ `https://www.youtube.com/embed/<id>`). Frontend tự thêm `autoplay=1&rel=0`.

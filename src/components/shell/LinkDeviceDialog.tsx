@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, CheckCircle, Copy, Desktop, DeviceMobile } from "@phosphor-icons/react";
+import { Check, CheckCircle, Copy, Desktop, DeviceMobile } from "@/components/ui/icons";
 import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { useState, type KeyboardEvent } from "react";
@@ -73,7 +73,7 @@ function Scanner({ onClose }: { onClose: () => void }) {
         <p className="font-display text-xl font-semibold">Đã mở cửa cho máy kia</p>
         <p className="max-w-[36ch] text-sm text-ink-2">Chrome trên Windows đã đăng nhập bằng tài khoản của bạn. Xem hoặc đăng xuất máy đó trong Cài đặt.</p>
         <div className="mt-2 flex gap-2">
-          <Link href="/cai-dat#may-tinh" onClick={onClose} className={buttonClass("secondary")}>Quản lý thiết bị</Link>
+          <Link href="/settings#link-device" onClick={onClose} className={buttonClass("secondary")}>Quản lý thiết bị</Link>
           <button onClick={onClose} className={buttonClass("primary")}>Xong</button>
         </div>
       </div>
@@ -128,7 +128,7 @@ function Scanner({ onClose }: { onClose: () => void }) {
 }
 
 function Steps() {
-  const url = `${location.origin}/dang-nhap`;
+  const url = `${location.origin}/login`;
   const [copied, setCopied] = useState(false);
   const steps = [
     <>Trên máy muốn đăng nhập, mở <span className="tabular font-semibold text-ink">{url.replace(/^https?:\/\//, "")}</span>.</>,
@@ -165,7 +165,7 @@ function Steps() {
       </div>
       <p className="text-sm text-ink-3">
         Máy nào đang đăng nhập thì xem ở{" "}
-        <Link href="/cai-dat#may-tinh" className="font-semibold text-coral-ink underline">Cài đặt, Thiết bị</Link>.
+        <Link href="/settings#link-device" className="font-semibold text-coral-ink underline">Cài đặt, Thiết bị</Link>.
       </p>
     </div>
   );

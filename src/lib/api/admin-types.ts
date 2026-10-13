@@ -1,4 +1,4 @@
-// Admin area (/quan-tri). Every endpoint requires role "admin" (403 otherwise).
+// Admin area (/admin/dashboard). Every endpoint requires role "admin" (403 otherwise).
 // See docs/api/admin.md.
 import type { Album, Photo, Role, User } from "./types";
 

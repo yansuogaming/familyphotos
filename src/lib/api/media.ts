@@ -214,7 +214,7 @@ const slug = (s: string) =>
     .replace(/^-|-$/g, "") || "album";
 
 const shareUrl = (albumId: string) =>
-  `${typeof location === "undefined" ? "" : location.origin}/khach/album/${albumId}-${Math.random().toString(36).slice(2, 8)}`;
+  `${typeof location === "undefined" ? "" : location.origin}/share/album/${albumId}-${Math.random().toString(36).slice(2, 8)}`;
 
 // ---------- API ----------
 

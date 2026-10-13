@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpenText, FolderSimple, MagnifyingGlass, MathOperations, TextAlignLeft, X } from "@phosphor-icons/react";
+import { BookOpenText, FolderSimple, MagnifyingGlass, MathOperations, TextAlignLeft, X } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { RichText } from "@/components/learn/Math";

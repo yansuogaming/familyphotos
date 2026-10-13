@@ -1,6 +1,6 @@
 "use client";
 
-import { DownloadSimple, FileText } from "@phosphor-icons/react";
+import { DownloadSimple, FileText } from "@/components/ui/icons";
 import Image from "next/image";
 import { useState, type KeyboardEvent } from "react";
 import { Lightbox } from "@/components/album/Lightbox";

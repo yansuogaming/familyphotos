@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- covers may be local data URLs */
-import { CheckCircle } from "@phosphor-icons/react";
+import { CheckCircle } from "@/components/ui/icons";
 import { useId, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/settings/shared";

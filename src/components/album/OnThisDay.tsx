@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight } from "@phosphor-icons/react";
+import { ArrowRight } from "@/components/ui/icons";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,7 +33,7 @@ export function OnThisDay() {
             <div>
               <p className="font-display text-xl font-semibold">{m.yearsAgo} năm trước</p>
               <p className="tabular text-sm text-ink-3">{new Date(m.date).toLocaleDateString("vi-VN")}</p>
-              <Link href={`/anh/${m.album.id}`} className="mt-2 inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-coral-ink hover:underline">
+              <Link href={`/photos/${m.album.id}`} className="mt-2 inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-coral-ink hover:underline">
                 {m.album.title} <ArrowRight size={14} weight="bold" />
               </Link>
             </div>

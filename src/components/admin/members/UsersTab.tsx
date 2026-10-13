@@ -1,6 +1,6 @@
 "use client";
 
-import { CaretDown, CaretLeft, CaretRight, CaretUp, CaretUpDown, Lock, LockOpen, MagnifyingGlass, PencilSimple, Trash } from "@phosphor-icons/react";
+import { CaretDown, CaretLeft, CaretRight, CaretUp, CaretUpDown, Lock, LockOpen, MagnifyingGlass, PencilSimple, Trash } from "@/components/ui/icons";
 import { useMemo, useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { formatBytes, useToast } from "@/components/settings/shared";

@@ -1,4 +1,4 @@
-import { Check } from "@phosphor-icons/react/ssr";
+import { Check } from "@/components/ui/icons";
 
 /** Today's goal as a row of notebook squares, ticked in red pen. */
 export function DailyTicks({ goal, done, size = "md" }: { goal: number; done: number; size?: "md" | "lg" }) {

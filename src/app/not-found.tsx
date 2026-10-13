@@ -1,4 +1,4 @@
-import { House, Images } from "@phosphor-icons/react/ssr";
+import { House, Images } from "@/components/ui/icons";
 import type { Metadata } from "next";
 import { Logo } from "@/components/brand/Logo";
 import { ButtonLink } from "@/components/ui/Button";
@@ -31,7 +31,7 @@ export default function NotFound() {
               <ButtonLink href="/">
                 <House size={18} weight="bold" /> Về trang chủ
               </ButtonLink>
-              <ButtonLink href="/anh" variant="secondary">
+              <ButtonLink href="/photos" variant="secondary">
                 <Images size={18} /> Mở album ảnh
               </ButtonLink>
             </div>

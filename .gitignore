@@ -55,3 +55,4 @@ DEMO_ACCOUNTS.txt
 .claude/skills/impeccable/scripts/bin/
 .impeccable/hook.cache.json
 .impeccable/questions/
+!.env.example

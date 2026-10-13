@@ -1,4 +1,4 @@
-import { MapPin } from "@phosphor-icons/react";
+import { MapPin } from "@/components/ui/icons";
 
 /**
  * Stand-in for a static map image. The backend can later return a real map

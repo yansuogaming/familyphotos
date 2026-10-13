@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowClockwise, CheckCircle, DeviceMobileCamera } from "@phosphor-icons/react";
+import { ArrowClockwise, CheckCircle, DeviceMobileCamera } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -14,7 +14,7 @@ type View =
   | { kind: "live"; session: QrLoginSession; state: QrLoginState };
 
 /** Web shows a QR; a member signed in on their phone scans it to sign this browser in. */
-export function QrLogin({ compact = false, redirectTo = "/anh" }: { compact?: boolean; redirectTo?: string }) {
+export function QrLogin({ compact = false, redirectTo = "/photos" }: { compact?: boolean; redirectTo?: string }) {
   const router = useRouter();
   const [view, setView] = useState<View>({ kind: "loading" });
   const [secondsLeft, setSecondsLeft] = useState(60);

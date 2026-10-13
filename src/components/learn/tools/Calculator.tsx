@@ -1,6 +1,6 @@
 "use client";
 
-import { Backspace } from "@phosphor-icons/react";
+import { Backspace } from "@/components/ui/icons";
 import { useRef, useState } from "react";
 import { evaluate, viNum } from "./math-utils";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Trash } from "@phosphor-icons/react";
+import { Plus, Trash } from "@/components/ui/icons";
 import { RichText } from "@/components/learn/Math";
 import { Button, IconButton } from "@/components/ui/Button";
 import type { LessonBlock, QuizQuestion } from "@/lib/api/lesson-types";

@@ -13,11 +13,11 @@ import { useApi } from "@/lib/hooks/useApi";
 import { useSession } from "@/lib/session";
 import { BookReader } from "./BookReader";
 
-/** /hoc/sach. `?cuon=<bookId>&trang=<n>` opens the reader. */
+/** /learn/sach. `?book=<bookId>&page=<n>` opens the reader. */
 export function BooksScreen() {
   const params = useSearchParams();
-  const id = params.get("cuon");
-  if (id) return <BookReader key={id} id={id} page={Math.max(1, Number(params.get("trang")) || 1)} />;
+  const id = params.get("book");
+  if (id) return <BookReader key={id} id={id} page={Math.max(1, Number(params.get("page")) || 1)} />;
   return <Shelves />;
 }
 
@@ -66,7 +66,7 @@ function Shelf({ title, books }: { title: string; books: BookSummary[] }) {
       <ul className="mt-4 flex overflow-x-auto px-3 pb-2 pt-3">
         {books.map((b) => (
           <li key={b.id} className="w-32 shrink-0 sm:w-36">
-            <Link href={`/hoc/sach?cuon=${b.id}`} className="group block px-2 sm:px-3" aria-label={`${b.title}, ${b.publisher}`}>
+            <Link href={`/learn/books?book=${b.id}`} className="group block px-2 sm:px-3" aria-label={`${b.title}, ${b.publisher}`}>
               <span
                 className="relative block aspect-[5/7] overflow-hidden rounded-l-[2px] rounded-r-[4px] bg-paper-3 shadow-[inset_7px_0_8px_-5px_oklch(0_0_0/0.4),0_10px_16px_-10px_hsl(var(--shadow)/0.6)] transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:-translate-y-2"
               >

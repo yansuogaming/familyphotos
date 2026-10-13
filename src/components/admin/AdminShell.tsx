@@ -14,7 +14,7 @@ import {
   UsersThree,
   X,
   type Icon,
-} from "@phosphor-icons/react";
+} from "@/components/ui/icons";
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -32,20 +32,20 @@ import { UnsavedProvider, useUnsavedGuard } from "./unsaved";
 
 const sections: { href: string; label: string; icon: Icon }[][] = [
   [
-    { href: "/quan-tri", label: "Tổng quan", icon: House },
-    { href: "/quan-tri/thanh-vien", label: "Thành viên", icon: UsersThree },
-    { href: "/quan-tri/album", label: "Album", icon: Books },
-    { href: "/quan-tri/thu-vien", label: "Thư viện ảnh", icon: Images },
+    { href: "/admin/dashboard", label: "Tổng quan", icon: House },
+    { href: "/admin/members", label: "Thành viên", icon: UsersThree },
+    { href: "/admin/albums", label: "Album", icon: Books },
+    { href: "/admin/library", label: "Thư viện ảnh", icon: Images },
   ],
   [
-    { href: "/quan-tri/noi-dung", label: "Nội dung trang", icon: Browser },
-    { href: "/quan-tri/hoc-lieu", label: "Học liệu", icon: BookOpenText },
-    { href: "/quan-tri/tro-ly", label: "Trợ lý AI", icon: Sparkle },
+    { href: "/admin/content", label: "Nội dung trang", icon: Browser },
+    { href: "/admin/lessons", label: "Học liệu", icon: BookOpenText },
+    { href: "/admin/assistant", label: "Trợ lý AI", icon: Sparkle },
   ],
-  [{ href: "/quan-tri/he-thong", label: "Cài đặt hệ thống", icon: GearSix }],
+  [{ href: "/admin/system", label: "Cài đặt hệ thống", icon: GearSix }],
 ];
 
-const isActive = (path: string, href: string) => (href === "/quan-tri" ? path === href : path === href || path.startsWith(`${href}/`));
+const isActive = (path: string, href: string) => (href === "/admin/dashboard" ? path === href : path === href || path.startsWith(`${href}/`));
 
 /** Link that asks before throwing away unsaved edits. */
 function useGuardedNavigate() {
@@ -95,13 +95,13 @@ function Sidebar({ onNavigate, layoutId }: { onNavigate?: () => void; layoutId: 
   async function logout() {
     await api.auth.logout();
     session.clear();
-    router.push("/quan-tri/dang-nhap");
+    router.push("/admin");
   }
 
   return (
     <div className="flex h-full flex-col">
       <div className="px-5 pb-5 pt-6 [&_*]:text-on-cover">
-        <Logo href="/quan-tri" tagline={false} />
+        <Logo href="/admin/dashboard" tagline={false} />
         <p className="mt-2 pl-[2.6rem] text-sm opacity-75">Trang quản trị</p>
       </div>
 
@@ -142,8 +142,8 @@ function Sidebar({ onNavigate, layoutId }: { onNavigate?: () => void; layoutId: 
 
       <div className="border-t border-[oklch(1_0_0/0.1)] px-3 py-4">
         <Link
-          href="/anh"
-          onClick={onClick("/anh", onNavigate)}
+          href="/photos"
+          onClick={onClick("/photos", onNavigate)}
           className="flex h-11 items-center gap-3 rounded-full border border-[oklch(1_0_0/0.18)] px-4 text-sm font-semibold text-on-cover transition-colors hover:bg-[oklch(1_0_0/0.06)]"
         >
           <ArrowSquareOut size={18} /> Xem trang chính

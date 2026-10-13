@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowsOut, ChatCircleDots, Plus, X } from "@phosphor-icons/react";
+import { ArrowsOut, ChatCircleDots, Plus, X } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -37,7 +37,7 @@ export function AssistantFab() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  if (path.startsWith("/tro-ly")) return null;
+  if (path.startsWith("/assistant")) return null;
 
   return (
     <>
@@ -57,7 +57,7 @@ export function AssistantFab() {
               <button onClick={() => { setContext(undefined); setSession((s) => s + 1); }} aria-label="Cuộc trò chuyện mới" title="Cuộc trò chuyện mới" className="inline-flex size-10 items-center justify-center rounded-full text-ink-2 hover:bg-paper-3 hover:text-ink">
                 <Plus size={20} />
               </button>
-              <Link href="/tro-ly" onClick={() => setOpen(false)} aria-label="Mở toàn trang" title="Mở toàn trang" className="inline-flex size-10 items-center justify-center rounded-full text-ink-2 hover:bg-paper-3 hover:text-ink">
+              <Link href="/assistant" onClick={() => setOpen(false)} aria-label="Mở toàn trang" title="Mở toàn trang" className="inline-flex size-10 items-center justify-center rounded-full text-ink-2 hover:bg-paper-3 hover:text-ink">
                 <ArrowsOut size={20} />
               </Link>
               <button onClick={() => setOpen(false)} aria-label="Đóng" title="Đóng" className="inline-flex size-10 items-center justify-center rounded-full text-ink-2 hover:bg-paper-3 hover:text-ink">

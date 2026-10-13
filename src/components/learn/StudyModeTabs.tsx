@@ -4,13 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export const studyModes = [
-  { href: "/hoc/ly-thuyet", label: "Lý thuyết" },
-  { href: "/hoc/luyen-tap", label: "Luyện tập" },
-  { href: "/hoc/giai-bai-tap", label: "Giải bài tập" },
-  { href: "/hoc/tien-ich", label: "Tiện ích" },
+  { href: "/learn/theory", label: "Lý thuyết" },
+  { href: "/learn/practice", label: "Luyện tập" },
+  { href: "/learn/solutions", label: "Giải bài tập" },
+  { href: "/learn/tools", label: "Tiện ích" },
 ];
 
-/** Switches between the four study modes. Shared by every /hoc sub-page. */
+/** Switches between the four study modes. Shared by every /learn sub-page. */
 export function StudyModeTabs({ className = "" }: { className?: string }) {
   const path = usePathname();
   return (

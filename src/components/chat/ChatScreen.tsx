@@ -13,7 +13,7 @@ import {
   UsersThree,
   VideoCamera,
   X,
-} from "@phosphor-icons/react";
+} from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { Lightbox, type LightboxItem } from "@/components/album/Lightbox";

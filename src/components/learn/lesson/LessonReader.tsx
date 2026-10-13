@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowsIn, ArrowsOut, ListBullets, ListDashes, SidebarSimple } from "@phosphor-icons/react";
+import { ArrowsIn, ArrowsOut, ListBullets, ListDashes, SidebarSimple } from "@/components/ui/icons";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
@@ -21,18 +21,18 @@ import { ArticleSkeleton } from "./Skeletons";
 const grades = Array.from({ length: 12 }, (_, i) => i + 1);
 const pending = <T,>() => new Promise<T>(() => {});
 
-/** /hoc/ly-thuyet. State lives in the URL: ?lop=9&mon=toan&bai=toan-9-c1-b1 (or &chu-de=2). */
+/** /learn/ly-thuyet. State lives in the URL: ?grade=9&subject=toan&lesson=toan-9-c1-b1 (or &topic=2). */
 export function LessonReader() {
   const params = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const user = useSession()?.user;
 
-  const lopParam = Number(params.get("lop"));
+  const lopParam = Number(params.get("grade"));
   const grade = lopParam >= 1 && lopParam <= 12 ? lopParam : user?.grade ?? 9;
-  const monParam = params.get("mon");
-  const baiParam = params.get("bai");
-  const chuDe = Number(params.get("chu-de")) || 0;
+  const monParam = params.get("subject");
+  const baiParam = params.get("lesson");
+  const chuDe = Number(params.get("topic")) || 0;
 
   /* ---- data ---- */
   const subjects = useApi(() => lessonsApi.subjects(grade), [grade]);
@@ -55,8 +55,8 @@ export function LessonReader() {
   const href = useCallback(
     (lop: number, mon?: string | null, bai?: string | null) => {
       const q = new URLSearchParams({ lop: String(lop) });
-      if (mon) q.set("mon", mon);
-      if (bai) q.set("bai", bai);
+      if (mon) q.set("subject", mon);
+      if (bai) q.set("lesson", bai);
       return `${pathname}?${q}`;
     },
     [pathname],
@@ -69,7 +69,7 @@ export function LessonReader() {
   // Keep the URL pointing at the lesson actually shown (search hits, chu-de, defaults).
   useEffect(() => {
     if (!current) return;
-    if (params.get("bai") === current.id && params.get("mon") === current.subject.id && params.get("lop") === String(current.grade)) return;
+    if (params.get("lesson") === current.id && params.get("subject") === current.subject.id && params.get("grade") === String(current.grade)) return;
     router.replace(href(current.grade, current.subject.id, current.id), { scroll: false });
   }, [current, params, router, href]);
 
@@ -322,7 +322,7 @@ function SubjectDrafting({ name, canEdit }: { name: string; canEdit: boolean }) 
         Môn này chưa có chủ đề nào. Em chọn môn khác ở hàng trên, hoặc nhờ bố mẹ thêm bài trong mục Quản trị, Học liệu.
       </p>
       {canEdit && (
-        <a href="/quan-tri/hoc-lieu" className={buttonClass("primary", "md", "mt-6")}>
+        <a href="/admin/lessons" className={buttonClass("primary", "md", "mt-6")}>
           Thêm chủ đề và bài
         </a>
       )}

@@ -1,5 +1,5 @@
 // Editable copy and images of the public pages (landing, login, register).
-// Admins edit it at /quan-tri/noi-dung; everyone reads it.
+// Admins edit it at /admin/dashboard/noi-dung; everyone reads it.
 
 export interface SiteImage {
   url: string;

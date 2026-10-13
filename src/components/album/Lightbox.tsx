@@ -11,7 +11,7 @@ import {
   MagnifyingGlassPlus,
   PaperPlaneRight,
   X,
-} from "@phosphor-icons/react";
+} from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion, type PanInfo } from "motion/react";
 import Image from "next/image";
 import { useEffect, useRef, useState, type FormEvent } from "react";

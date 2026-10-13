@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Clock } from "@phosphor-icons/react";
+import { ArrowRight, Clock } from "@/components/ui/icons";
 import Link from "next/link";
 import { useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
@@ -11,7 +11,7 @@ import { useApi } from "@/lib/hooks/useApi";
 import { useSession } from "@/lib/session";
 import { Chips, EmptyNote, grades, LearnHeader, Ribbon } from "./shared";
 
-/** /hoc/toan: math skills by chapter for one grade, each opening a practice set. */
+/** /learn/toan: math skills by chapter for one grade, each opening a practice set. */
 export function MathCorner() {
   const user = useSession()?.user;
   const [picked, setPicked] = useState<number | null>(null);
@@ -21,7 +21,7 @@ export function MathCorner() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 lg:py-8">
       <LearnHeader title="Góc Toán">
-        <Link href="/hoc/tien-ich?cu=giai-phuong-trinh" className={buttonClass("secondary", "sm")}>
+        <Link href="/learn/tools?tool=equations" className={buttonClass("secondary", "sm")}>
           Giải phương trình
         </Link>
       </LearnHeader>
@@ -91,7 +91,7 @@ function Outline({ chapters }: { chapters: MathChapter[] }) {
             <div className="h-full rounded-full bg-coral transition-[width] duration-500 ease-[var(--ease-out-expo)]" style={{ width: `${totalQ ? (mastered / totalQ) * 100 : 0}%` }} />
           </div>
           {nextSkill?.setId && (
-            <Link href={`/hoc/luyen-tap?bai=${nextSkill.setId}`} className={buttonClass("primary", "md", "mt-5 w-full")}>
+            <Link href={`/learn/practice?lesson=${nextSkill.setId}`} className={buttonClass("primary", "md", "mt-5 w-full")}>
               Luyện dạng tiếp theo <ArrowRight size={18} weight="bold" />
             </Link>
           )}
@@ -113,7 +113,7 @@ function SkillRow({ skill: s, current }: { skill: MathSkill; current: boolean })
       </div>
     );
   return (
-    <Link href={`/hoc/luyen-tap?bai=${s.setId}`} className="group relative flex min-h-16 items-center gap-4 py-3 pl-8 pr-2 transition-colors hover:bg-paper-2">
+    <Link href={`/learn/practice?lesson=${s.setId}`} className="group relative flex min-h-16 items-center gap-4 py-3 pl-8 pr-2 transition-colors hover:bg-paper-2">
       {current && <Ribbon className="absolute -top-px left-1.5 h-9 w-3.5" />}
       <span className="min-w-0 flex-1">
         <span className="block font-medium transition-colors group-hover:text-coral-ink">{s.title}</span>

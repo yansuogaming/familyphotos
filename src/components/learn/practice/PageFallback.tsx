@@ -1,4 +1,4 @@
-/** Shown while a /hoc sub-page reads its URL (Suspense fallback). */
+/** Shown while a /learn sub-page reads its URL (Suspense fallback). */
 export function PageFallback() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 lg:py-8" aria-busy="true" aria-label="Đang tải">

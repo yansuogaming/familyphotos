@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Clock, DownloadSimple, FilePdf, ListNumbers, PencilSimpleLine } from "@phosphor-icons/react";
+import { ArrowLeft, Clock, DownloadSimple, FilePdf, ListNumbers, PencilSimpleLine } from "@/components/ui/icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -23,11 +23,11 @@ export const kindNames: Record<ExamKind, string> = {
 
 const yearLabel = (e: Pick<ExamSummary, "kind" | "year">) => (e.kind === "vao-10" || e.kind === "thpt" ? `Năm ${e.year}` : `Năm học ${e.year}-${e.year + 1}`);
 
-/** /hoc/de-thi. `?de=<id>` opens an exam, `&lam=1` starts the timed attempt. */
+/** /learn/de-thi. `?exam=<id>` opens an exam, `&take=1` starts the timed attempt. */
 export function ExamsScreen() {
   const params = useSearchParams();
-  const id = params.get("de");
-  const doing = params.get("lam") === "1";
+  const id = params.get("exam");
+  const doing = params.get("take") === "1";
   if (id) return <ExamLoader key={`${id}-${doing}`} id={id} doing={doing} />;
   return <Library />;
 }
@@ -90,7 +90,7 @@ function Library() {
                     <p className="text-sm text-ink-3">
                       {kindNames[e.kind]}. {e.subject.name}, lớp {e.grade}. {yearLabel(e)}
                     </p>
-                    <Link href={`/hoc/de-thi?de=${e.id}`} className="mt-0.5 block font-display text-lg font-semibold hover:text-coral-ink">
+                    <Link href={`/learn/exams?exam=${e.id}`} className="mt-0.5 block font-display text-lg font-semibold hover:text-coral-ink">
                       {e.title}
                     </Link>
                     <p className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-2">
@@ -111,11 +111,11 @@ function Library() {
                   )}
                   <div className="flex shrink-0 gap-2">
                     {e.online && (
-                      <Link href={`/hoc/de-thi?de=${e.id}&lam=1`} className={buttonClass("primary", "sm")}>
+                      <Link href={`/learn/exams?exam=${e.id}&take=1`} className={buttonClass("primary", "sm")}>
                         Làm bài
                       </Link>
                     )}
-                    <Link href={`/hoc/de-thi?de=${e.id}`} className={buttonClass("secondary", "sm")}>
+                    <Link href={`/learn/exams?exam=${e.id}`} className={buttonClass("secondary", "sm")}>
                       Xem đề
                     </Link>
                   </div>
@@ -141,7 +141,7 @@ function ExamLoader({ id, doing }: { id: string; doing: boolean }) {
       )}
       {exam.status === "error" && (
         <>
-          <LearnHeader title="Đề thi" backHref="/hoc/de-thi" backLabel="Về thư viện đề" />
+          <LearnHeader title="Đề thi" backHref="/learn/exams" backLabel="Về thư viện đề" />
           <div className="mt-6">
             <LoadError onRetry={exam.reload} what="đề thi" />
           </div>
@@ -158,7 +158,7 @@ function ExamPaper({ exam }: { exam: ExamDetail }) {
   const numbers = new Map(exam.parts.flatMap((p) => p.questions).map((q, i) => [q.id, i + 1]));
   return (
     <>
-      <LearnHeader title={exam.title} backHref="/hoc/de-thi" backLabel="Về thư viện đề" />
+      <LearnHeader title={exam.title} backHref="/learn/exams" backLabel="Về thư viện đề" />
       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-ink-2 sm:pl-14">
         <span>{exam.source}</span>
         <span>{yearLabel(exam)}</span>
@@ -167,7 +167,7 @@ function ExamPaper({ exam }: { exam: ExamDetail }) {
       </div>
       <div className="mt-5 flex flex-wrap gap-3 sm:pl-14">
         {exam.parts.length > 0 && (
-          <Link href={`/hoc/de-thi?de=${exam.id}&lam=1`} className={buttonClass("primary")}>
+          <Link href={`/learn/exams?exam=${exam.id}&take=1`} className={buttonClass("primary")}>
             <PencilSimpleLine size={18} /> Làm bài, tính giờ {exam.durationMin} phút
           </Link>
         )}
@@ -238,7 +238,7 @@ function ExamPaper({ exam }: { exam: ExamDetail }) {
         )}
       </div>
       <p className="mt-6 sm:pl-14">
-        <Link href="/hoc/de-thi" className="inline-flex h-10 items-center gap-1.5 text-sm font-semibold text-ink-2 hover:text-ink">
+        <Link href="/learn/exams" className="inline-flex h-10 items-center gap-1.5 text-sm font-semibold text-ink-2 hover:text-ink">
           <ArrowLeft size={16} /> Về thư viện đề
         </Link>
       </p>

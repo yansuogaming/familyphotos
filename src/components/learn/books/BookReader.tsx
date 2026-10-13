@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, BookmarkSimple, CaretDown, MagnifyingGlassMinus, MagnifyingGlassPlus, X } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, BookmarkSimple, CaretDown, MagnifyingGlassMinus, MagnifyingGlassPlus, X } from "@/components/ui/icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ export function BookReader({ id, page }: { id: string; page: number }) {
       )}
       {book.status === "error" && (
         <>
-          <LearnHeader title="Sách" backHref="/hoc/sach" backLabel="Về kệ sách" />
+          <LearnHeader title="Sách" backHref="/learn/books" backLabel="Về kệ sách" />
           <div className="mt-6">
             <LoadError onRetry={book.reload} what="cuốn sách" />
           </div>
@@ -60,7 +60,7 @@ function Reader({ book, page }: { book: BookDetail; page: number }) {
     if (next === page) return;
     setDir(next > page ? 1 : -1);
     setPageText(null);
-    router.replace(`${pathname}?cuon=${book.id}&trang=${next}`, { scroll: false });
+    router.replace(`${pathname}?book=${book.id}&page=${next}`, { scroll: false });
   };
 
   const toggleMark = () => {
@@ -125,7 +125,7 @@ function Reader({ book, page }: { book: BookDetail; page: number }) {
 
   return (
     <>
-      <LearnHeader title={book.title} backHref="/hoc/sach" backLabel="Về kệ sách" />
+      <LearnHeader title={book.title} backHref="/learn/books" backLabel="Về kệ sách" />
       <p className="mt-1 text-ink-2 sm:pl-14">
         {book.publisher}
         {book.kind === "sgk" ? `, lớp ${book.grade}` : `. Hợp với lớp ${book.grade} trở lên`}. {book.pageCount} trang.

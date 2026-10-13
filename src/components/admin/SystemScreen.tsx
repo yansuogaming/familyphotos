@@ -1,6 +1,6 @@
 "use client";
 
-import { CaretLeft, CaretRight, MagnifyingGlass } from "@phosphor-icons/react";
+import { CaretLeft, CaretRight, MagnifyingGlass } from "@/components/ui/icons";
 import { useMemo, useRef, useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
 import { Section, formatDateTime, useToast } from "@/components/settings/shared";

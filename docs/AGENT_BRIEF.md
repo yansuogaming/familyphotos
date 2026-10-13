@@ -21,8 +21,8 @@ Token Tailwind (định nghĩa trong src/app/globals.css, KHÔNG sửa file đó
 
 ## Quy tắc (taste-skill + impeccable, đã cài ở .claude/skills)
 - Chữ hiển thị tiếng Việt có dấu, câu ngắn, rõ, trẻ em đọc hiểu. TUYỆT ĐỐI không dùng em-dash (—) hay en-dash (–) trong chữ hiển thị; dùng dấu chấm, phẩy, gạch ngang thường (-).
-- Không eyebrow (nhãn nhỏ viết hoa phía trên tiêu đề). Không đánh số section trừ khi thứ tự có ý nghĩa. Không lưới thẻ giống hệt nhau (icon + tiêu đề + mô tả). Không thẻ lồng thẻ. Không gradient text, không viền trái màu dày hơn 1px, không glow neon, không emoji, không icon tự vẽ.
-- Icon: chỉ Phosphor (`@phosphor-icons/react` trong client, `@phosphor-icons/react/ssr` trong server component).
+- Không eyebrow (nhãn nhỏ viết hoa phía trên tiêu đề). Không đánh số section trừ khi thứ tự có ý nghĩa. Không lưới thẻ giống hệt nhau (icon + tiêu đề + mô tả). Không thẻ lồng thẻ. Không gradient text, không viền trái màu dày hơn 1px, không glow neon, không emoji, không icon tự vẽ. Mọi URL, tham số và mục neo bằng tiếng Anh.
+- Icon: chỉ từ `@/components/ui/icons` (Morphicons vẽ icon Lucide). Icon đổi theo trạng thái dùng `<Morph icon={cond ? icons.A : icons.B} />` để có hiệu ứng biến hình.
 - Mọi màn dữ liệu có đủ: loading (skeleton đúng hình), rỗng (hướng dẫn cách thêm), lỗi (LoadError + Tải lại). Form: label trên, lỗi dưới ô, kiểm tra trước khi gửi, trạng thái đang gửi.
 - Sáng và tối đều phải đẹp: chỉ dùng token, không hard-code màu (trừ bề mặt cố định như mã QR).
 - WCAG AA, mục bấm >= 40px, focus nhìn thấy được, aria đúng (tablist, dialog, switch, menu...). Dialog: đóng bằng Esc, bẫy focus hợp lý, trả focus.

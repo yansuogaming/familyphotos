@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, X } from "@phosphor-icons/react";
+import { ArrowRight, Check, X } from "@/components/ui/icons";
 import Link from "next/link";
 import { useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
@@ -14,12 +14,12 @@ import { useSession } from "@/lib/session";
 import { ConfirmDialog, ErrorNote, PageHeader, RibbonMark, errorText, timeAgo } from "./ui";
 
 const shortcuts = [
-  { href: "/quan-tri/noi-dung", label: "Sửa chữ và ảnh trang chủ" },
-  { href: "/quan-tri/thanh-vien#ma-moi", label: "Tạo mã mời người nhà" },
-  { href: "/quan-tri/thu-vien", label: "Tải ảnh lên thư viện" },
-  { href: "/quan-tri/hoc-lieu", label: "Soạn bài học" },
-  { href: "/quan-tri/album", label: "Chia sẻ album cho khách" },
-  { href: "/quan-tri/he-thong", label: "Xem nhật ký thay đổi" },
+  { href: "/admin/content", label: "Sửa chữ và ảnh trang chủ" },
+  { href: "/admin/members#invites", label: "Tạo mã mời người nhà" },
+  { href: "/admin/library", label: "Tải ảnh lên thư viện" },
+  { href: "/admin/lessons", label: "Soạn bài học" },
+  { href: "/admin/albums", label: "Chia sẻ album cho khách" },
+  { href: "/admin/system", label: "Xem nhật ký thay đổi" },
 ];
 
 export function OverviewScreen() {
@@ -110,7 +110,7 @@ function Pending({ initial }: { initial: JoinRequest[] }) {
           {list.length > 0 && <RibbonMark className="h-7 w-3" />}
           {list.length > 0 ? `${list.length} người đang chờ bạn duyệt` : "Không có ai đang chờ duyệt"}
         </h2>
-        <Link href="/quan-tri/thanh-vien#cho-duyet" className="shrink-0 text-sm font-semibold text-coral-ink underline">Xem tất cả</Link>
+        <Link href="/admin/members#requests" className="shrink-0 text-sm font-semibold text-coral-ink underline">Xem tất cả</Link>
       </div>
       {list.length === 0 ? (
         <p className="mt-2 text-ink-2">Khi họ hàng đăng ký làm khách, lời xin vào sẽ hiện ở đây để bạn duyệt.</p>
@@ -215,9 +215,9 @@ function Household({ o }: { o: AdminOverview }) {
         </div>
       </div>
       <p className="mt-8 border-t border-line pt-4 text-ink-2">
-        <Link href="/quan-tri/thanh-vien" className="font-semibold text-ink underline decoration-rule hover:decoration-coral">{o.memberCount} người trong nhà</Link>
+        <Link href="/admin/members" className="font-semibold text-ink underline decoration-rule hover:decoration-coral">{o.memberCount} người trong nhà</Link>
         , trong đó {o.kidCount} con đang đi học.{" "}
-        <Link href="/quan-tri/thanh-vien" className="font-semibold text-ink underline decoration-rule hover:decoration-coral">{o.guestCount} khách</Link> được xem album chia sẻ.
+        <Link href="/admin/members" className="font-semibold text-ink underline decoration-rule hover:decoration-coral">{o.guestCount} khách</Link> được xem album chia sẻ.
       </p>
     </section>
   );
@@ -228,7 +228,7 @@ function Activity({ o }: { o: AdminOverview }) {
     <section aria-labelledby="activity-h">
       <div className="flex items-baseline justify-between gap-4">
         <h2 id="activity-h" className="text-2xl font-bold">Hoạt động gần đây</h2>
-        <Link href="/quan-tri/he-thong" className="shrink-0 text-sm font-semibold text-coral-ink underline">Nhật ký đầy đủ</Link>
+        <Link href="/admin/system" className="shrink-0 text-sm font-semibold text-coral-ink underline">Nhật ký đầy đủ</Link>
       </div>
       {o.activity.length === 0 ? (
         <p className="mt-2 text-ink-2">Chưa có hoạt động nào. Khi cả nhà thêm ảnh, học bài hay bạn đổi cài đặt, mọi việc sẽ ghi ở đây.</p>

@@ -1,6 +1,6 @@
 # API khu quản trị (admin)
 
-Dùng cho `/quan-tri`. Kiểu dữ liệu: `src/lib/api/admin-types.ts`. Frontend gọi qua `adminApi` trong `src/lib/api/admin.ts`. Bài học dùng API riêng (`docs/api/lessons.md`), nội dung trang công khai xem `docs/api/site.md`.
+Dùng cho `/admin/dashboard`. Kiểu dữ liệu: `src/lib/api/admin-types.ts`. Frontend gọi qua `adminApi` trong `src/lib/api/admin.ts`. Bài học dùng API riêng (`docs/api/lessons.md`), nội dung trang công khai xem `docs/api/site.md`.
 
 ## Quyền
 
