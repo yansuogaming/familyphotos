@@ -25,8 +25,11 @@ type Draft = Omit<SystemSettings, "quotaPerUserGb"> & { quotaPerUserGb: string }
 const toDraft = (s: SystemSettings): Draft => ({ ...s, quotaPerUserGb: String(s.quotaPerUserGb) });
 const same = (a: Draft, b: Draft) => JSON.stringify(a) === JSON.stringify(b);
 
+const SITE_RE = /^(https?:\/\/)?[a-z0-9-]+(\.[a-z0-9-]+)+(:\d+)?(\/\S*)?$/i;
+
 function validate(d: Draft) {
-  const errors: { familyName?: string; quotaPerUserGb?: string } = {};
+  const errors: { familyName?: string; quotaPerUserGb?: string; siteUrl?: string } = {};
+  if (d.siteUrl.trim() && !SITE_RE.test(d.siteUrl.trim())) errors.siteUrl = "Nhập tên miền, ví dụ familyphotos.vn hoặc https://familyphotos.vn";
   const name = d.familyName.trim();
   if (!name) errors.familyName = "Nhập tên nhà. Tên này hiện ở trang đăng nhập và đầu mọi trang.";
   else if (name.length > NAME_MAX) errors.familyName = `Tối đa ${NAME_MAX} ký tự.`;
@@ -90,6 +93,7 @@ function SystemForm({ initial, onSaved }: { initial: SystemSettings; onSaved: ()
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const quotaRef = useRef<HTMLInputElement>(null);
+  const siteRef = useRef<HTMLInputElement>(null);
 
   const dirty = !same(base, draft);
   useUnsavedChanges(dirty);
@@ -101,9 +105,9 @@ function SystemForm({ initial, onSaved }: { initial: SystemSettings; onSaved: ()
   };
 
   async function save() {
-    if (errors.familyName || errors.quotaPerUserGb) {
+    if (errors.familyName || errors.quotaPerUserGb || errors.siteUrl) {
       setShowErrors(true);
-      (errors.familyName ? nameRef : quotaRef).current?.focus();
+      (errors.familyName ? nameRef : errors.quotaPerUserGb ? quotaRef : siteRef).current?.focus();
       return;
     }
     setSaving(true);
@@ -112,6 +116,7 @@ function SystemForm({ initial, onSaved }: { initial: SystemSettings; onSaved: ()
       const saved = await adminApi.system.save({
         ...draft,
         familyName: draft.familyName.trim(),
+        siteUrl: draft.siteUrl.trim(),
         quotaPerUserGb: Number(draft.quotaPerUserGb),
       });
       const next = toDraft(saved);
@@ -149,6 +154,16 @@ function SystemForm({ initial, onSaved }: { initial: SystemSettings; onSaved: ()
           error={showErrors ? errors.familyName : undefined}
           hint="Hiện ở trang đăng nhập và trên thanh đầu trang."
           aside={<span className="tabular text-sm text-ink-3">{draft.familyName.length}/{NAME_MAX}</span>}
+        />
+        <TextField
+          ref={siteRef}
+          label="Địa chỉ web"
+          value={draft.siteUrl}
+          inputMode="url"
+          placeholder="familyphotos.vn"
+          onChange={(e) => patch({ siteUrl: e.target.value })}
+          error={showErrors ? errors.siteUrl : undefined}
+          hint="Tên miền thật của nhà. Hiện trong hướng dẫn đăng nhập bằng mã QR. Để trống thì dùng địa chỉ đang mở."
         />
         <TextField
           ref={quotaRef}

@@ -54,7 +54,7 @@ export function LessonReader() {
   /* ---- URL ---- */
   const href = useCallback(
     (lop: number, mon?: string | null, bai?: string | null) => {
-      const q = new URLSearchParams({ lop: String(lop) });
+      const q = new URLSearchParams({ grade: String(lop) });
       if (mon) q.set("subject", mon);
       if (bai) q.set("lesson", bai);
       return `${pathname}?${q}`;

@@ -114,6 +114,8 @@ export interface SystemSettings {
   familyName: string;
   quotaPerUserGb: number;
   qrTtlSeconds: number;
+  /** Public address of the site, e.g. "familyphotos.vn". Shown in sign-in instructions. Empty: use the browser's address. */
+  siteUrl: string;
   /** Cloudflare Turnstile on login, register and admin login. */
   captchaOnAuth: boolean;
   /** Human check whenever someone opens a page and their last check has expired. */
@@ -122,7 +124,7 @@ export interface SystemSettings {
   botCheckMinutes: number;
 }
 
-export const SECURITY_DEFAULTS = { captchaOnAuth: true, botCheckEnabled: true, botCheckMinutes: 20 } as const;
+export const SECURITY_DEFAULTS = { captchaOnAuth: true, botCheckEnabled: true, botCheckMinutes: 20, siteUrl: "" } as const;
 
 export interface AuditEntry {
   id: string;

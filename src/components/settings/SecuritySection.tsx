@@ -6,6 +6,7 @@ import { Button, IconButton } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
 import { api, ApiError } from "@/lib/api/client";
 import type { Device } from "@/lib/api/types";
+import { publicConfigApi } from "@/lib/api/public-config";
 import { useApi } from "@/lib/hooks/useApi";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { Block, formatDateTime, Section, useToast } from "./shared";
@@ -52,11 +53,10 @@ function PasswordBlock() {
   return (
     <Block
       title="Mật khẩu"
-      aside={!open && <Button variant="secondary" size="sm" onClick={() => setOpen(true)}>Đổi mật khẩu</Button>}
+      description="Nên đổi nếu bạn từng đăng nhập trên máy của người khác."
+      aside={!open && <Button variant="secondary" onClick={() => setOpen(true)}>Đổi mật khẩu</Button>}
     >
-      {!open ? (
-        <p className="text-sm text-ink-2">Nên đổi nếu bạn từng đăng nhập trên máy của người khác.</p>
-      ) : (
+      {open && (
         <form onSubmit={onSubmit} noValidate className="flex max-w-md flex-col gap-5">
           <Field label="Mật khẩu hiện tại" name="current" type={show ? "text" : "password"} autoComplete="current-password" error={errors.current} trailing={eye} />
           <Field label="Mật khẩu mới" name="next" type={show ? "text" : "password"} autoComplete="new-password" hint="Ít nhất 8 ký tự." error={errors.next} />
@@ -75,7 +75,10 @@ const noop = () => () => {};
 
 function QrSignInBlock() {
   const isPhone = useMediaQuery("(max-width: 767px)");
-  const host = useSyncExternalStore(noop, () => location.host, () => "familyphotos.vn");
+  const browserHost = useSyncExternalStore(noop, () => location.host, () => "");
+  const config = useApi(publicConfigApi.get);
+  // The admin sets the real address (Cài đặt hệ thống > Địa chỉ web); fall back to this browser's host.
+  const host = (config.status === "ready" && config.data.siteUrl ? config.data.siteUrl : browserHost).replace(/^https?:\/\//, "").replace(/\/$/, "");
   const [tried, setTried] = useState(false);
   const steps = [
     <>Trên máy tính, mở <span className="font-semibold text-ink">{host}</span>.</>,
@@ -83,8 +86,16 @@ function QrSignInBlock() {
     <>Bấm <span className="font-semibold text-ink">Quét mã QR</span> ở đây rồi hướng camera vào mã trên màn hình.</>,
   ];
   return (
-    <div id="link-device" className="scroll-mt-24">
-      <Block title="Đăng nhập trên máy tính">
+    <Block
+      id="link-device"
+      title="Đăng nhập trên máy tính"
+      description="Dùng điện thoại đã đăng nhập để mở cửa cho máy tính, không cần gõ mật khẩu."
+      aside={
+        <Button variant="secondary" onClick={() => setTried(true)}>
+          <QrCode size={18} /> Quét mã QR
+        </Button>
+      }
+    >
         <ol className="flex flex-col gap-3">
           {steps.map((s, i) => (
             <li key={i} className="flex items-start gap-3 text-ink-2">
@@ -93,9 +104,6 @@ function QrSignInBlock() {
             </li>
           ))}
         </ol>
-        <Button variant="secondary" className="mt-5" onClick={() => setTried(true)}>
-          <QrCode size={18} /> Quét mã QR
-        </Button>
         {tried && (
           <p role="status" className="mt-3 max-w-[56ch] text-sm text-ink-2">
             {isPhone
@@ -103,8 +111,7 @@ function QrSignInBlock() {
               : "Bạn đang dùng máy tính. Mở trang Cài đặt này trên điện thoại để quét mã."}
           </p>
         )}
-      </Block>
-    </div>
+    </Block>
   );
 }
 
@@ -127,10 +134,19 @@ function DevicesBlock() {
   }
 
   return (
-    <Block title="Thiết bị đã đăng nhập">
-      <p className="text-sm text-ink-2">Mỗi lần đăng nhập trên thiết bị lạ, bạn nhận email báo kèm vị trí gần đúng.</p>
-      {loaded.status === "loading" && <div className="mt-4 h-32 animate-pulse rounded-[var(--radius-paper)] bg-paper-2" />}
-      <ul className="mt-4 divide-y divide-line">
+    <Block
+      title="Thiết bị đã đăng nhập"
+      description="Mỗi lần đăng nhập trên thiết bị lạ, bạn nhận email báo kèm vị trí gần đúng."
+      aside={
+        others.length > 0 && (
+          <Button variant="secondary" onClick={revokeAll}>
+            <SignOut size={18} /> Đăng xuất máy khác
+          </Button>
+        )
+      }
+    >
+      {loaded.status === "loading" && <div className="h-32 animate-pulse rounded-[var(--radius-paper)] bg-paper-2" />}
+      <ul className="divide-y divide-line">
         {devices.map((d) => {
           const Icon = deviceIcon[d.kind];
           return (
@@ -154,11 +170,6 @@ function DevicesBlock() {
           );
         })}
       </ul>
-      {others.length > 0 && (
-        <Button variant="secondary" className="mt-4" onClick={revokeAll}>
-          <SignOut size={18} /> Đăng xuất mọi thiết bị khác
-        </Button>
-      )}
     </Block>
   );
 }

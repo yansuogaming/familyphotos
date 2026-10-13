@@ -9,6 +9,7 @@ export interface PublicConfig {
   captchaOnAuth: boolean;
   botCheckEnabled: boolean;
   botCheckMinutes: number;
+  siteUrl: string;
 }
 
 export function mockPublicConfig(): PublicConfig {
@@ -21,6 +22,7 @@ export function mockPublicConfig(): PublicConfig {
     captchaOnAuth: sys.captchaOnAuth,
     botCheckEnabled: sys.botCheckEnabled,
     botCheckMinutes: sys.botCheckMinutes,
+    siteUrl: sys.siteUrl,
   };
 }
 

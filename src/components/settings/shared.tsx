@@ -26,14 +26,33 @@ export function Section({
 }
 
 /** Sub-block inside a section: small heading, content below. */
-export function Block({ title, children, aside }: { title: string; children: ReactNode; aside?: ReactNode }) {
+/**
+ * Sub-block inside a section. Same rhythm everywhere: title and description on the
+ * left, one action on the right (vertically centred on the text), content below.
+ */
+export function Block({
+  id,
+  title,
+  description,
+  aside,
+  children,
+}: {
+  id?: string;
+  title: string;
+  description?: ReactNode;
+  aside?: ReactNode;
+  children?: ReactNode;
+}) {
   return (
-    <div className="py-5 first:pt-0">
-      <div className="flex items-baseline justify-between gap-4">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        {aside}
+    <div id={id} className="scroll-mt-24 py-6 first:pt-0 last:pb-0">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <div className="min-w-0 max-w-[60ch]">
+          <h3 className="text-lg font-semibold">{title}</h3>
+          {description && <p className="mt-1 text-sm text-ink-2">{description}</p>}
+        </div>
+        {aside && <div className="shrink-0">{aside}</div>}
       </div>
-      <div className="mt-3">{children}</div>
+      {children && <div className="mt-5">{children}</div>}
     </div>
   );
 }
