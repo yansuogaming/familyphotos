@@ -1,17 +1,15 @@
 "use client";
 
-import { ArrowRight, Check, X } from "@/components/ui/icons";
+import { ArrowRight } from "@/components/ui/icons";
 import Link from "next/link";
-import { useState } from "react";
 import { LoadError } from "@/components/album/PhotosScreen";
-import { formatBytes, useToast } from "@/components/settings/shared";
+import { formatBytes } from "@/components/settings/shared";
 import { Avatar } from "@/components/ui/Avatar";
-import { Button } from "@/components/ui/Button";
 import { adminApi } from "@/lib/api/admin";
-import type { AdminOverview, JoinRequest } from "@/lib/api/admin-types";
+import type { AdminOverview } from "@/lib/api/admin-types";
 import { useApi } from "@/lib/hooks/useApi";
 import { useSession } from "@/lib/session";
-import { ConfirmDialog, ErrorNote, PageHeader, RibbonMark, errorText, timeAgo } from "./ui";
+import { PageHeader, timeAgo } from "./ui";
 
 const shortcuts = [
   { href: "/admin/content", label: "Sửa chữ và ảnh trang chủ" },
@@ -58,7 +56,6 @@ export function OverviewScreen() {
       />
       <div className="mt-8 grid gap-x-12 gap-y-12 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="flex min-w-0 flex-col gap-12">
-          <Pending initial={o.pending} />
           <Household o={o} />
           <Activity o={o} />
         </div>
@@ -78,83 +75,6 @@ export function OverviewScreen() {
         </aside>
       </div>
     </>
-  );
-}
-
-/** First thing on the page: guests waiting at the door. */
-function Pending({ initial }: { initial: JoinRequest[] }) {
-  const toast = useToast();
-  const [list, setList] = useState(initial);
-  const [busy, setBusy] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [rejecting, setRejecting] = useState<JoinRequest | null>(null);
-
-  async function approve(r: JoinRequest) {
-    setBusy(r.id);
-    setError(null);
-    try {
-      await adminApi.requests.approve(r.id);
-      setList((l) => l.filter((x) => x.id !== r.id));
-      toast(`Đã cho ${r.name} vào nhà.`);
-    } catch (e) {
-      setError(errorText(e));
-    } finally {
-      setBusy(null);
-    }
-  }
-
-  return (
-    <section aria-labelledby="pending-h">
-      <div className="flex items-baseline justify-between gap-4">
-        <h2 id="pending-h" className="flex items-center gap-3 text-2xl font-bold">
-          {list.length > 0 && <RibbonMark className="h-7 w-3" />}
-          {list.length > 0 ? `${list.length} người đang chờ bạn duyệt` : "Không có ai đang chờ duyệt"}
-        </h2>
-        <Link href="/admin/members#requests" className="shrink-0 text-sm font-semibold text-coral-ink underline">Xem tất cả</Link>
-      </div>
-      {list.length === 0 ? (
-        <p className="mt-2 text-ink-2">Khi họ hàng đăng ký làm khách, lời xin vào sẽ hiện ở đây để bạn duyệt.</p>
-      ) : (
-        <ul className="mt-4 divide-y divide-line rounded-[var(--radius-paper)] border border-line">
-          {list.map((r) => (
-            <li key={r.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:gap-5">
-              <div className="flex min-w-0 flex-1 items-start gap-3">
-                <Avatar user={{ name: r.name }} size="sm" className="mt-0.5" />
-                <div className="min-w-0">
-                  <p className="font-semibold">
-                    {r.name} <span className="font-normal text-ink-3">· {timeAgo(r.requestedAt)}</span>
-                  </p>
-                  <p className="truncate text-sm text-ink-2">{r.identifier}</p>
-                  {r.message && <p className="mt-1 text-sm text-ink-2">“{r.message}”</p>}
-                </div>
-              </div>
-              <div className="flex shrink-0 gap-2 pl-11 sm:pl-0">
-                <Button size="sm" onClick={() => approve(r)} disabled={busy === r.id}>
-                  <Check size={16} weight="bold" /> {busy === r.id ? "Đang duyệt..." : "Duyệt"}
-                </Button>
-                <Button size="sm" variant="ghost" onClick={() => setRejecting(r)} disabled={busy === r.id}>
-                  <X size={16} /> Từ chối
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-      {error && <div className="mt-3"><ErrorNote>{error}</ErrorNote></div>}
-      <ConfirmDialog
-        open={!!rejecting}
-        onClose={() => setRejecting(null)}
-        title={`Từ chối ${rejecting?.name ?? ""}?`}
-        body="Lời xin vào sẽ bị xoá. Người này vẫn có thể đăng ký lại sau."
-        confirmLabel="Từ chối"
-        onConfirm={async () => {
-          if (!rejecting) return;
-          await adminApi.requests.reject(rejecting.id);
-          setList((l) => l.filter((x) => x.id !== rejecting.id));
-          toast(`Đã từ chối ${rejecting.name}.`);
-        }}
-      />
-    </section>
   );
 }
 

@@ -29,15 +29,6 @@ export interface UserPatch {
   status?: AccountStatus;
 }
 
-/** A guest asking to come in (registered as "khách"). */
-export interface JoinRequest {
-  id: string;
-  name: string;
-  identifier: string; // email or phone
-  message?: string; // "Cháu là con chú Tư..."
-  requestedAt: string;
-}
-
 export interface InviteCode {
   id: string;
   code: string; // "NHA-4821"
@@ -125,7 +116,7 @@ export interface AuditEntry {
   id: string;
   at: string;
   actor: Actor;
-  action: string; // "Duyệt khách"
+  action: string; // "Tạo mã mời"
   target: string; // "Chú Tư Hải"
 }
 
@@ -133,7 +124,6 @@ export interface AdminOverview {
   memberCount: number;
   kidCount: number;
   guestCount: number;
-  pending: JoinRequest[];
   storage: { usedBytes: number; quotaBytes: number; top: { user: Actor; bytes: number }[] };
   photosThisWeek: { total: number; perDay: number[] }; // 7 values, oldest first, last = today
   activity: AuditEntry[];

@@ -12,13 +12,12 @@ import { useApi } from "@/lib/hooks/useApi";
 import { session, useSession } from "@/lib/session";
 import { InviteFormModal } from "./InviteFormModal";
 import { InvitesTab, inviteState } from "./InvitesTab";
-import { RequestsTab } from "./RequestsTab";
 import { UserFormModal } from "./UserFormModal";
 import { UsersTab } from "./UsersTab";
 import { useHashTab, useLocalList, type TabKey } from "./shared";
 
-const TABS: TabKey[] = ["members", "requests", "invites"];
-const TAB_LABEL: Record<TabKey, string> = { members: "Thành viên", requests: "Chờ duyệt", invites: "Mã mời" };
+const TABS: TabKey[] = ["members", "invites"];
+const TAB_LABEL: Record<TabKey, string> = { members: "Thành viên", invites: "Mã mời" };
 
 export function MembersScreen() {
   const toast = useToast();
@@ -27,10 +26,8 @@ export function MembersScreen() {
   const now = useNow();
 
   const users = useApi(() => adminApi.users.list(), []);
-  const requests = useApi(() => adminApi.requests.list(), []);
   const invites = useApi(() => adminApi.invites.list(), []);
   const [userList, updateUsers] = useLocalList(users.status === "ready" ? users.data : undefined);
-  const [requestList, updateRequests] = useLocalList(requests.status === "ready" ? requests.data : undefined);
   const [inviteList, updateInvites] = useLocalList(invites.status === "ready" ? invites.data : undefined);
 
   const [form, setForm] = useState<{ user: AdminUser | null } | null>(null);
@@ -38,17 +35,15 @@ export function MembersScreen() {
 
   const counts: Record<TabKey, number | undefined> = {
     members: userList?.length,
-    requests: requestList?.length,
     invites: inviteList?.filter((i) => inviteState(i, now).usable).length,
   };
   const countLabel: Record<TabKey, string> = {
     members: "người",
-    requests: "người đang chờ",
     invites: "mã còn dùng được",
   };
 
   const baseId = useId();
-  const tabRefs = useRef<Record<TabKey, HTMLButtonElement | null>>({ members: null, requests: null, invites: null });
+  const tabRefs = useRef<Record<TabKey, HTMLButtonElement | null>>({ members: null, invites: null });
 
   function onTabKey(e: KeyboardEvent) {
     const i = TABS.indexOf(tab);
@@ -75,7 +70,7 @@ export function MembersScreen() {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Thành viên"
-        description="Ai đang ở trong nhà, ai đang xin vào, và mã mời bạn đã gửi đi."
+        description="Ai đang ở trong nhà và mã mời bạn đã gửi đi."
         actions={headerAction}
       />
 
@@ -83,7 +78,6 @@ export function MembersScreen() {
         {TABS.map((t) => {
           const selected = tab === t;
           const n = counts[t];
-          const hot = t === "requests" && !!n;
           return (
             <button
               key={t}
@@ -104,7 +98,7 @@ export function MembersScreen() {
               {n !== undefined && (
                 <span
                   aria-hidden="true"
-                  className={`tabular inline-flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-xs font-bold ${hot ? "bg-coral text-on-coral" : "bg-paper-3 text-ink-2"}`}
+                  className={`tabular inline-flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-xs font-bold bg-paper-3 text-ink-2`}
                 >
                   {n}
                 </span>
@@ -125,15 +119,6 @@ export function MembersScreen() {
             onAdd={() => setForm({ user: null })}
             onEdit={(u) => setForm({ user: u })}
             update={updateUsers}
-          />
-        )}
-        {tab === "requests" && (
-          <RequestsTab
-            status={requests.status}
-            requests={requestList}
-            onRetry={requests.reload}
-            update={updateRequests}
-            onApproved={(u) => (userList ? updateUsers((l) => [...l, u]) : users.reload())}
           />
         )}
         {tab === "invites" && (

@@ -9,7 +9,6 @@ import type {
   AssistantConfig,
   AuditEntry,
   InviteCode,
-  JoinRequest,
   MediaAsset,
   MediaUpload,
   NewInviteInput,
@@ -37,18 +36,6 @@ export const adminApi = {
     },
     remove(id: string): Promise<void> {
       return http(`/admin/users/${id}`, json("DELETE"));
-    },
-  },
-
-  requests: {
-    list(): Promise<JoinRequest[]> {
-      return http("/admin/join-requests");
-    },
-    approve(id: string): Promise<AdminUser> {
-      return http(`/admin/join-requests/${id}/approve`, json("POST"));
-    },
-    reject(id: string): Promise<void> {
-      return http(`/admin/join-requests/${id}/reject`, json("POST"));
     },
   },
 

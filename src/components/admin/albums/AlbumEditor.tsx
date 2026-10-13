@@ -137,7 +137,7 @@ export function AlbumEditor({
                 Đã chọn <span className="tabular font-semibold text-ink">{ids.length}</span> trên {guests.length} khách
               </p>
               {guests.length === 0 ? (
-                <p className="px-4 py-4 text-sm text-ink-2">Nhà chưa có khách nào. Duyệt lời xin vào hoặc tạo mã mời ở trang Thành viên.</p>
+                <p className="px-4 py-4 text-sm text-ink-2">Nhà chưa có khách nào. Khách tự đăng ký ở trang đăng ký, hoặc bạn tạo mã mời ở trang Thành viên.</p>
               ) : (
                 <ul className="max-h-64 divide-y divide-line overflow-y-auto">
                   {guests.map((g) => {

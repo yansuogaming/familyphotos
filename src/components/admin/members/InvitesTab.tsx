@@ -50,7 +50,7 @@ export function InvitesTab({
     return (
       <EmptyState
         title="Chưa có mã mời nào"
-        body="Tạo mã rồi gửi qua Zalo hay tin nhắn. Người nhận nhập mã ở trang đăng nhập là vào được, không cần chờ duyệt."
+        body="Tạo mã rồi gửi qua Zalo hay tin nhắn. Người nhận nhập mã ở trang đăng ký để tạo tài khoản."
         action={<Button onClick={onCreate}>Tạo mã mời</Button>}
       />
     );

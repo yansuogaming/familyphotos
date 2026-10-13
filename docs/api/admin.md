@@ -13,7 +13,7 @@ Dùng cho `/admin/dashboard`. Kiểu dữ liệu: `src/lib/api/admin-types.ts`. 
 
 | Method | Path | Body | Trả về |
 |---|---|---|---|
-| GET | `/admin/overview` | | `AdminOverview`: số người trong nhà, số con đang đi học (có `grade`), số khách, lời xin vào đang chờ, dung lượng (`usedBytes`, `quotaBytes`, 4 người dùng nhiều nhất), ảnh mới 7 ngày (`perDay` 7 số, cũ đến mới, số cuối là hôm nay), 8 hoạt động gần nhất (gồm cả việc của cả nhà như thêm ảnh, học bài, và các dòng nhật ký) |
+| GET | `/admin/overview` | | `AdminOverview`: số người trong nhà, số con đang đi học (có `grade`), số khách, dung lượng (`usedBytes`, `quotaBytes`, 4 người dùng nhiều nhất), ảnh mới 7 ngày (`perDay` 7 số, cũ đến mới, số cuối là hôm nay), 8 hoạt động gần nhất (gồm cả việc của cả nhà như thêm ảnh, học bài, và các dòng nhật ký) |
 
 ## Thành viên
 
@@ -23,14 +23,6 @@ Dùng cho `/admin/dashboard`. Kiểu dữ liệu: `src/lib/api/admin-types.ts`. 
 | POST | `/admin/users` | `NewUserInput { name, nickname?, email, role, grade? }` | `AdminUser`. Email trùng: `409`. Backend gửi email mời đặt mật khẩu |
 | PATCH | `/admin/users/:id` | `UserPatch { name?, nickname?, role?, grade? (null để bỏ), status?: "active" \| "locked" }` | `AdminUser`. Tự khoá hoặc tự bỏ quyền admin của chính mình: `400`. Khoá thì đăng xuất mọi thiết bị của người đó |
 | DELETE | `/admin/users/:id` | | `204`. Xoá chính mình: `400` |
-
-## Khách xin vào
-
-| Method | Path | Body | Trả về |
-|---|---|---|---|
-| GET | `/admin/join-requests` | | `JoinRequest[]` |
-| POST | `/admin/join-requests/:id/approve` | | `AdminUser` (tài khoản khách mới, `role: "guest"`) |
-| POST | `/admin/join-requests/:id/reject` | | `204` |
 
 ## Mã mời
 

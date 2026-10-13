@@ -23,7 +23,7 @@ export function InviteFormModal({ open, onClose, onCreated }: { open: boolean; o
       open={open}
       onClose={close}
       title={created ? "Mã mời đã sẵn sàng" : "Tạo mã mời"}
-      description={created ? "Gửi mã này cho người được mời. Họ nhập mã ở trang đăng nhập." : "Người có mã tự tạo tài khoản, không cần chờ duyệt."}
+      description={created ? "Gửi mã này cho người được mời. Họ nhập mã ở trang đăng ký." : "Người có mã tự tạo tài khoản ở trang đăng ký."}
       size="sm"
     >
       {open &&

@@ -53,7 +53,7 @@ Mọi URL đều bằng tiếng Anh. URL tiếng Việt cũ (`/dang-nhap`, `/anh
 | `/admin` | **Trang đăng nhập quản trị** (cửa riêng) |
 | `/admin/dashboard` | Tổng quan |
 | `/admin/content`, `/admin/library` | Chữ và ảnh của landing, đăng nhập, đăng ký; thư viện ảnh |
-| `/admin/members`, `/admin/albums` | Thành viên, duyệt khách (`#requests`), mã mời (`#invites`); album |
+| `/admin/members`, `/admin/albums` | Thành viên, mã mời (`#invites`); album |
 | `/admin/lessons` | Soạn học liệu |
 | `/admin/assistant` | Trợ lý AI: lời nhắc, câu gợi ý, ai được dùng, khách dùng chung API, kết nối API AI chung |
 | `/admin/system` | Tên nhà, địa chỉ web, dung lượng, mã QR, chống bot (captcha, kiểm tra khi vào trang, thời hạn), nhật ký |
