@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Light: a bright notebook page. Dark: the navy album cover at night. */
+:root {
+  --paper: oklch(0.99 0.004 275);
+  --paper-2: oklch(0.967 0.008 275);
+  --paper-3: oklch(0.935 0.013 275);
+  --ink: oklch(0.25 0.045 265);
+  --ink-2: oklch(0.42 0.035 265);
+  --ink-3: oklch(0.52 0.03 265);
+  --line: oklch(0.885 0.016 272);
+  --rule: oklch(0.86 0.035 285);
+  --rule-faint: oklch(0.935 0.02 285);
+  --coral: oklch(0.7 0.15 38);
+  --coral-strong: oklch(0.64 0.16 36);
+  --coral-ink: oklch(0.54 0.16 35);
+  --coral-wash: oklch(0.94 0.035 45);
+  --on-coral: oklch(0.22 0.045 265);
+  --cover: oklch(0.27 0.055 262);
+  --cover-2: oklch(0.32 0.06 262);
+  --on-cover: oklch(0.96 0.01 262);
+  --sleeve: oklch(1 0 0 / 0.16);
+  --ok: oklch(0.55 0.12 155);
+  --danger: oklch(0.55 0.18 25);
+  --shadow: 220 40% 20%;
+  color-scheme: light;
+}
+
+.dark {
+  --paper: oklch(0.205 0.036 262);
+  --paper-2: oklch(0.238 0.04 262);
+  --paper-3: oklch(0.285 0.045 262);
+  --ink: oklch(0.95 0.01 262);
+  --ink-2: oklch(0.8 0.025 262);
+  --ink-3: oklch(0.7 0.03 262);
+  --line: oklch(0.335 0.042 262);
+  --rule: oklch(0.33 0.045 270);
+  --rule-faint: oklch(0.262 0.04 268);
+  --coral: oklch(0.75 0.14 40);
+  --coral-strong: oklch(0.79 0.13 42);
+  --coral-ink: oklch(0.8 0.12 44);
+  --coral-wash: oklch(0.3 0.05 40);
+  --on-coral: oklch(0.21 0.04 262);
+  --cover: oklch(0.165 0.032 262);
+  --cover-2: oklch(0.22 0.04 262);
+  --on-cover: oklch(0.95 0.01 262);
+  --sleeve: oklch(1 0 0 / 0.06);
+  --ok: oklch(0.75 0.12 155);
+  --danger: oklch(0.72 0.15 25);
+  --shadow: 225 60% 4%;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-paper-3: var(--paper-3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-rule: var(--rule);
+  --color-coral: var(--coral);
+  --color-coral-strong: var(--coral-strong);
+  --color-coral-ink: var(--coral-ink);
+  --color-coral-wash: var(--coral-wash);
+  --color-on-coral: var(--on-coral);
+  --color-cover: var(--cover);
+  --color-cover-2: var(--cover-2);
+  --color-on-cover: var(--on-cover);
+  --color-ok: var(--ok);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-text);
+  --font-display: var(--font-display-face);
+  --font-hand: var(--font-hand-face);
+
+  --radius-paper: 6px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-text), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display-face), var(--font-text), sans-serif;
+  text-wrap: balance;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
+p { text-wrap: pretty; }
+
+::selection {
+  background: var(--coral);
+  color: var(--on-coral);
+}
+
+:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+input, textarea { caret-color: var(--coral); }
+
+/* Text fields draw their own focus ring (border + glow, or the wrapper's
+   focus-within). Drop the generic outline so it never doubles up. */
+input:not([type="checkbox"], [type="radio"], [type="range"]):focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
+
+a { text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Vở ô li: big squares with four thin writing lines, plus the red margin. */
+.oli {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, var(--rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule) 1px, transparent 1px),
+    repeating-linear-gradient(to bottom, var(--rule-faint) 0 1px, transparent 1px 8px);
+  background-size: 32px 32px, 32px 32px, 100% 8px;
+}
+
+.oli-margin {
+  position: relative;
+}
+.oli-margin::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 56px;
+  width: 1px;
+  background: color-mix(in oklch, var(--coral) 70%, transparent);
+}
+
+/* Ruled memo strip beside each photo in an album sleeve. */
+.memo-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 23px,
+    var(--rule) 23px 24px
+  );
+}
+
+/* Plastic sleeve sheen over a photo. */
+.sleeve {
+  position: relative;
+}
+.sleeve::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    var(--sleeve) 32%,
+    transparent 48%
+  );
+  mix-blend-mode: screen;
+}
+
+.vinyl {
+  background-color: var(--cover);
+  background-image:
+    radial-gradient(circle at 20% 10%, oklch(1 0 0 / 0.06), transparent 50%),
+    repeating-linear-gradient(45deg, oklch(1 0 0 / 0.015) 0 2px, transparent 2px 4px);
+}
+
+.paper-shadow {
+  box-shadow:
+    0 1px 2px hsl(var(--shadow) / 0.08),
+    0 8px 24px -8px hsl(var(--shadow) / 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
