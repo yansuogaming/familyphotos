@@ -35,11 +35,23 @@ const qrExpires = new Map<string, number>();
 
 export const api = {
   auth: {
+    /** Family and guests only. Admin accounts are refused here and use adminLogin. */
     login(identifier: string, password: string): Promise<Session> {
       if (BASE) return http("/auth/login", { method: "POST", body: JSON.stringify({ identifier, password }) });
       const account = mock.demoAccounts.find((a) => a.identifier === identifier.trim().toLowerCase() && a.password === password);
       if (!account) return wait(500).then(() => { throw new ApiError(401, "Sai email/số điện thoại hoặc mật khẩu."); });
+      if (account.user.role === "admin")
+        return wait(500).then(() => { throw new ApiError(403, "Tài khoản này chỉ đăng nhập được ở trang quản trị."); });
       return fake({ user: account.user, token: "demo" }, 600);
+    },
+    /** Admin door (/quan-tri/dang-nhap). Refuses every non-admin account. */
+    adminLogin(identifier: string, password: string): Promise<Session> {
+      if (BASE) return http("/admin/auth/login", { method: "POST", body: JSON.stringify({ identifier, password }) });
+      const account = mock.demoAccounts.find((a) => a.identifier === identifier.trim().toLowerCase() && a.password === password);
+      if (!account) return wait(600).then(() => { throw new ApiError(401, "Sai email hoặc mật khẩu."); });
+      if (account.user.role !== "admin")
+        return wait(600).then(() => { throw new ApiError(403, "Tài khoản này không có quyền quản trị."); });
+      return fake({ user: account.user, token: "demo-admin" }, 700);
     },
     register(input: { name: string; identifier: string; password: string; role: "member" | "guest"; inviteCode?: string }): Promise<Session> {
       if (BASE) return http("/auth/register", { method: "POST", body: JSON.stringify(input) });

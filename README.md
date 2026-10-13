@@ -54,9 +54,15 @@ Bản demo lưu các thay đổi trong `localStorage` của trình duyệt (kho�
 | `/hoc/tien-ich` | Máy tính, giải phương trình, bảng công thức, đồng hồ học, đổi đơn vị |
 | `/tro-ly` | Trợ lý AI toàn trang (nút nổi góc phải có ở mọi trang trong app) |
 | `/cai-dat` | Hồ sơ, bảo mật, thiết bị, tài khoản AI, dung lượng, riêng tư, giao diện, thông báo |
+| `/quan-tri/dang-nhap` | Trang đăng nhập riêng của quản trị (không dùng chung `/dang-nhap`) |
 | `/quan-tri/*` | Chỉ vai trò `admin`: tổng quan, nội dung trang (đổi ảnh và chữ ở landing, đăng nhập, đăng ký), thư viện ảnh, thành viên và mã mời, album, học liệu (soạn bài), trợ lý AI, cài đặt hệ thống |
 
-Các trang trong `(app)` và `(admin)` yêu cầu đăng nhập. Chưa đăng nhập thì được chuyển về `/dang-nhap`.
+Các trang trong `(app)` yêu cầu đăng nhập, chưa đăng nhập thì được chuyển về `/dang-nhap`.
+
+Khu quản trị có cửa riêng:
+- **Chưa đăng nhập:** vào `/quan-tri/*` thì được chuyển về `/quan-tri/dang-nhap`.
+- **Đang đăng nhập bằng tài khoản khách hoặc người trong nhà:** trang báo lỗi "chỉ dành cho quản trị" và yêu cầu đăng xuất trước.
+- **Tài khoản quản trị:** không đăng nhập được ở `/dang-nhap`.
 
 ## Cấu trúc thư mục
 

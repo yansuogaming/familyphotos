@@ -95,7 +95,7 @@ function Sidebar({ onNavigate, layoutId }: { onNavigate?: () => void; layoutId: 
   async function logout() {
     await api.auth.logout();
     session.clear();
-    router.push("/dang-nhap");
+    router.push("/quan-tri/dang-nhap");
   }
 
   return (

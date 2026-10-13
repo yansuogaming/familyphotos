@@ -13,7 +13,8 @@ Nguồn chuẩn của các kiểu dữ liệu: `src/lib/api/types.ts`. Frontend 
 
 | Method | Path | Body | Trả về |
 |---|---|---|---|
-| POST | `/auth/login` | `{ identifier, password }` (identifier là email hoặc số điện thoại) | `Session` |
+| POST | `/auth/login` | `{ identifier, password }` (identifier là email hoặc số điện thoại) | `Session`. Chỉ nhận người trong nhà và khách. Tài khoản `admin` trả `403` |
+| POST | `/admin/auth/login` | `{ identifier, password }` | `Session`. Trang `/quan-tri/dang-nhap` dùng endpoint này. Chỉ nhận `role: "admin"`, tài khoản khác trả `403` |
 | POST | `/auth/register` | `{ name, identifier, password, role: "member" \| "guest", inviteCode? }` | `Session`. Với khách: tài khoản ở trạng thái chờ duyệt |
 | POST | `/auth/logout` | | `204` |
 | GET | `/auth/me` | | `User` |
